@@ -1,0 +1,71 @@
+<?php
+if (!defined ("__CONFIG_INC__")) {
+define ("__CONFIG_INC__", True);
+
+	define('ROOT_DIR', realpath (dirname(__FILE__) . DIRECTORY_SEPARATOR . '..').DIRECTORY_SEPARATOR);
+
+//	define ('INC_DIR', ROOT_DIR.'inc'.DIRECTORY_SEPARATOR);
+//	define ('LIB_DIR', ROOT_DIR.'lib'.DIRECTORY_SEPARATOR);
+//	define ('TPL_DIR', ROOT_DIR.'tpl'.DIRECTORY_SEPARATOR);
+//	define ('DATA_DIR', ROOT_DIR.'data'.DIRECTORY_SEPARATOR);
+//	define ('CSS_URL', 'style/');
+
+	define ('INC_DIR', 'inc'.DIRECTORY_SEPARATOR);
+	define ('LIB_DIR', 'lib'.DIRECTORY_SEPARATOR);
+	define ('TPL_DIR', 'tpl'.DIRECTORY_SEPARATOR);
+	define ('DATA_DIR', 'data'.DIRECTORY_SEPARATOR);
+	define ('REPORT_DIR', DATA_DIR.'reports'.DIRECTORY_SEPARATOR);
+
+	define ('CSS_URL', 'style/');
+	define ('REPORT_URL', 'data/reports/');
+
+
+	// Location path of the MyReporting installation directory (on the web server)
+	$myreporting['dir'] = "/usr/local/www/MyReporting/";
+
+	// Specify the path for the Python executable
+	$send_reports_mail_script = "/usr/bin/python " . $myreporting['dir']."bin/send_reports_emails.py";
+
+	// The url, can be relative or absolute 
+	$myreporting_url = "/MyReporting";
+
+	// The admin's password
+	$myreporting['admin_passwd'] = 'admin!';
+
+	define ('SMARTY_DIR', LIB_DIR.'smarty'.DIRECTORY_SEPARATOR.'libs'.DIRECTORY_SEPARATOR);
+
+/////////////////////////////////////////////////////////////////////////////
+// You shouldn't change the following, unless you know what you are doing ..
+
+	$reporters_filename = DATA_DIR . "users.txt";
+	$reporting_list_filename = REPORT_DIR . "reporting_list.html";
+	$reporting_list_url = REPORT_URL . "reporting_list.html";
+
+	if (!isset ($misc_fileloaded)) {
+		require INC_DIR."reporters.inc.php";
+	}
+
+	// StyleSheets
+	$stylesheet_src = CSS_URL."reporting.css";
+	$stylesheet_viewer_src = CSS_URL."reportsviewer.css";
+
+	// Data
+	require INC_DIR."load_data.inc";
+	loadUsersInformation ();
+
+	function MyReportingUrl() {
+		return $GLOBALS['myreporting_url'];
+	}
+	function sendReportsMailScript () {
+		return $GLOBALS['send_reports_mail_script'];
+	}
+	function reportersFilename () {
+		return $GLOBALS['reporters_filename'];
+	}
+	function isValidAdminPassword ($pass) {
+		return $pass == $GLOBALS['myreporting']['admin_passwd'];
+	}
+
+}//end defined
+
+?>

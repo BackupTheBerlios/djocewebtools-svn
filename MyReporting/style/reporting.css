@@ -1,0 +1,155 @@
+BODY {
+        background-color : #FFFFFF;
+}
+
+/* General text */
+.gen { font-size : 12px; }
+.genmed { font-size : 11px; }
+.gensmall { font-size : 10px; }
+.gen,.genmed,.gensmall { color : #000000; }
+
+
+A {
+	font-family: verdana;
+	font-size: 10pt;
+	color: DarkBlue;
+	text-decoration: none;
+}
+A:hover {
+	color: #ff0000;
+}
+A.menu, A.menu:active, A.menu:visited  {
+	color: #0000cc;
+	font-weight: bold;
+	text-decoration: none;
+}
+A.menu:hover {
+	color: #ff0000;
+	background-color: #FFFFaa;
+	width: 100%;
+}
+A.nav, A.nav:active, A.nav:visited  {
+		text-decoration: none;
+}
+A.nav:hover {
+	text-decoration: none;
+	color: #FFFFFF;
+	background-color: #336699;
+}
+
+H2 {
+    color: Blue;
+	font-size: 12pt;
+        font-weight: bold;
+        border-bottom : 1px solid black;
+	margin-left: 3px;
+}
+H3 {
+	font-size: 12pt;
+        color: #000000;
+        margin-left : 25px;
+}
+H2.old {
+        font-weight: bold;
+	font-size: 12pt;
+        background-color : #FFFFCC;
+        border-bottom : thin solid black;
+}
+H3.old {
+	font-size: 10pt;
+        color: #0033FF;
+        margin-left : 25px;
+}
+TD.header, TABLE.header {
+	background-color: #003366;
+	color: #ffffff;
+	font-size: 18pt;
+	font-weight: bold;
+	font-family: arial;
+	text-align: center;
+	padding: 10;
+}
+
+TD.userbar {
+	text-align: center;
+	font-size: 16pt;
+	background-color: #ccffcc;
+}
+TD.requiredfield {
+	border : medium solid Blue;
+	background-color : White;
+	padding: 5px;
+	font-weight : bold;
+}
+TD.field {
+	font-weight : bold;
+}
+TABLE.subframe {
+	background-color: #ffffff;
+}
+
+TD {
+	vertical-align: top;
+}
+DIV.apptitle {
+	color: #FFFFFF;
+	background-color: #bbccdd;
+	font-weight: bold;
+}
+TD.subtitle {
+	color: #000000;
+	background-color: #bbccee;
+	font-weight: bold;
+}
+TD.subcontent {
+	background-color: #ffffff;
+	padding: 3;
+}
+
+TD.menu {
+	background-color: #e0e0e0;
+	padding: 10px;
+	text-align: center;
+}
+
+TD.main {
+	background-color: #eeeeee;
+}
+
+FONT.selection {
+	background-color: #ffff00;
+	color: red;
+	font-weight: bold;
+
+}
+DIV.warning, SPAN.warning, FONT.warning {
+	background-color: #ffbbbb;
+	color: DarkRed;
+	font-weight: bold;
+	font-size: 24pt;
+
+}
+DIV.reporttitle {
+	color: #000000;
+	background-color: #dddddd;
+	height: 22;
+	font-size: 16pt;
+	font-weight: bold;
+}
+TD.reporttext {
+}
+
+INPUT { 
+	padding-left: 2px;
+	padding-right: 2px;
+}
+
+INPUT.button {
+	background-color : #ffffff;
+	color : #000000;
+	font-size: 11px; font-family: Verdana, Arial, Helvetica, sans-serif;
+	border-style : ridge;
+}
+
+
+

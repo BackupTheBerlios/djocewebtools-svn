@@ -1,0 +1,63 @@
+	#####################################
+	### MyReporting by "Jocelyn FIAT" ###
+	#####################################
+
+Version: 0.9
+Author: Jocelyn FIAT
+Homepage: http://distrib.djoce.net/
+
+A Very quick note ..
+
+*** Requirement ***
+	To install this script you should have
+	- a web server with PHP installed on it (I guess PHP > 4.1)
+	- python (I guess > 1.2), the last version should be fine
+
+*** Configuration files ***
+	- bin/pyMyReporting/config.py
+	- conf/config.inc
+
+	IMPORTANT:  Please edit the   *.distrib files, fill them with your data, 
+				and replace the corresponding files
+
+*** Templates ***
+	The templates
+	- tpl/...
+
+*** Users data ***
+	- data/users.txt
+	Nota: Must be writable by the web server
+
+	Contains list of all reporters
+	a line is formated like this : "login, FullName, ReportingGroup, HomePage, Active|InActive"
+	for instance
+		|users.txt------------------------------------------------------|
+		|docuser, DocUser, Documentation, http://www/~docuser/, Active	|
+		|devuser, DevUser, Developper, http://www/~devuser/, Active		|
+		|---------------------------------------------------------------|
+
+		the status Active or InActive, is to mark the reporter who have to report each week.
+
+*** Categories data ***
+	- data/categories.txt
+	Nota: Must be writable by the web server
+	IMPORTANT:  Please edit the   *.distrib files, fill them with your data, 
+				and replace the corresponding files
+
+	This is a php script template and this will set the default topics to edit for reports.
+
+*** Reports data ***
+	- data/reports/2004/..
+	- data/reports/2005/..
+	Nota: Must be writable by the web server
+	Nota: this files can be edited throught the web interface
+	IMPORTANT:  Please edit the   *.distrib files, fill them with your data, 
+				and replace the corresponding files
+
+WARNING: for now, the report is sent, to a global email address, 
+		 in future I may change it to be sent to each reporter
+
+For any bugs, suggestion, requests or more questions, please email me at <web@djoce.net>
+
+This script is distributed as it is, maybe one day I will make it better ... and nicer.
+I may set up, a cvs or subversion server if someone need it for real.

@@ -1,0 +1,20 @@
+<?php
+
+// First value is description ...
+$reporting ["categories"] = array (
+	"Development"                 => array ("What you changed in the source, if you fixed something in a branch please specify."),
+
+	"Usage & Testing"             => array ("Anything about usage and testing"),
+	"General System Life"         => array ("Concerning you computer, network, or any thing related to system."),
+	"Intranet and Documentation"  => array ("About web, and documentation"
+//												, "public website"
+//												, "internal website"
+//												, "documentation"
+											),
+	"Marketing and business"      => array ("New deals, marketing events"),
+	"Miscellaneous Activities"    => array ("Day off, Activities which don't fit other categories "),
+	"Next"                        => array ("To indicate what you plan to do next week")
+);
+
+
+?>
