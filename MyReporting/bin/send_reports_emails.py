@@ -11,6 +11,7 @@ from time import *
 from pyMyReporting.config import *
 
 email_mode_new = "new"
+email_mode_report = "report"
 email_mode_refresh = "refresh"
 email_mode_remind = "remind"
 
@@ -49,7 +50,7 @@ def ActiveUsers (z_reporters_file):
 	#return only active reporter from this file
 	return active_reporters
 
-def weekMailContent (z_good_reporters, z_bad_reporters, z_week_number_string, z_week_url, z_week_filename, z_to_address, z_superreporter) :
+def weekMailContent (z_include_report, z_good_reporters, z_bad_reporters, z_week_number_string, z_week_url, z_week_filename, z_to_address, z_superreporter) :
 
 	z_today = strftime ("%A %d %B %Y (%H:%M:%S)", localtime(time()))
 	good_text = "<STRONG>Good reporters : </STRONG> "
@@ -83,22 +84,22 @@ def weekMailContent (z_good_reporters, z_bad_reporters, z_week_number_string, z_
 	message_to_add = message_to_add +  "For any request <A HREF=\"mailto:%s\">email me</A> <BR>\n" % (z_superreporter)
 	message_to_add = message_to_add +  "<HR>\n\n"
 
-	    # Building email source
-	myweekfile = open (z_week_filename, 'r');
-	message_body = myweekfile.read();
-	myweekfile.close ();
+	if z_include_report:
+			# Building email source
+		myweekfile = open (z_week_filename, 'r');
+		message_body = myweekfile.read();
+		myweekfile.close ();
 
+		p = re.compile ("\.\.\/\.\.\/\.\.\/")
+		zto = reporting_web_path
+		message_body = p.sub (zto, message_body, 1)
 
-	p = re.compile ("\.\.\/\.\.\/\.\.\/")
-	zto = reporting_web_path
-	message_body = p.sub (zto, message_body, 1)
-
-	p = re.compile ("\<[Bb][Oo][Dd][Yy]\>")
-	zto = "<BODY>\n%s" % (message_to_add)
-	message_body = p.sub (zto, message_body, 1)
-
+		p = re.compile ("\<[Bb][Oo][Dd][Yy]\>")
+		zto = "<BODY>\n%s" % (message_to_add)
+		message_body = p.sub (zto, message_body, 1)
+	else :
+		message_body = "<HTML><BODY>%s</BODY></HTML>" % (message_to_add);
 	message = message_header + message_body
-
 	return message
 
 def badReporterMailContent (z_bad_reporter, z_week_number_string, z_week_url, z_to_address, z_superreporter) :
@@ -133,9 +134,8 @@ if __name__ == '__main__':
 			email_mode_name = sys.argv [2]
 		else:
 			email_mode_name = sys.argv [1]
-			week_number = string.atoi (strftime ("%U", localtime(time())) ) 
+			week_number = 1 + string.atoi (strftime ("%U", localtime(time())) ) 
 			week_day = string.atoi (strftime ("%u", localtime(time())) ) 
-			print week_day;
 			if email_mode_name == email_mode_remind :
 				if week_day == 7 :
 					send_current_as_previous = 0;
@@ -143,7 +143,13 @@ if __name__ == '__main__':
 				if week_day == 6 :
 					send_current_as_previous = 0;
 					week_number = week_number
-			if send_current_as_previous :
+				if week_day == 5 :
+					send_current_as_previous = 0;
+					week_number = week_number
+				if week_day == 4 :
+					send_current_as_previous = 0;
+					week_number = week_number
+			if send_current_as_previous == 1 :
 				week_number = week_number - 1
 			if week_number == 0 :
 				week_number = 52
@@ -200,7 +206,11 @@ if __name__ == '__main__':
 	# Build the mail content
 
 	if email_mode_name == email_mode_new :
-		message = weekMailContent (good_reporters, bad_reporters, week_number_string, week_url, week_filename, reporters_email, superreporter_email)
+		message = weekMailContent (0, good_reporters, bad_reporters, week_number_string, week_url, week_filename, reporters_email, superreporter_email)
+		sendMailToFromSubjectOfOn (reporters_email, sender_name, sender_email,  message, smtp_server)
+		#print message;
+	if email_mode_name == email_mode_report :
+		message = weekMailContent (1, good_reporters, bad_reporters, week_number_string, week_url, week_filename, reporters_email, superreporter_email)
 		sendMailToFromSubjectOfOn (reporters_email, sender_name, sender_email,  message, smtp_server)
 		#print message;
 
@@ -216,7 +226,7 @@ if __name__ == '__main__':
 		# Send summary to superreporter_email
 		if enable_copy_to_superreporter:
 			print summary_bad;
-			#For Manus ...
+			#For sys admin ...
 			sendMailToFromSubjectOfOn (superreporter_email, sender_name, sender_email, summary_bad, smtp_server)
 
 		
