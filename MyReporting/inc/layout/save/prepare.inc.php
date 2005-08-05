@@ -21,7 +21,7 @@
 			$report_content = stripslashes ($_POST['report_content']);
 			createDirIfNotExists ($year);
 			$target_file = userFilename ($username, $year, $week);
-			$DIS_SaveMessage = "Saving to $target_file";
+			$DIS_SaveMessage = "Saving to $target_file <br/>";
 
 			#ob_start("ReportSaving"); 
 			ob_start();
