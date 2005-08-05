@@ -9,8 +9,8 @@ Function loadUsersInformation () {
 	$fn = $reporters_filename;
 	$fp = fopen ($fn, "r");
 	while ($data = fgetcsv ($fp, filesize ($fn), ',')) {
-		$user = new ReportingUser ($data[0], $data[1], $data[2], $data[3], ($data[4] == 'Active'));
-		$reporting ["users"][$data[0]] = $user; 
+		$user = new ReportingUser (trim($data[0]), trim($data[1]), trim($data[2]), trim($data[3]), (trim($data[4]) == 'Active'));
+		$reporting ["users"][trim($data[0])] = $user; 
 	}
 
 	// Categories //
