@@ -39,7 +39,7 @@ ini_set('magic_quotes_gpc', 0);
 	$smarty->config_dir = $smarty->template_dir . '_config' . DIRECTORY_SEPARATOR;
 	$smarty->compile_dir = $smarty->template_dir . '_compiled' . DIRECTORY_SEPARATOR;
 	$smarty->cache_dir = $smarty->template_dir . '_cache' . DIRECTORY_SEPARATOR;
-	if (True) {
+	if (False) {
 		$smarty->compile_check = true;
 		$smarty->debugging = true;
 	}
