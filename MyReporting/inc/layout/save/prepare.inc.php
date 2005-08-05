@@ -23,7 +23,8 @@
 			$target_file = userFilename ($username, $year, $week);
 			$DIS_SaveMessage = "Saving to $target_file";
 
-			ob_start("ReportSaving"); 
+			#ob_start("ReportSaving"); 
+			ob_start();
 			SaveTextIntoFile ($report_content, $target_file);
 			makeReportingWeekFileFor ($year, $week) ;
 			$DIS_SaveMessage .= ob_get_contents();
@@ -75,7 +76,8 @@
 				$DIS_SaveMessage = "Saving to $target_file";
 
 				$week_filename = weekFilename ($year, $week);
-				ob_start("ReportSaving"); 
+				#ob_start("ReportSaving"); 
+				ob_start(); 
 
 //				$backup = ContentOfFile ($target_file);
 //				SaveTextIntoFile ($report_content, $target_file);
