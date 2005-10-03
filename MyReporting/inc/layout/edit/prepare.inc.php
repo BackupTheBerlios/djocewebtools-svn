@@ -48,18 +48,22 @@
 				$cat_sel = $_POST['cat_sel'];
 				$DIS_EditReportingText = "";
 				while (list ($key, $val) = each ($cat_sel)) {
-					$DIS_EditReportingText .= "<H2>$val</H2>\n";
+					$DIS_EditReportingText .= "<h2>$val</h2>\n";
 					$selected_cat = $GLOBALS['reporting']["categories"][$val];
 					reset ($selected_cat);
 					next ($selected_cat);
-					$DIS_EditReportingText .= "<UL>\n";
-					while (list ($skey, $sval) = each ($selected_cat)) {
-						$DIS_EditReportingText .= "    <H3>$sval</H3>\n";
-						$DIS_EditReportingText .= "    <UL>\n";
-						$DIS_EditReportingText .= "       <LI>...</LI>\n";
-						$DIS_EditReportingText .= "    </UL>\n";
+					$DIS_EditReportingText .= "<ul>\n";
+					if (count ($selected_cat) > 1) {
+						while (list ($skey, $sval) = each ($selected_cat)) {
+							$DIS_EditReportingText .= "    <h3>$sval</h3>\n";
+							$DIS_EditReportingText .= "    <ul>\n";
+							$DIS_EditReportingText .= "       <li>...</li>\n";
+							$DIS_EditReportingText .= "    </ul>\n";
+						}
+					} else {
+						$DIS_EditReportingText .= "<li>...</li>\n";
 					}
-					$DIS_EditReportingText .= "</UL>\n\n";
+					$DIS_EditReportingText .= "</ul>\n\n";
 				}
 			}
 		}
