@@ -4,16 +4,10 @@ define ("__CONFIG_INC__", True);
 
 	define('ROOT_DIR', realpath (dirname(__FILE__) . DIRECTORY_SEPARATOR . '..').DIRECTORY_SEPARATOR);
 
-//	define ('INC_DIR', ROOT_DIR.'inc'.DIRECTORY_SEPARATOR);
-//	define ('LIB_DIR', ROOT_DIR.'lib'.DIRECTORY_SEPARATOR);
-//	define ('TPL_DIR', ROOT_DIR.'tpl'.DIRECTORY_SEPARATOR);
-//	define ('DATA_DIR', ROOT_DIR.'data'.DIRECTORY_SEPARATOR);
-//	define ('CSS_URL', 'style/');
-
-	define ('INC_DIR', 'inc'.DIRECTORY_SEPARATOR);
-	define ('LIB_DIR', 'lib'.DIRECTORY_SEPARATOR);
-	define ('TPL_DIR', 'tpl'.DIRECTORY_SEPARATOR);
-	define ('DATA_DIR', 'data'.DIRECTORY_SEPARATOR);
+	define ('INC_DIR', ROOT_DIR.'inc'.DIRECTORY_SEPARATOR);
+	define ('LIB_DIR', ROOT_DIR.'lib'.DIRECTORY_SEPARATOR);
+	define ('TPL_DIR', ROOT_DIR.'tpl'.DIRECTORY_SEPARATOR);
+	define ('DATA_DIR', ROOT_DIR.'data'.DIRECTORY_SEPARATOR);
 	define ('REPORT_DIR', DATA_DIR.'reports'.DIRECTORY_SEPARATOR);
 
 	define ('CSS_URL', 'style/');
