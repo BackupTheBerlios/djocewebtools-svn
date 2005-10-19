@@ -18,15 +18,12 @@
 
 		if ($has_confirmation) {
 
+			ob_start();
 			$report_content = stripslashes ($_POST['report_content']);
 			createDirIfNotExists ($year);
 			$target_file = userFilename ($username, $year, $week);
 			$DIS_SaveMessage = "Saving to $target_file <br/>";
-
-			#ob_start("ReportSaving"); 
-			ob_start();
-			SaveTextIntoFile ($report_content, $target_file);
-			makeReportingWeekFileFor ($year, $week) ;
+			postUserReport ($username, $year, $week, $report_content);
 			$DIS_SaveMessage .= ob_get_contents();
 			ob_end_clean();
 

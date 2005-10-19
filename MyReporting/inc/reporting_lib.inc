@@ -2,7 +2,7 @@
 if (!defined ("__REPORTING_LIB_INC__")) {
 define ("__REPORTING_LIB_INC__", True);
 
-require "conf/config.inc";
+//require "conf/config.inc";
 require LIB_DIR."file.inc";
 require LIB_DIR."date.inc";
 
@@ -106,14 +106,16 @@ Function makeReportingWeekFileFor ($year, $week, $include_missing_reporter=True)
 	global $stylesheet_viewer_src;
 	global $reporting;
 
+	require_once SMARTY_DIR.'Smarty.class.php';
+
 	$dirname = REPORT_DIR.$year;
 	$week_filename = weekFilename ($year, $week);
 	if (isLocked ($year, $week)) {
 		echo "Sorry but the reports for the week $week of year $year is LOCKED\n";
 	} else {
 
-		$missing_log = "Missing reports from :<UL>";
-		$reporter_log = "Using reports from :<UL>";
+		$missing_log = "Missing reports from :<ul>";
+		$reporter_log = "Using reports from :<ul>";
 
 		$previous_week_filename = weekRelativePreviousUrl ($year, $week);
 		$next_week_filename = weekRelativeNextUrl ($year, $week);
@@ -122,7 +124,7 @@ Function makeReportingWeekFileFor ($year, $week, $include_missing_reporter=True)
 		$DIS_Teams = array ();
 		while (list ($k_login, $v_file) = each ($user_reports_to_use)) {
 			$current_user = $reporting["users"][$k_login];
-			$reporter_log .= "<LI>".$current_user->name."</LI>\n";
+			$reporter_log .= "<li>".$current_user->name."</li>\n";
 
 			$DIS_User = array (
 					"login" => $k_login,
@@ -151,7 +153,7 @@ Function makeReportingWeekFileFor ($year, $week, $include_missing_reporter=True)
 		while (list ($k_login, $val) = each ($missing_users)) {
 			$current_user = $reporting["users"][$k_login];
 
-			$missing_log .= "<LI>".$current_user->name."</LI>\n";
+			$missing_log .= "<li>".$current_user->name."</li>\n";
 			$DIS_User = array (
 					"login" => $k_login,
 					"name" => $current_user->name,
@@ -186,10 +188,10 @@ Function makeReportingWeekFileFor ($year, $week, $include_missing_reporter=True)
 
 		$log = "Creating ".$week_filename." ... <BR><BR>";
 		$log .= $reporter_log;
-		$log .= "</UL>\n";
+		$log .= "</ul>\n";
 
 		$log .= $missing_log;
-		$log .= "</UL>\n";
+		$log .= "</ul>\n";
 		echo $log;
 
 		$report_output = $smarty->fetch ("generate/reporting_week.tpl");
@@ -230,6 +232,26 @@ Function listOfWeekFilesForYearByWeekNumber ($year) {
 	return $weeks;
 }
 
+Function listOfWeekFilesForYearAndUserByWeekNumber ($year, $user){
+	$dirname = REPORT_DIR.$year;
+	$filter = $user.'_'.'.*\..*';
+	$ls_result = listDirFilter ($dirname, $filter);
+	$weeks= array ();
+	while (list ($key, $val) = each ($ls_result)) {
+		$pos = strrpos ($val, '_');
+		$key = substr ($val, $pos + 1);
+		$pos = strrpos ($key, '.');
+		$key = substr ($key, 0, $pos);
+		if (strlen($val) > 0) { 
+			$weeks[$key] = $val;
+		}
+	}
+	arsort ($weeks);
+	reset ($weeks);
+	return $weeks;
+
+}
+
 Function listOfWeekFilesInDirByWeekNumber ($dirname) {
 	$filter = "week-.*\..*";
 	$ls_result = listDirFilter ($dirname, $filter);
@@ -250,9 +272,8 @@ Function listOfWeekFilesInDirByWeekNumber ($dirname) {
 }
 
 Function listOfUserFilesInDirForWeekByLogin ($dirname, $week) {
-
 	if (strlen ($week) < 2) { $week = '0' . $week; }
-	$filter = ".*_".$week."\..*";
+	$filter = ".+_".$week."\..*";
 	$ls_result = listDirFilter ($dirname, $filter);
 	$users= array ();
 	while (list ($key, $val) = each ($ls_result)) {
@@ -270,30 +291,17 @@ Function listOfUserFilesInDirForWeekByLogin ($dirname, $week) {
 	return $users;
 }
 
-//Function userFilesForYear ($user, $year) {
-//	global $data_dir;
-//	$filter = $user."_.*\..*";
-//	$dirname = $data_dir."/".$year;
-//	$ls_result = listDirFilter ($dirname, $filter);
-//	$weekfiles= array ();
-//	while (list ($k_filename, $v_fullfilename) = each ($ls_result)) {
-//		$pos = strrpos ($k_filename, '_');
-//		$iweek = substr ($k_filename, $pos + 1);
-//		$pos = strrpos ($iweek, '.');
-//		$iweek = substr ($iweek, 0, $pos);
-//		if ($iweek != "") { 
-//			if (!isset ($weekfiles[$iweek])) { $weekfiles[$iweek] = ""; }
-//			$weekfiles[$iweek] .= $v_fullfilename;
-//		}
-//	}
-//}
-
 Function userReportExists ($user, $year, $week) {
 	return file_exists (userFilename($user, $year, $week));
 }
 
 Function userReportContent ($user, $year, $week) {
 	return ContentOfFile (userFilename ($user, $year, $week));
+}
+Function postUserReport ($user, $year, $week, $text) {
+	$target_file = userFilename ($user, $year, $week);
+	SaveTextIntoFile ($text, $target_file);
+	makeReportingWeekFileFor ($year, $week) ;
 }
 
 Function userFilename ($user, $year, $week) {

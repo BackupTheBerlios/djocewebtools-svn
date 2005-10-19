@@ -24,14 +24,6 @@ ini_set('magic_quotes_gpc', 0);
 	if (isset ($GLOBALS['username'])) { $username = $GLOBALS['username']; }
 	if (!isset ($application)) { $application = "overview"; }
 
-//// Template
-//	include LIB_DIR."template.inc";
-//	$t = new Template;
-//	include INC_DIR."layout/$application/PCG.inc";
-//	include INC_DIR."layout/CIG.inc";
-//	$t->pparse("Output","CommonTemplate");
-
-
 // Smarty
 	require_once SMARTY_DIR.'Smarty.class.php';
 	$smarty = new Smarty;
