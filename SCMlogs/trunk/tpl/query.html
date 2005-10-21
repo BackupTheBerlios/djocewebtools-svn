@@ -1,0 +1,85 @@
+<script type="text/javascript" language="JavaScript">
+  <!-- 
+function SetAllYearCheckBoxes(FormName, FieldName, CheckValue)
+{
+	SetAllCheckBoxes(FormName, FieldName + "[01][]", CheckValue);
+	SetAllCheckBoxes(FormName, FieldName + "[02][]", CheckValue);
+	SetAllCheckBoxes(FormName, FieldName + "[03][]", CheckValue);
+	SetAllCheckBoxes(FormName, FieldName + "[04][]", CheckValue);
+	SetAllCheckBoxes(FormName, FieldName + "[05][]", CheckValue);
+	SetAllCheckBoxes(FormName, FieldName + "[06][]", CheckValue);
+	SetAllCheckBoxes(FormName, FieldName + "[07][]", CheckValue);
+	SetAllCheckBoxes(FormName, FieldName + "[08][]", CheckValue);
+	SetAllCheckBoxes(FormName, FieldName + "[09][]", CheckValue);
+	SetAllCheckBoxes(FormName, FieldName + "[10][]", CheckValue);
+	SetAllCheckBoxes(FormName, FieldName + "[11][]", CheckValue);
+	SetAllCheckBoxes(FormName, FieldName + "[12][]", CheckValue);
+}
+function SetAllCheckBoxes(FormName, FieldName, CheckValue)
+{
+	if(!document.forms[FormName])
+		return;
+	var objCheckBoxes = document.forms[FormName].elements[FieldName];
+	if(!objCheckBoxes)
+		return;
+	var countCheckBoxes = objCheckBoxes.length;
+	if(!countCheckBoxes)
+		objCheckBoxes.checked = CheckValue;
+	else
+		// set the check value for all check boxes
+		for(var i = 0; i < countCheckBoxes; i++)
+			objCheckBoxes[i].checked = CheckValue;
+}
+
+function setblocking(nr, b)
+{
+	if (document.layers)
+	{
+		current = b ? 'block' : 'none';
+		document.layers[nr].display = current;
+	}
+	else if (document.all)
+	{
+		current = b ? 'block' : 'none';
+		document.all[nr].style.display = current;
+	}
+	else if (document.getElementById)
+	{
+		vista = b ? 'block' : 'none';
+		document.getElementById(nr).style.display = vista;
+	}
+}
+function blocking(nr)
+{
+	if (document.layers)
+	{
+		current = (document.layers[nr].display == 'none') ? 'block' : 'none';
+		document.layers[nr].display = current;
+	}
+	else if (document.all)
+	{
+		current = (document.all[nr].style.display == 'none') ? 'block' : 'none';
+		document.all[nr].style.display = current;
+	}
+	else if (document.getElementById)
+	{
+		vista = (document.getElementById(nr).style.display == 'none') ? 'block' : 'none';
+		document.getElementById(nr).style.display = vista;
+	}
+}
+
+// -->
+</script>
+
+<FORM ACTION="show.php?user={VAR_USER}" NAME="QueryForm" METHOD="POST">
+<TABLE border=0 cellpadding=10 cellspacing=5 >
+<TR>
+<TD class=text>
+{VAR_PAGE_COMMITS_FILES}
+</TD>
+<TD class=form>
+{VAR_PAGE_COMMANDS}
+</TD>
+</TR>
+</TABLE>
+</FORM>

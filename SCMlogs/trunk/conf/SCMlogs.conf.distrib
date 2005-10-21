@@ -1,0 +1,52 @@
+[global]
+SCMlogs_appdir = /path-to/SCMlogs/
+SCMlogs_appurl = "http://url-to/SCMlogs/"
+user_cfg_dir = /path-to/SCMlogs/data/ 
+user_cfg_extension= .cfg
+user_pref_extension= .pref
+SCM_repositories= testsvn,repo_cvs
+SCM_default_repository= testsvn
+
+;You can specify to use the 3 following web application
+; to browse your repositories
+; webscmlogs will redirect the query
+;	to the web application set at the SCMlogs level
+; don't change this
+;browsing= webscmlogs
+;browsing= viewcvs
+;browsing= websvn
+
+;[name-of-your-repository]
+; mode can be 'svn' or 'cvs'
+;mode=svn
+; Warning: the name should be the same for websvn or viewcvs ...
+;repository_name= testsvn
+;repository_path= /home/jfiat/testsvn/
+;logs_dir= /home/jfiat/svndir/LOGS
+
+[testsvn]
+mode=svn
+repository_path= /home/jfiat/testsvn/
+repository_name= testsvn
+logs_dir= /home/jfiat/svndir/LOGS
+
+[repo_cvs]
+mode=cvs
+repository_path= /home/cvs/
+repository_name= cvs
+logs_dir= /home/cvs/LOGS
+
+[webscmlogs]
+webapp_url= "http://url-to-scmlogs/SCMlogs/scmweblogs.php"
+[websvn]
+webapp_url= "http://url-to_websvn/websvn/"
+[viewcvs]
+webapp_url= "http://url-to-viewcvs/viewcvs.cgi/"
+
+[email]
+smtp_server=  smtp.domain.com
+at_domain_name= @domain.com
+superuser_name= SCMLogs
+superuser_email= SCMLogs@domain.com
+organization_name= SCMlogs users
+
