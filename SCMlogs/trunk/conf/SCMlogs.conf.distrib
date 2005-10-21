@@ -1,11 +1,15 @@
 [global]
 SCMlogs_appdir = /path-to/SCMlogs/
+SCMlogs_datadir = /path-to/SCMlogs/data/
 SCMlogs_appurl = "http://url-to/SCMlogs/"
-user_cfg_dir = /path-to/SCMlogs/data/ 
-user_cfg_extension= .cfg
-user_pref_extension= .pref
+
 SCM_repositories= testsvn,repo_cvs
 SCM_default_repository= testsvn
+
+[users]
+cfg_extension= .cfg
+pref_extension= .pref
+
 
 ;You can specify to use the 3 following web application
 ; to browse your repositories
@@ -16,7 +20,7 @@ SCM_default_repository= testsvn
 ;browsing= viewcvs
 ;browsing= websvn
 
-;[name-of-your-repository]
+;[repo:name-of-your-repository]
 ; mode can be 'svn' or 'cvs'
 ;mode=svn
 ; Warning: the name should be the same for websvn or viewcvs ...
@@ -24,13 +28,13 @@ SCM_default_repository= testsvn
 ;repository_path= /home/jfiat/testsvn/
 ;logs_dir= /home/jfiat/svndir/LOGS
 
-[testsvn]
+[repo:testsvn]
 mode=svn
 repository_path= /home/jfiat/testsvn/
 repository_name= testsvn
 logs_dir= /home/jfiat/svndir/LOGS
 
-[repo_cvs]
+[repo:repo_cvs]
 mode=cvs
 repository_path= /home/cvs/
 repository_name= cvs
