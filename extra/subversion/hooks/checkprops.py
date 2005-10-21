@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-# Nota:
+### Config file
 # put in your repository/conf
 # the file 'config'
 # with for instance:
@@ -14,6 +14,15 @@
 # *.bat = svn:keywords=Author Date ID Revision
 # *.sh = svn:keywords=Author Date ID Revision
 # *.bm = svn:keywords=Author Date ID Revision
+#
+### install hook
+# in pre-commit  hook 
+# REPOS="$1"
+# TXN="$2"
+# /usr/bin/python /path-to/checkprops.py $REPOS $TXN >> /tmp/svnlog || exit 1 
+#
+# exit 0
+###
 
 from ConfigParser import ConfigParser
 from fnmatch import fnmatch
