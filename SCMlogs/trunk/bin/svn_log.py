@@ -4,14 +4,13 @@
 # 			from the cvs 1.11 distribution
 #
 # 
-# /usr/bin/python /home/jfiat/public_html/Berlios/djocewebtools/SCMLogs/bin/svn_log.py -rev $REV -repo $REPOS -l /home/jfiat/svndir/LOGS/commits.txt
+# /usr/bin/python /home/jfiat/public_html/Berlios/djocewebtools/SCMLogs/bin/svn_log.py -rev $REV -svnrepo $REPOS -l /home/jfiat/svndir/LOGS/commits.txt
 #
-# Usage:  log.py [-u user] [-i cvsinfo] [-s] -f logfile 
+# Usage:  svn_log.py -rev revision -svnrepo path -l logfile 
 #
-#	-u user		- $USER passed from loginfo
-#	--svn-repo=
-#	-s			- to prevent "cvs status -v" messages
-#	-f logfile	- for the logfile to append to
+#	-rev revision
+#	-svnrepo repository_path
+#	-l logfile	- for the logfile to append to
 #
 #
 # here is what the output looks like:
@@ -40,70 +39,69 @@ import string;
 import subprocess;
 from time import strftime, localtime, time;
 
+
 def usage ():
 	return """
-Usage:  svn_log.py [-u user] [-i cvsinfo] [-s] -l logfile 
-
-	-u user		- $USER passed from loginfo
-	-i cvsinfo	- to pass the %{sVv} information : file,old,new .
-	-s			- to prevent "cvs status -v" messages
-	-f logfile	- for the logfile to append to
+Usage:  svn_log.py -rev revision -svnrepo path -l logfile 
+	-rev revision   - revision
+	-svnrepo path 	- repository path
+	-l logfile	    - for the logfile to append to
 """
 
 def output_of (cmd):
 	output = subprocess.Popen(string.split (cmd), stdout=subprocess.PIPE).communicate()[0]
 	return output[:-1]
 
-if __name__ == '__main__':
-	logfile = '';
-	revision = '';
-	repository = '';
-	argc = len (sys.argv) ;
-	i = 1;
+def proprocess_main():
+	svnlook_cmd = "svnlook"
+	logfile = ''
+	revision = ''
+	repository = ''
+	argc = len (sys.argv)
+	i = 1
 	while i < argc:
-		arg = sys.argv[i];
-		i = i + 1;
+		arg = sys.argv[i]
+		i = i + 1
 		if arg == '-rev' :
 			revision = sys.argv[i]
-			i = i + 1;
-		elif arg == '-repo' :
+			i = i + 1
+		elif arg == '-svnrepo' :
 			repository = sys.argv[i]
-			i = i + 1;
+			i = i + 1
 		elif arg == '-l' :
 			logfile = sys.argv[i]
-			i = i + 1;
+			i = i + 1
 		#else :
 			#nop
-			#print "? Ignored : [%s] ?" %(arg);
+			#print "? Ignored : [%s] ?" %(arg)
 
 	if logfile == '':
 		print "You must specify at least the logfile"
-		print usage ();
-		sys.exit ();
+		print usage ()
+		sys.exit ()
 
-	#date = strftime ("%A %B %d, %Y @ %H:%M:%S", localtime(time()))
 	### Let's get the message content (from CVS)
 	text = ''
-	text_dirchanged = output_of ("svnlook dirs-changed %s -r %s" %(repository, revision))
-	text_changed = output_of ("svnlook changed %s -r %s" %(repository, revision))
-	text_logs = output_of ("svnlook log %s -r %s" %(repository, revision))
 
-	login = output_of ("svnlook author %s -r %s" % (repository, revision))
+	#date = strftime ("%A %B %d, %Y @ %H:%M:%S", localtime(time()))
+	date = output_of ("%s date %s -r %s" % (svnlook_cmd, repository, revision))
+	text_dirchanged = output_of ("%s dirs-changed %s -r %s" %(svnlook_cmd, repository, revision))
+	text_changed = output_of ("%s changed %s -r %s" %(svnlook_cmd, repository, revision))
+	text_logs = output_of ("%s log %s -r %s" %(svnlook_cmd, repository, revision))
+	login = output_of ("%s author %s -r %s" % (svnlook_cmd, repository, revision))
 	if len (login) == 0:
 		login = os.environ['USER'] + "?"
-	date = output_of ("svnlook date %s -r %s" % (repository, revision))
-
 	text = "%s\n" 				% (text)
 
 	### Build the log text
 	text = "****************************************\n";
-	text = "%sDate:\t%s\n" 		% (text, date)
-	text = "%sAuthor:\t%s\n" 	% (text, login)
-	text = "%sRevision:\t%s\n" 	% (text, revision)
+	text = "%sDate:\t%s\n" 	 		% (text, date)
+	text = "%sAuthor:\t%s\n" 		% (text, login)
+	text = "%sRevision:\t%s\n" 		% (text, revision)
 	text = "%sDirChanged:%d\n%s\n" 	% (text, 1 + string.count (text_dirchanged,"\n"), text_dirchanged)
 	text = "%sChanged:%d\n%s\n" 	% (text, 1 + string.count (text_changed,"\n"), text_changed)
-	text = "%sLogs:%d\n%s\n" 	% (text, string.count (text_logs, "\n"), text_logs)
-	text = "%s\n" 				% (text)
+	text = "%sLogs:%d\n%s\n" 		% (text, string.count (text_logs, "\n"), text_logs)
+	text = "%s\n" 					% (text)
 
 	### Save the log text in the log file
 	z_logfile = open (logfile, 'a');
@@ -111,3 +109,6 @@ if __name__ == '__main__':
 	z_logfile.close ();
 
 	sys.exit();
+
+if __name__ == '__main__':
+	process_main()
