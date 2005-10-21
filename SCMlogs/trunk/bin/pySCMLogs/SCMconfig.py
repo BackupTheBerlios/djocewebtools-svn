@@ -33,12 +33,11 @@ class SCMconfig:
 		# Global
 		self.SCMlogs_appdir = self.option (cfg, "global", "SCMlogs_appdir")
 		self.SCMlogs_appurl = self.remove_double_quotes (self.option (cfg, "global", "SCMlogs_appurl"))
-		if cfg.has_option ("global", "user_cfg_dir"):
-			self.user_cfg_dir = self.option (cfg, "global", "user_cfg_dir")
+		if cfg.has_option("global", "SCMlogs_datadir"):
+			self.data_dir = self.option (cfg, "global", "SCMlogs_datadir")
 		else:
-			self.user_cfg_dir = "%sdata" % (self.SCMlogs_appdir)
-		self.user_cfg_ext = self.option (cfg, "global", "user_cfg_extension")
-		self.user_pref_ext = self.option (cfg, "global", "user_pref_extension")
+			self.data_dir = "%sdata" % (self.SCMlogs_appdir)
+
 		# SCM mode
 		if len(repo) > 0:
 			if cfg.has_section (repo):
@@ -52,10 +51,24 @@ class SCMconfig:
 			if cfg.has_option("global", "SCM_default_repository"):
 				self.SCMrepository = self.option (cfg, "global", "SCM_default_repository")
 
-		self.SCMmode = self.option (cfg, self.SCMrepository, "mode")
-		self.repository_path = self.option (cfg, self.SCMrepository, "repository_path")
-		self.repository_name = self.option (cfg, self.SCMrepository, "repository_name")
-		self.logs_dir = self.option (cfg, self.SCMrepository, "logs_dir")
+		repo_section = "repo:%s" %(self.SCMrepository)
+		self.SCMmode = self.option (cfg, repo_section, "mode")
+		self.repository_path = self.option (cfg, repo_section, "repository_path")
+		self.repository_name = self.option (cfg, repo_section, "repository_name")
+		self.logs_dir = self.option (cfg, repo_section, "logs_dir")
+
+		# Users data
+		if cfg.has_section("users"):
+			if cfg.has_option("users", "cfg_extension"):
+				self.cfg_ext = self.option (cfg, "users", "cfg_extension")
+			if cfg.has_option("users", "pref_extension"):
+				self.pref_ext = self.option (cfg, "users", "pref_extension")
+		else:
+			self.cfg_ext = '.cfg';
+			self.pref_ext = '.pref';
+
+		self.cfg_dir = "%s/%s/%s/" % (self.data_dir, self.SCMmode, self.SCMrepository)
+
 		# Browsing
 		if cfg.has_option ("global", "browsing"):
 			self.browsing = self.option (cfg, "global", "browsing")

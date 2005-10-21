@@ -74,10 +74,10 @@ class UserProfile:
 			self.email = user + self.config.at_domain_name
 
 	def user_pref_filename (self, user):
-		return self.config.user_cfg_dir + user + self.config.user_pref_ext
+		return self.config.data_dir + user + self.config.pref_ext
 
 	def user_cfg_filename (self, user):
-		return self.config.user_cfg_dir + user + self.config.user_cfg_ext
+		return self.config.cfg_dir + user + self.config.cfg_ext
 
 	def set_values (self, line):
 		args = (re.split ('\=', line)); #[1:-1];
@@ -322,8 +322,8 @@ class SCMLogsApplication:
 				text, self.config.smtp_server)
 
 	def listOfUsers (self):
-		dir_list = os.listdir (self.config.user_cfg_dir)
-		regexp = "^([a-zA-Z\.]+)%s$" % (self.config.user_cfg_ext)
+		dir_list = os.listdir (self.config.cfg_dir)
+		regexp = "^([a-zA-Z\.]+)%s$" % (self.config.cfg_ext)
 		puser = re.compile (regexp);
 		users = []
 		for file in dir_list:

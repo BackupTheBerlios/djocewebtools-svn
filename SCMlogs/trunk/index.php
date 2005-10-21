@@ -16,6 +16,10 @@ include "inc/datamanager.inc";
 	$_GET = $HTTP_GET_VARS ;
 	$_COOKIE = $HTTP_COOKIE_VARS ;
 
+if (isset($_GET['repo'])) {
+	SCMLogs_set_repository_id ($_GET['repo']);
+}
+
 // Cookies
 	if (!isset($user) and isset($_POST['user'])) { $username = $_POST['user']; }
 	if (!isset($user) and isset($_GET['user'])) { $username = $_GET['user']; }

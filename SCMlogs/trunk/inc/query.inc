@@ -9,8 +9,7 @@ Function ExecuteCommand ($cmd) {
 }
 
 Function EmailLogsAction ($commitsfilename, $username, $filter, $only_user='', $only_tag='', $format='html') {
-	global $SCMLOGS;
-	$cmd = $SCMLOGS['sendlogs_cmd']." -f $commitsfilename -u $username -p $filter";
+	$cmd = SCMLogs_sendlogs_cmd()." -f $commitsfilename -u $username -p $filter";
 	$cmd .= " -mail -$format ";
 	ExecuteCommand ($cmd);
 	echo "EmailLogsAction  done...<BR>\n";
@@ -18,7 +17,6 @@ Function EmailLogsAction ($commitsfilename, $username, $filter, $only_user='', $
 }
 
 Function ShowRawLogsAction ($commitsfilename, $username='', $filter, $only_user='', $only_tag='', $format='text') {
-	global $SCMLOGS;
 	$cmd = "include $commitsfilename";
 	echo "<PRE>\n";
 	include $commitsfilename;
@@ -27,15 +25,13 @@ Function ShowRawLogsAction ($commitsfilename, $username='', $filter, $only_user=
 }
 
 Function ShowLogsAction ($commitsfilename, $username, $filter, $only_user='', $only_tag='', $format='html') {
-	global $SCMLOGS;
-	$cmd = $SCMLOGS['sendlogs_cmd']." -f $commitsfilename -u $username -p $filter -out -$format ";
+	$cmd = SCMLogs_sendlogs_cmd()." -f $commitsfilename -u $username -p $filter -out -$format ";
 	ExecuteCommand ($cmd);
 	return $cmd;
 }
 
 Function EmailMyLogsAction ($commitsfilename, $username, $filter, $only_user='', $only_tag='', $format='html') {
-	global $SCMLOGS;
-	$cmd = $SCMLOGS['sendlogs_cmd']." -f $commitsfilename -u $username -p $filter -only_user $username ";
+	$cmd = SCMLogs_sendlogs_cmd()." -f $commitsfilename -u $username -p $filter -only_user $username ";
 	$cmd .= " -mail -$format ";
 	ExecuteCommand ($cmd);
 	echo "EmailMyLogsAction done...<BR>\n";
@@ -43,15 +39,13 @@ Function EmailMyLogsAction ($commitsfilename, $username, $filter, $only_user='',
 }
 
 Function ShowMyLogsAction ($commitsfilename, $username, $filter, $only_user='', $only_tag='', $format='html') {
-	global $SCMLOGS;
-	$cmd = $SCMLOGS['sendlogs_cmd']." -f $commitsfilename -u $username -p $filter -only_user $username -out -$format";
+	$cmd = SCMLogs_sendlogs_cmd()." -f $commitsfilename -u $username -p $filter -only_user $username -out -$format";
 	ExecuteCommand ($cmd);
 	return $cmd;
 }
 
 Function EmailOnlyLogsForAction ($commitsfilename, $username, $filter, $only_user='', $only_tag='', $format='html') {
-	global $SCMLOGS;
-	$cmd = $SCMLOGS['sendlogs_cmd']." -f $commitsfilename -u $username -p $filter ";
+	$cmd = SCMLogs_sendlogs_cmd()." -f $commitsfilename -u $username -p $filter ";
 	if ($only_user != '') { $cmd .= " -only_user $only_user "; }
 	if ($only_tag  != '') { $cmd .= " -only_tag  $only_tag  "; }
 	$cmd .= " -mail -$format ";
@@ -60,8 +54,7 @@ Function EmailOnlyLogsForAction ($commitsfilename, $username, $filter, $only_use
 	return $cmd;
 }
 Function ShowOnlyLogsForAction ($commitsfilename, $username, $filter, $only_user='', $only_tag='', $format='html') {
-	global $SCMLOGS;
-	$cmd = $SCMLOGS['sendlogs_cmd']." -f $commitsfilename -u $username -p $filter ";
+	$cmd = SCMLogs_sendlogs_cmd()." -f $commitsfilename -u $username -p $filter ";
 	if ($only_user != '') { $cmd .= " -only_user $only_user "; }
 	if ($only_tag  != '') { $cmd .= " -only_tag  $only_tag  "; }
 	$cmd .= " -out -$format ";

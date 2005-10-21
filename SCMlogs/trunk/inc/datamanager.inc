@@ -7,11 +7,11 @@ if (! defined("_DATAMANAGER_")) { define ("_DATAMANAGER_", 1);
 
 	Function listOfUsers () {
 		global $SCMLOGS;
-		$filter = "[a-z_\.]*.cfg$";
+		$filter = "[a-z_\.]*.".$SCMLOGS['user.cfg.ext']."$";
 		$ls_result = listDirFilter ($SCMLOGS['datadir'], $filter);
 		$result = array();
 		while (list($key, $val) = each ($ls_result)) {
-			$result[] = substr ($val, 1 + strlen ($SCMLOGS['datadir']), - strlen (',cfg') );
+			$result[] = substr ($val, 1 + strlen ($SCMLOGS['datadir']), - strlen (','.$SCMLOGS['user.cfg.ext']) );
 		}
 		return $result;
 	}
@@ -40,26 +40,35 @@ if (! defined("_DATAMANAGER_")) { define ("_DATAMANAGER_", 1);
 
 	Function displayCurrentUserPref () {
 		global $SCMLOGS;
-		echo "<BR>AAA".$SCMLOGS['send_format']."BBB<BR>";
+		echo "<br>".$SCMLOGS['send_format']."<br>";
 		while (list($k, $v) = each ($SCMLOGS)) {
-			echo "<LI>$k = $v</LI>\n";
+			echo "<li>$k = $v</li>\n";
 		}
+	}
+
+	Function usersDataDirectory () {
+		global $SCMLOGS;
+		return $SCMLOGS['datadir'];
+	}
+	Function usersCfgDirectory () {
+		$dir = usersDataDirectory();
+		$dir .= SCMLogs_repository_mode().DIRECTORY_SEPARATOR;
+		$dir .= SCMLogs_repository_id() . DIRECTORY_SEPARATOR;
+		return $dir;
 	}
 	Function userPrefFilename ($user) {
 		global $SCMLOGS;
-		return $SCMLOGS['datadir']."/".$user.".pref";
+		return usersDataDirectory().DIRECTORY_SEPARATOR.$user.$SCMLOGS['user.pref.ext'];
 	}
 	Function userCfgDefaultFilename () {
-		global $SCMLOGS;
-		return $SCMLOGS['datadir']."/cfg.tpl";
+		return usersCfgDirectory().'pref.tpl';
 	}
 	Function userPrefDefaultFilename () {
-		global $SCMLOGS;
-		return $SCMLOGS['datadir']."/pref.tpl";
+		return usersDataDirectory().'pref.tpl';
 	}
 	Function userConfigFilename ($user) {
 		global $SCMLOGS;
-		return $SCMLOGS['datadir']."/".$user.".cfg";
+		return usersCfgDirectory().$user.$SCMLOGS['user.cfg.ext'];
 	}
 
 	Function userCfgDefaultText() {
