@@ -1,0 +1,10 @@
+[auto-props]
+#* = svn:keywords=Author Date ID Revision
+*.e = svn:keywords=Author Date ID Revision
+*.c = svn:keywords=Author Date ID Revision
+*.cpp = svn:keywords=Author Date ID Revision
+*.h = svn:keywords=Author Date ID Revision
+Make* = svn:keywords=Author Date ID Revision
+*.bat = svn:keywords=Author Date ID Revision
+*.sh = svn:keywords=Author Date ID Revision
+*.bm = svn:keywords=Author Date ID Revision
