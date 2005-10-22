@@ -29,6 +29,9 @@ class SCMconfig:
 	def remove_double_quotes (self, text):
 		return replace (text, '"', '')
 
+	def cfg_repo_section (self, repo):
+		return "repo:%s" % (repo)
+
 	def load_options (self, cfg, repo):
 		# Global
 		self.SCMlogs_appdir = self.option (cfg, "global", "SCMlogs_appdir")
@@ -40,7 +43,7 @@ class SCMconfig:
 
 		# SCM mode
 		if len(repo) > 0:
-			if cfg.has_section (repo):
+			if cfg.has_section (self.cfg_repo_section (repo)):
 				self.SCMrepository = repo
 			else:
 				self.error ("Repository id specified in argument [%s] is not valid\n" % (repo));
@@ -51,7 +54,7 @@ class SCMconfig:
 			if cfg.has_option("global", "SCM_default_repository"):
 				self.SCMrepository = self.option (cfg, "global", "SCM_default_repository")
 
-		repo_section = "repo:%s" %(self.SCMrepository)
+		repo_section = self.cfg_repo_section (self.SCMrepository)
 		self.SCMmode = self.option (cfg, repo_section, "mode")
 		self.repository_path = self.option (cfg, repo_section, "repository_path")
 		self.repository_name = self.option (cfg, repo_section, "repository_name")
