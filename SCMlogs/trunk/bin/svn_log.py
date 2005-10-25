@@ -36,7 +36,8 @@
 import os;
 import sys;
 import string;
-import subprocess;
+#import subprocess;
+import popen2;
 from time import strftime, localtime, time;
 
 
@@ -49,10 +50,12 @@ Usage:  svn_log.py -rev revision -svnrepo path -l logfile
 """
 
 def output_of (cmd):
-	output = subprocess.Popen(string.split (cmd), stdout=subprocess.PIPE).communicate()[0]
+	#output = subprocess.Popen(string.split (cmd), stdout=subprocess.PIPE).communicate()[0]
+	(std_output, std_input) = popen2.popen2(cmd);
+	output = std_output.read();
 	return output[:-1]
 
-def proprocess_main():
+def process_main():
 	svnlook_cmd = "svnlook"
 	logfile = ''
 	revision = ''
@@ -76,9 +79,10 @@ def proprocess_main():
 			#print "? Ignored : [%s] ?" %(arg)
 
 	if logfile == '':
-		print "You must specify at least the logfile"
-		print usage ()
-		sys.exit ()
+		sys.stderr.write ("You must specify at least the logfile\n")
+		sys.stderr.write (usage ())
+		sys.exit (2)
+	sys.stderr.write ("You must specify at least the logfile\n")
 
 	### Let's get the message content (from CVS)
 	text = ''

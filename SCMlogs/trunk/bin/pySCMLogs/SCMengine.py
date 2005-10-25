@@ -43,10 +43,9 @@ def sendMailToFromSubjectOfOn (z_to, z_from_name, z_from, z_mail, z_server) :
 	fromaddr = 'From: "' + z_from_name + '" <' + z_from + '>'
 	toaddrs = 'To: <' + z_to + '>'
 	msg = z_mail
-	print msg
-	#server = smtplib.SMTP(z_server)
-	#server.sendmail(fromaddr, toaddrs, msg)
-	#server.quit()
+	server = smtplib.SMTP(z_server)
+	server.sendmail(fromaddr, toaddrs, msg)
+	server.quit()
 
 def hrefNameFor (dir):
 	return replace (dir, "/", "_")
