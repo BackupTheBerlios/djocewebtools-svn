@@ -28,8 +28,8 @@
 			ob_end_clean();
 
 			$week_filename = weekFilename ($year, $week);
-
-			$DIS_SaveMessage .= "<BR><A HREF='$week_filename'>$week_filename</A><BR>\n";
+			$week_url = weekUrl ($year, $week);
+			$DIS_SaveMessage .= "<br><a href='$week_url'>$week_filename</a><br>\n";
 		} else {
 			switch ($op) {
 				case "SaveUrl" :
@@ -85,8 +85,8 @@
 
 				$DIS_SaveMessage .= ob_get_contents();
 				ob_end_clean();
-
-				$DIS_SaveMessage .= "<BR><A HREF='$week_filename'>$week_filename</A><BR>\n";
+				$week_url = weekUrl ($year, $week);
+				$DIS_SaveMessage .= "<br><a href='$week_url'>$week_filename</a><br>\n";
 			}
 		}
 	}
