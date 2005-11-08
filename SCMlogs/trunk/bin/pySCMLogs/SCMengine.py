@@ -367,7 +367,7 @@ class SCMLogsApplication:
 				is_selected = is_selected and log_obj.tag == self.only_tag
 			is_selected = is_selected and self.logDirectorySelected (log_obj, mydirectories)
 
-			is_selected = 1;#FIXME
+			#is_selected = 1;#FIXME
 
 			if is_selected:
 				if not dirs_listed.has_key (log_obj.directory):
