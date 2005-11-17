@@ -7,6 +7,7 @@ from time import *
 import sys
 import re
 import os
+import smtplib
 from string import split, replace, rstrip, strip
 from SCMconfig import SCMconfig
 
