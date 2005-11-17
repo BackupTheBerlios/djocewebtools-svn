@@ -45,12 +45,19 @@ class CvsLogEntry(SCMLogEntry):
 
 		message = mesg
 		if message:
-			(self.modified, tag) = self.getFilesAndTagFor ("Modified Files", message)
-			if tag: self.tag = tag
-			(self.added, tag) = self.getFilesAndTagFor ("Added Files", message)
-			if tag: self.tag = tag
-			(self.removed, tag) = self.getFilesAndTagFor ("Removed Files", message)
-			if tag: self.tag = tag
+			try:
+				(self.modified, tag) = self.getFilesAndTagFor ("Modified Files", message)
+				if tag: self.tag = tag
+				(self.added, tag) = self.getFilesAndTagFor ("Added Files", message)
+				if tag: self.tag = tag
+				(self.removed, tag) = self.getFilesAndTagFor ("Removed Files", message)
+				if tag: self.tag = tag
+			except:
+				self.modified = [];
+				self.added = [];
+				self.removed = [];
+				self.tag = "";
+				self.error_message = "Error: issue raised while processing this log:\n%s" % (message);
 
 	def repository (self, directory):
 		return directory[len(self.config.repository_path):]
@@ -60,7 +67,7 @@ class CvsLogEntry(SCMLogEntry):
 		tag = ''
 		msg_regexp = "^(.|\n)*%s:\s*\n((\s.+\n)+)" % (type);
 		pmsg = re.compile (msg_regexp);
-		result = pmsg.search (mesg,0)
+		result = pmsg.match (mesg,0)
 		if result:
 			text = result.group (2)
 			files_regexp = "^\s*Tag:\s+(.*)\s+((.|\n)*)$";

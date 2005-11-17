@@ -38,6 +38,8 @@ class SCMLogEntry:
 		self.modified_id = 'U';
 		self.removed_id = 'D';
 
+		self.error_message = '';
+
 	def webappUrlForBlameFileInDirectory (self, file, dir, r1=-1):
 		return self.webUrl_engine.urlBlameFile (file, dir, r1)
 
@@ -68,6 +70,8 @@ class SCMLogEntry:
 			result = "%s%s" % (result, self.list_to_text (self.added, "Added   ", offset, tab))
 		if self.removed:
 			result = "%s%s" % (result, self.list_to_text (self.removed, "Removed ", offset, tab))
+		if self.error_message:
+			result = "%s%s[ Error msg  ] %s\n"  %(result, offset, replace (self.error_message, "\n","\n"+offset+ tab + ": "));
 		result = "%s%s[ LogMessage ] %s\n"  %(result, offset, replace (self.logmessage, "\n","\n"+offset+ tab + ": "));
 		return result
 
@@ -109,6 +113,9 @@ class SCMLogEntry:
 		if self.removed:
 			result = "%s%s" % (result, self.list_to_html (self.removed_id, self.removed, "Removed", "removed"))
 		result = "%s\n"  %(result)
+		if self.error_message:
+			result = "%s<tr><td class=log >ErrorMessage</td><td colspan=3 class=logmessage>%s</td></tr>"  %(result, \
+					text_to_formated_html_escape (self.error_message));
 		result = "%s<tr><td class=log >LogMessage</td><td colspan=3 class=logmessage>%s</td></tr>"  %(result, \
 				text_to_formated_html_escape (self.logmessage));
 		return result
@@ -116,4 +123,3 @@ class SCMLogEntry:
 	def list_to_html (self, lst_id, lst, title, cssclass):
 		result = ""
 		return result
-
