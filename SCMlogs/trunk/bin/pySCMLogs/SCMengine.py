@@ -172,6 +172,9 @@ class SCMLogsApplication:
 			# Get config
 		self.load_config (self.opt_SCM_repo)
 
+		if len (self.logskey) > 0:
+			self.logsfile = self.commitsFileFor (self.logskey)
+
 		self.webUrlEngine = webAppEngine.webscmlogs(self.config.webapp_url, self.config.repository_name)
 		self.webUrlEngine.set_default_webapp (self.config.browsing);
 #		if self.config.browsing == 'websvn':
@@ -191,7 +194,6 @@ class SCMLogsApplication:
 			self.opt_cfg = param['config']
 		if param.has_key ('keyfile'): 
 			self.logskey = param ['keyfile']
-			self.logsfile = self.commitsFileFor (self.logskey)
 		elif param.has_key ('logfile'):
 			self.logsfile = param['logfile']
 		if param.has_key ('user'): 
@@ -217,7 +219,7 @@ class SCMLogsApplication:
 			self.opt_output = param['output']
 
 	def check_parameters (self):
-		if self.logsfile == '':
+		if self.logsfile == '' and self.logskey == '':
 			print "Usage: script (-k logskey |-f logfile) -u user {-p none or filterfile} -html -mail -only_user a_user -only_tag a_tag -mesg message \n"
 			sys.exit ();
 
@@ -229,7 +231,7 @@ class SCMLogsApplication:
 		if result:
 			l_year = result.group (1)
 			l_month = result.group (2)
-		return "%s/%s/%s/%s" % (config.logs_dir, l_year, l_month, key)
+		return "%s/%s/%s/%s" % (self.config.logs_dir, l_year, l_month, key)
 
 	def getLogsFrom (self,log):
 		return self.logs_factory.logs_from (log)
@@ -479,7 +481,7 @@ class SCMLogsApplication:
 				#print log_obj.directory + "   <BR>\n"
 				all_logs.extend (log_objs)
 			except:
-				error ("\n\n[!] Unable to create object for: \n%s\n" %(log) );
+				print ("\n\n[!] Unable to create object for: \n%s\n" %(log) );
 
 		if self.user != '':
 			self.processUser (self.user, self.opt_filter, self.opt_filter_fn, all_logs, self.logskey)
@@ -487,7 +489,10 @@ class SCMLogsApplication:
 			# For each user (thoses who have a .cfg file in the correct directory
 			# send an email regarding the directories affected.
 			for user in self.listOfUsers ():
-				self.processUser (user, 'profil', '', all_logs, self.logskey)
+				try:
+					self.processUser (user, 'profil', '', all_logs, self.logskey)
+				except:
+					print "Error while processing user [%s] \n" % (user)
 
 
 
