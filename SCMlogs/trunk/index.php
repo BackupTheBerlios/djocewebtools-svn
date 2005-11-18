@@ -26,6 +26,15 @@ global $SCMLOGS;
 	$_GET = $HTTP_GET_VARS ;
 	$_COOKIE = $HTTP_COOKIE_VARS ;
 
+/* Dirty hack for exiting */
+if (isset($_GET['op'])) {
+	if ($_GET['op'] == 'exit') {
+		$username = Null;
+		$_COOKIE['user'] = Null;
+		$_SESSION['user'] = Null;
+	}
+}
+
 if (isset($_GET['repo'])) {
 	$asked_repo = $_GET['repo'];
 } elseif (isset ($_SESSION['repo'])) {
