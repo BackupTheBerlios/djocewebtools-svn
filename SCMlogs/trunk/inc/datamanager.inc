@@ -8,10 +8,10 @@ if (! defined("_DATAMANAGER_")) { define ("_DATAMANAGER_", 1);
 	Function listOfUsers () {
 		global $SCMLOGS;
 		$filter = "[a-z_\.]*.".$SCMLOGS['user.cfg.ext']."$";
-		$ls_result = listDirFilter ($SCMLOGS['datadir'], $filter);
+		$ls_result = listDirFilter (usersCfgDirectory(), $filter);
 		$result = array();
 		while (list($key, $val) = each ($ls_result)) {
-			$result[] = substr ($val, 1 + strlen ($SCMLOGS['datadir']), - strlen (','.$SCMLOGS['user.cfg.ext']) );
+			$result[] = substr ($val, 1 + strlen (usersCfgDirectory()), +1 - strlen (','.$SCMLOGS['user.cfg.ext']) );
 		}
 		return $result;
 	}
@@ -58,13 +58,13 @@ if (! defined("_DATAMANAGER_")) { define ("_DATAMANAGER_", 1);
 	}
 	Function userPrefFilename ($user) {
 		global $SCMLOGS;
-		return usersDataDirectory().DIRECTORY_SEPARATOR.$user.$SCMLOGS['user.pref.ext'];
+		return usersCfgDirectory().$user.$SCMLOGS['user.pref.ext'];
 	}
 	Function userCfgDefaultFilename () {
 		return usersCfgDirectory().'pref.tpl';
 	}
 	Function userPrefDefaultFilename () {
-		return usersDataDirectory().'pref.tpl';
+		return usersCfgDirectory().'pref.tpl';
 	}
 	Function userConfigFilename ($user) {
 		global $SCMLOGS;
@@ -137,7 +137,7 @@ if (! defined("_DATAMANAGER_")) { define ("_DATAMANAGER_", 1);
 
 	Function allModules () {
 		global $SCMLOGS;
-		$all_cfg = ContentOfFile ($SCMLOGS['datadir']."/all.tpl");
+		$all_cfg = ContentOfFile (usersCfgDirectory()."all.tpl");
 		$lst = split ("\n", $all_cfg);
 		return convertSimpleModListToModRespList ($lst);
 	}
