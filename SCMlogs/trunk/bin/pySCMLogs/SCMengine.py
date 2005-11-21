@@ -470,7 +470,7 @@ class SCMLogsApplication:
 	def execute(self):
 		# Read the cvs log file
 		mylogsfile = open (self.logsfile, 'r');
-		mylogs = re.split ('\*'*40, mylogsfile.read());
+		mylogs = re.split ('-'*72, mylogsfile.read());
 		mylogsfile.close ();
 
 		# parse and create a list of Cvs logs objects.
@@ -481,7 +481,7 @@ class SCMLogsApplication:
 				#print log_obj.directory + "   <BR>\n"
 				all_logs.extend (log_objs)
 			except:
-				print ("\n\n[!] Unable to create object for: \n%s\n" %(log) );
+				print ("\n\n[!] Unable to create object for: \n<pre>[%s]</pre>\n" %(log) );
 
 		if self.user != '':
 			self.processUser (self.user, self.opt_filter, self.opt_filter_fn, all_logs, self.logskey)

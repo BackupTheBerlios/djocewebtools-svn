@@ -89,7 +89,7 @@ if __name__ == '__main__':
 	text = "%s\n" 				% (text)
 
 	### Build the log text
-	text = "****************************************\n";
+	text = "------------------------------------------------------------------------\n";
 	text = "%sDate:\t%s\n" 		% (text, date)
 	text = "%sAuthor:\t%s\n" 	% (text, login)
 	text = "%sInfo:\t%s\n" 		% (text, info)

@@ -98,7 +98,7 @@ def process_main():
 	text = "%s\n" 				% (text)
 
 	### Build the log text
-	text = "****************************************\n";
+	text = "------------------------------------------------------------------------\n"
 	text = "%sDate:\t%s\n" 	 		% (text, date)
 	text = "%sAuthor:\t%s\n" 		% (text, login)
 	text = "%sRevision:\t%s\n" 		% (text, revision)

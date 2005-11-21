@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 from SCMlog import * ;
+import string;
 
 class LogEntryDetails:
 	def __init__ (self, dir):
@@ -61,31 +62,78 @@ class SvnLogEntries:
 		self.revision = 0;
 
 	def load_log (self, log):
+		#print "<pre style='border: 1px solid blue;'>" + log + "</pre>"
+		if len(log) >4:
+			t = log[:len("Date:")+1].strip()
+			if t == "Date:":
+				self.load_normal_log (log)
+			else:
+				self.load_svnlog (log)
 
+	def load_svnlog (self, log):
+		#print "load_svnlog"
+		lines = string.split (log, "\n")
+		if len (lines) > 1:
+			details = string.split (lines[1], '|')
+			self.date = details[2].strip()
+			self.author = details[1].strip()
+			self.revision = atoi (details[0][1:].strip())
+
+			strNb = details[3]
+			s = string.split (strNb,' ', 2)[1]
+			try:
+				nb = string.atoi(s)
+			except:
+				nb = 1
+			# Get changed path
+			index = 3;
+			for line in lines[index:]:
+				t_line = line.strip()
+				if len(t_line) == 0:
+					break;
+				ch = t_line[0]
+				if ch == 'A':
+					self.append_added (strip(t_line[1:]))
+				elif ch == 'U' or ch =='M':
+					self.append_modified (strip(t_line[1:]))
+				elif ch == 'D':
+					self.append_removed (strip(t_line[1:]))
+				index = index + 1
+
+			# Get log message
+			index = index + 1
+			self.logmessage = ""
+			for line in lines[index:index + nb] :
+				self.logmessage = "%s%s\n" % (self.logmessage, line)
+
+	def load_normal_log (self, log):
 		### Analyse log
-		message = '';
-		tag = '';
+		#print "<pre style='border: 1px solid red;'>" + log + "</pre>"
 		loglines = (re.split ('\n', log))[1:-1];
 
-
+		message = '';
+		tag = '';
 		cursor = 0;
-		self.date = (loglines[cursor])[len("Date:	"):];
+		self.date = (loglines[cursor])[len("Date:"):].strip();
 		cursor = cursor + 1
-		self.author = (loglines[cursor])[len("Author:	"):];
+		self.author = (loglines[cursor])[len("Author:"):].strip();
 		if len (self.author) == 0:
 			self.author = "unknown"
 		cursor = cursor + 1
-		self.revision = atoi((loglines[cursor])[len("Revision:	"):])
+		line = loglines[cursor];
+		tmp = line[len("Revision:"):].strip()
+		self.revision = atoi(tmp)
 		cursor = cursor + 1
-		dirchanged_nb = atoi ((loglines[cursor])[len("DirChanged:"):])
-		cursor = cursor + 1
-		if dirchanged_nb > 0:
-			for i in range (1, dirchanged_nb + 1):
-				dir = loglines[cursor]
-				if dir[-1] == '/':
-					dir = dir[:-1]
-				self.directories[dir] = LogEntryDetails(dir)
-				cursor = cursor + 1
+		line = loglines[cursor];
+		if line[:len("DirChanged:")] == "DirChanged:":
+			dirchanged_nb = atoi ((loglines[cursor])[len("DirChanged:"):])
+			cursor = cursor + 1
+			if dirchanged_nb > 0:
+				for i in range (1, dirchanged_nb + 1):
+					self.add_dir (loglines[cursor])
+					cursor = cursor + 1
+		else:
+			cursor = cursor
 		changed_nb = atoi ((loglines[cursor])[len("Changed:"):])
 		cursor = cursor + 1
 #		print ">>> %s\n" % (loglines[cursor])
@@ -95,7 +143,7 @@ class SvnLogEntries:
 				ch = line[0]
 				if ch == 'A':
 					self.append_added (strip(line[1:]))
-				elif ch == 'U':
+				elif ch == 'U' or ch =='M':
 					self.append_modified (strip(line[1:]))
 				elif ch == 'D':
 					self.append_removed (strip(line[1:]))
@@ -115,7 +163,9 @@ class SvnLogEntries:
 	def to_logEntries(self):
 		result = [];
 		for d in self.directories:
+			#print "<pre>" + d + "</pre>"
 			o = SvnLogEntry(self.config, self.webUrl_engine)
+
 			o.date = self.date;
 			o.author = self.author;
 			o.revision = self.revision;
@@ -126,6 +176,7 @@ class SvnLogEntries:
 			o.removed = ldir.removed;
 			o.logmessage = self.logmessage;
 
+			#print "<pre>" + o.to_text() + "</pre>"
 			result.append (o)
 		return result
 
@@ -137,29 +188,34 @@ class SvnLogEntries:
 		f = os.path.basename (path)
 		return f
 
+	def add_dir (self, d):
+		dir = d
+		if dir[-1] == '/':
+			dir = dir[:-1]
+		self.directories[dir] = LogEntryDetails(dir)
+	def path_to_stripped_path (self, path):
+		p = path.split ('(')[0]
+		return strip (p)
 	def append_added (self, path):
-		p = strip (path);
+		p = self.path_to_stripped_path (path);
 		d = self.dirname_from (p)
-		if self.directories.has_key (d):
-			f = self.filename_from (p)
-			self.directories[d].added.append (f)
-#		else:
-#			print "error with %s :: %s" % (p, d)
+		if not self.directories.has_key (d):
+			self.add_dir(d)
+		f = self.filename_from (p)
+		self.directories[d].added.append (f)
 	def append_modified (self, path):
-		p = strip (path);
+		p = self.path_to_stripped_path (path);
 		d = self.dirname_from (p)
-		if self.directories.has_key (d):
-			f = self.filename_from (p)
-			self.directories[d].modified.append (f)
-#		else:
-#			print "error with %s :: %s" % (p, d)
+		if not self.directories.has_key (d):
+			self.add_dir(d)
+		f = self.filename_from (p)
+		self.directories[d].modified.append (f)
 	def append_removed (self, path):
-		p = strip (path);
+		p = self.path_to_stripped_path (path);
 		d = self.dirname_from (p)
-		if self.directories.has_key (d):
-			f = self.filename_from (p)
-			self.directories[d].removed.append (f)
-#		else:
-#			print "error with %s :: %s" % (p, d)
+		if not self.directories.has_key (d):
+			self.add_dir(d)
+		f = self.filename_from (p)
+		self.directories[d].removed.append (f)
 
 
