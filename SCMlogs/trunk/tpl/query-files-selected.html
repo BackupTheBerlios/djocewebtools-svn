@@ -1,29 +1,28 @@
-<TR>
-<TD class='subtitle' COLSPAN=1 >{VAR_ITEM_YEAR}</TD>
-<TD class='subtitle' style="text-align: right">
-<a href="" onClick="SetAllYearCheckBoxes('QueryForm','commitsmonthfiles[{VAR_ITEM_YEAR}]', true);return false">all</a>
-::
-<a href="#" onClick="SetAllYearCheckBoxes('QueryForm','commitsmonthfiles[{VAR_ITEM_YEAR}]', false);return false">none</a>
-<INPUT TYPE=hidden NAME="selected_years[]" VALUE="{VAR_ITEM_YEAR}">
-</TD>
-</TR>
+<script>
+StartYearFilesBlockControl({VAR_ITEM_YEAR},"y{VAR_ITEM_YEAR}",true);
+</script>
+<noscript>
+	<h1>{VAR_ITEM_YEAR}</h1>
+</noscript>
+<input type=hidden name="selected_years[]" value="{VAR_ITEM_YEAR}" />
 <!-- BEGIN ListMonthsBlock -->
-<TR>
-<TD colspan=1 class='inlist'><STRONG>{VAR_ITEM_MONTH}</STRONG></TD>
-<TD colspan=1 class='inlist' style="text-align: right">
-<a href="#" onClick="SetAllCheckBoxes('QueryForm','commitsmonthfiles[{VAR_ITEM_YEAR}][{VAR_ITEM_MONTH}][]', true);return false">all</a>
-::
-<a href="#" onClick="SetAllCheckBoxes('QueryForm','commitsmonthfiles[{VAR_ITEM_YEAR}][{VAR_ITEM_MONTH}][]', false);return false">none</a>
-</TD>
-</TR>
-<TR>
-	<TD class=text>&nbsp;&nbsp;&nbsp;</TD>
-	<TD class='text'>
-		<!-- BEGIN ListFilesBlock -->
-		<SPAN style="font-size: 70%; color: #6666cc;">week {VAR_FILE_ITEM_WEEK}</SPAN>
-		<INPUT TYPE=checkbox {VAR_FILE_CHECKED} NAME='commitsmonthfiles[{VAR_ITEM_YEAR}][{VAR_ITEM_MONTH}][]' VALUE='{VAR_FILE_KEY_ITEM}'>{VAR_FILE_NAME_ITEM}
-		- <SPAN style="font-size: 70%; color: #6666cc;">{VAR_FILE_ITEM_DAY}</SPAN><BR>
-		<!-- END ListFilesBlock -->
-	</TD>
-</TR>
+<script>
+StartYearMonthFilesBlockControl({VAR_ITEM_YEAR},{VAR_ITEM_MONTH},"ym{VAR_ITEM_YEAR}-{VAR_ITEM_MONTH}",true);
+</script>
+<noscript>
+	<h2>{VAR_ITEM_MONTH}</h2>
+</noscript>
+<div id="offset">
+	<!-- BEGIN ListFilesBlock -->
+	<span style="font-size: 70%; color: #6666cc;">week {VAR_FILE_ITEM_WEEK}</span>
+	<input type=checkbox {VAR_FILE_CHECKED} name='commitsmonthfiles[{VAR_ITEM_YEAR}][{VAR_ITEM_MONTH}][]' value='{VAR_FILE_KEY_ITEM}' />{VAR_FILE_NAME_ITEM}
+	- <span style="font-size: 70%; color: #6666cc;">{VAR_FILE_ITEM_DAY}</span><br>
+	<!-- END ListFilesBlock -->
+</div>
+<script>
+	EndBlockControl();
+</script>
 <!-- END ListMonthsBlock -->
+<script>
+	EndBlockControl();
+</script>

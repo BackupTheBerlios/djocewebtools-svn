@@ -2,18 +2,25 @@
   <!-- 
 function SetAllYearCheckBoxes(FormName, FieldName, CheckValue)
 {
-	SetAllCheckBoxes(FormName, FieldName + "[01][]", CheckValue);
-	SetAllCheckBoxes(FormName, FieldName + "[02][]", CheckValue);
-	SetAllCheckBoxes(FormName, FieldName + "[03][]", CheckValue);
-	SetAllCheckBoxes(FormName, FieldName + "[04][]", CheckValue);
-	SetAllCheckBoxes(FormName, FieldName + "[05][]", CheckValue);
-	SetAllCheckBoxes(FormName, FieldName + "[06][]", CheckValue);
-	SetAllCheckBoxes(FormName, FieldName + "[07][]", CheckValue);
-	SetAllCheckBoxes(FormName, FieldName + "[08][]", CheckValue);
-	SetAllCheckBoxes(FormName, FieldName + "[09][]", CheckValue);
-	SetAllCheckBoxes(FormName, FieldName + "[10][]", CheckValue);
-	SetAllCheckBoxes(FormName, FieldName + "[11][]", CheckValue);
-	SetAllCheckBoxes(FormName, FieldName + "[12][]", CheckValue);
+	for (m=1;m<=12;m=m+1) 
+	{
+		s = "" + m;
+		if (s.length == 1) { s = "0" + s; }
+		SetAllCheckBoxes(FormName, FieldName + "[" + s + "][]", CheckValue);
+	}
+}
+function SetAllYearCheckBoxesByCb(elt, FormName, FieldName, AllName)
+{
+	SetAllYearCheckBoxes(FormName, FieldName, elt.checked);
+	for (m=1;m<=12;m=m+1) 
+	{
+		SetAllCheckBoxes(FormName, AllName + "[" + m + "]",elt.checked);
+	}
+}
+function SetAllCheckBoxesByCb(elt, FormName, FieldName, AllName)
+{
+	SetAllCheckBoxes(FormName, FieldName, elt.checked);
+	SetAllCheckBoxes(FormName, AllName,false);
 }
 function SetAllCheckBoxes(FormName, FieldName, CheckValue)
 {
@@ -21,6 +28,7 @@ function SetAllCheckBoxes(FormName, FieldName, CheckValue)
 		return;
 	var objCheckBoxes = document.forms[FormName].elements[FieldName];
 	if(!objCheckBoxes)
+		//alert(FieldName + " : no checkbox");
 		return;
 	var countCheckBoxes = objCheckBoxes.length;
 	if(!countCheckBoxes)
@@ -68,18 +76,55 @@ function blocking(nr)
 	}
 }
 
+function StartYearFilesBlockControl(year,id,expanded)
+{
+	var t_open = year;
+	var t_close = year;
+	var bl_id= BC_BlockId(id);
+	var fOpen = BC_BlockControlIsOpened(bl_id, expanded);
+	document.write('<h1>');
+
+	document.write('<span>');
+	document.write ('<input type="checkbox" name="All['+year+']" onClick="SetAllYearCheckBoxesByCb(this,\'QueryForm\',\'commitsmonthfiles['+year+']\',\'All['+year+']\');return true;" />');
+	document.write('</span>');
+	document.write(' <a href="#" onclick="BC_BlockToggle(\'' + bl_id + '\',this,\'' + t_open + '\',\''+ t_close + '\');return true;" class="_block_control" >');
+	document.write(fOpen ? t_close : t_open);
+	document.write('</a>');
+	document.write('</h1>');
+	document.write('<div id="' + bl_id + '" style="display: ' + (fOpen ? 'block' : 'none') + '">');
+	return true;
+}
+
+function StartYearMonthFilesBlockControl(year,month,id,expanded)
+{
+	var t_open = month;
+	var t_close = month;
+	var bl_id= BC_BlockId(id);
+	var fOpen = BC_BlockControlIsOpened(bl_id, expanded);
+	document.write('<h2>');
+	document.write('<span>');
+	document.write ('<input type="checkbox" name="All['+year+']['+month+']" onClick="SetAllCheckBoxesByCb(this,\'QueryForm\',\'commitsmonthfiles['+year+']['+month+'][]\', \'All['+year+']\' );return true;" />');
+	document.write('</span>');
+	document.write(' <a href="#" onclick="BC_BlockToggle(\'' + bl_id + '\',this,\'' + t_open + '\',\''+ t_close + '\');return true;" class="_block_control" >');
+	document.write(fOpen ? t_close : t_open);
+	document.write('</a>');
+	document.write('</h2>');
+	document.write('<div id="' + bl_id + '" style="display: ' + (fOpen ? 'block' : 'none') + '">');
+	return true;
+}
+
 // -->
 </script>
 
-<FORM ACTION="show.php?user={VAR_USER}" NAME="QueryForm" METHOD="POST">
-<TABLE border=0 cellpadding=10 cellspacing=5 >
-<TR>
-<TD class=text>
+<form action="show.php?user={VAR_USER}" name="QueryForm" method="POST">
+<table border=0 cellpadding=10 cellspacing=5 >
+<tr>
+<td>
 {VAR_PAGE_COMMITS_FILES}
-</TD>
-<TD class=form>
+</td>
+<td class=form>
 {VAR_PAGE_COMMANDS}
-</TD>
-</TR>
-</TABLE>
-</FORM>
+</td>
+</tr>
+</table>
+</form>

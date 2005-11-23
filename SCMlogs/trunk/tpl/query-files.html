@@ -1,12 +1,8 @@
-<TABLE border=0 cellpadding='5' cellspacing='5' >
-<TR>
-	<TD class='subtitle' COLSPAN=2 >Current log file</TD>
-</TR>
-<TR>
-	<TD class=text>&nbsp;&nbsp;&nbsp;</TD>
-	<TD class='text'>
-		<INPUT TYPE=checkbox {VAR_CURRENT_FILE_CHECKED} NAME='commitsmonthfiles[0][0][]' VALUE='{VAR_CURRENT_COMMITS_FILENAME}'>Current commit file
-	</TD>
-</TR>
+<div id="queryfiles">
+<h1>Current log file</h1>
+<div id="offset">
+	<input type="checkbox" {VAR_CURRENT_FILE_CHECKED} name="commitsmonthfiles[0][0][]" value="{VAR_CURRENT_COMMITS_FILENAME}" />Current commit file
+</div>
+
 {VAR_PAGE_YEAR}
-</TABLE>
+</div>
