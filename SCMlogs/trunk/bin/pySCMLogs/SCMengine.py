@@ -470,7 +470,9 @@ class SCMLogsApplication:
 	def execute(self):
 		# Read the cvs log file
 		mylogsfile = open (self.logsfile, 'r');
-		mylogs = re.split ('-'*72, mylogsfile.read());
+		reg = '^[-|\*]{40,}$'
+		p = re.compile(reg, re.MULTILINE)
+		mylogs = p.split (mylogsfile.read());
 		mylogsfile.close ();
 
 		# parse and create a list of Cvs logs objects.
