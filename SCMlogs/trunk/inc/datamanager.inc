@@ -61,7 +61,7 @@ if (! defined("_DATAMANAGER_")) { define ("_DATAMANAGER_", 1);
 		return usersCfgDirectory().$user.$SCMLOGS['user.pref.ext'];
 	}
 	Function userCfgDefaultFilename () {
-		return usersCfgDirectory().'pref.tpl';
+		return usersCfgDirectory().'cfg.tpl';
 	}
 	Function userPrefDefaultFilename () {
 		return usersCfgDirectory().'pref.tpl';
