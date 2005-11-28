@@ -147,18 +147,25 @@ class SvnLogEntries:
 					self.append_modified (strip(line[1:]))
 				elif ch == 'D':
 					self.append_removed (strip(line[1:]))
+				elif ch == '_':
+					if line[2] == 'M':
+						self.append_modified (strip(line[1:]))
 				cursor = cursor + 1
 
-		loglines_nb = atoi ((loglines[cursor])[len("Logs:"):])
+		loglines_nb = atoi ((loglines[cursor])[len("Logs:"):]) + 2
 		cursor = cursor + 1
-		logs = ""
-		if loglines_nb > 0:
-			for i in range (1, loglines_nb + 1):
-				line = loglines[cursor]
-				cursor = cursor + 1
-				self.logmessage = "%s%s\n" % (self.logmessage, line)
-			while self.logmessage[-1] == '\n':
+		for line in loglines[cursor:]:
+			loglines_nb = loglines_nb - 1
+			#print "#%d[%s]<br/>" % (loglines_nb, line)
+			cursor = cursor + 1
+			self.logmessage = "%s%s\n" % (self.logmessage, line)
+		if loglines_nb != 0:
+			print "Warning: Issue while processing logmessage: delta = %d <br/>" % (loglines_nb)
+		if len(self.logmessage) > 0:
+			rstrip(self.logmessage)
+			while self.logmessage[-1] == '\n' or self.logmessage[-1] == ' ':
 				self.logmessage = self.logmessage[:-1]
+				rstrip(self.logmessage)
 
 	def to_logEntries(self):
 		result = [];

@@ -286,6 +286,8 @@ class SCMLogsApplication:
 		else:
 			result = 0
 			log_dir = log.directory
+			if log_dir[0] == '/':
+				log_dir = log_dir[1:]
 			for dir in mydir:
 				#print "%s %s" % (dir, (log_dir)[:len(dir)])
 				result = result or (dir == (log_dir)[:len(dir)])
