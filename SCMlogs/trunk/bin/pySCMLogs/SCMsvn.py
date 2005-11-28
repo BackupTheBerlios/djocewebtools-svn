@@ -144,12 +144,17 @@ class SvnLogEntries:
 				if ch == 'A':
 					self.append_added (strip(line[1:]))
 				elif ch == 'U' or ch =='M':
-					self.append_modified (strip(line[1:]))
+					if line[2] == 'U':
+						# Files AND Prop changes
+						self.append_modified (strip(line[2:]))
+					else:
+						self.append_modified (strip(line[1:]))
 				elif ch == 'D':
 					self.append_removed (strip(line[1:]))
 				elif ch == '_':
-					if line[2] == 'M':
-						self.append_modified (strip(line[1:]))
+					# Property
+					if line[2] == 'U':
+						self.append_modified (strip(line[2:]))
 				cursor = cursor + 1
 
 		loglines_nb = atoi ((loglines[cursor])[len("Logs:"):]) + 2
