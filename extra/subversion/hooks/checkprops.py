@@ -27,8 +27,9 @@
 from ConfigParser import ConfigParser
 from fnmatch import fnmatch
 import sys,os
-from subprocess import Popen, PIPE
-from string import split
+#from subprocess import Popen, PIPE
+import popen2;
+from string import split, lower
 
 repos = sys.argv[1]
 trans = sys.argv[2]
@@ -36,50 +37,118 @@ trans = sys.argv[2]
 SVNLOOK = "/usr/bin/svnlook"
 CONFIG = "%s/conf/config" % repos
 
-config = ConfigParser()
-config.read(CONFIG)
-autoprops = dict(config.items("auto-props"))
-changes = os.popen("%s changed -t %s %s" % (SVNLOOK,trans,repos)).readlines()
+nb_of_failures_before_error = 5
+log_enabled = 0
+logfilename ="/home/svn/logs/checkprops.log"
+#logfile = None;
+#global log_enabled, logfile;
+if log_enabled:
+	try:
+		logfile = open (logfilename, 'a')
+	except:
+		sys.stderr.write ("Checkprops#: unexpected error: %s \n" %(sys.exc_info()[0]))
+		sys.stderr.write ("Checkprops#: unexpected error: %s \n" %(sys.exc_info()[1]))
+		sys.stderr.write ("Checkprops#: unexpected error: %s \n" %(sys.exc_info()[2]))
+		sys.stderr.write ("Checkprops: failed : [%s] is not writable\n" % (logfilename))
+		log_enabled = 0
+		sys.exit(1);
+
+def log_message(msg):
+	global log_enabled, logfile;
+	if log_enabled:
+		logfile.write (msg)
+		logfile.flush ()
 
 def checkPath(path,autoprops):
+  log_message ("checkPath: [%s]\n" % (path));
   #sys.stderr.write ("Checking autoprops on [%s] ...\n" % (path))
   okay = 1
   is_dir = (path[-1] == '/')
   for pattern in autoprops.keys():
+    #log_message("#Pattern [%s] \n" % (pattern))
     if fnmatch(path,pattern):
-      items = map( lambda rule: rule.split("="),autoprops[pattern].split(";"))
+      #log_message("#Match [%s ~ %s] \n" % (pattern, path))
+      items = autoprops[pattern]
       for item in items:
         propname = item[0]
+        log_message("#Propname [%s] \n" % (propname))
         if is_dir and propname == 'svn:keywords':
-          sys.stderr.write ("Skip checking %s on directory [%s] ...\n" % (propname, path))
+          log_message ("Skip checking %s on directory [%s] ...\n" % (propname, path))
         else:
-          expected = item[1]
+          expected = item[1] # already lower case
           cmd = "%s propget -t %s %s %s %s" % (SVNLOOK,trans,repos,propname,path)
-          propget = Popen(split (cmd), stdout=PIPE).stdout
-          #propget = os.popen(cmd)
-          propval = propget.read()
+          #propget = Popen(split (cmd), stdout=PIPE).stdout
+          #log_message("Launch command=%s \n" % (cmd))
+          (propget, prop_in) = popen2.popen2(cmd)
+          #log_message("Read output \n")
+          propval = lower(propget.read())
           status = propget.close()
+          prop_in.close()
+          #log_message("Finish command \n")
           if propval.find(expected) < 0:
             okay = 0
             #if not status:
-            sys.stderr.write("hook: Property value '%s=%s' not found on path '%s'\n" % (propname,expected,path))
+            sys.stderr.write("hook: Property value '%s=%s' not found (or not expected) on path '%s'\n" % (propname,expected,path))
+  log_message ("checkPath: [%s] done\n" % (path));
   return okay
 
-failures = 0
-for change in changes:
-  if change[0] == 'A':
-    path = change[4:].strip()
-    if not checkPath(path,autoprops):
-      sys.stderr.write("props not set correctly for %s\n" % path)
-      failures = 1
+try:
+	log_message ("checkprop: start\n");
 
-if failures:
-  hr = "\n" + "-" * 80 + "\n"
-  MESSAGE = 'ERROR: Set the auto-props in your subversion config file.'
-  MESSAGE = "%s\n%s" % (MESSAGE, 'Location(linux): $HOME/.subversion/config ')
-  MESSAGE = "%s\n%s" % (MESSAGE, 'Location(windows): $APPDATE\subversion\config \n  or in HKCU\\Software\\Tigris.org\\Subversion\\Config\\miscellany')
-  MESSAGE = "%s\n%s" % (MESSAGE, ':\t[auto-props]\n:\t* = svn:keywords=Author Date ID Revision')
-  MESSAGE = "%s\n%s" % (MESSAGE, 'Or for instance execute :\n  svn propset svn:keywords "Author Date ID Revision" ')
-  sys.stderr.write(hr + MESSAGE + hr)
-sys.exit(failures) 
+	config = ConfigParser()
+	config.read(CONFIG)
+	autoprops = dict(config.items("auto-props"))
+	for pattern in autoprops.keys():
+		s_props = autoprops[pattern]
+		props_items=[]
+		props = s_props.split(";")
+		for p in props:
+			s_pn = p.split("=")
+			if s_pn[0] == "svn:keywords":
+				s_pn[1] = lower (s_pn[1]);
+			props_items.append (s_pn)
+		autoprops[pattern] = props_items
+
+	failures = 0
+	cmd = "%s changed -t %s %s" % (SVNLOOK,trans,repos)
+	(cmd_out, cmd_in) = popen2.popen2(cmd)
+	changes = cmd_out.readlines()
+	cmd_out.close()
+	cmd_in.close()
+	for change in changes:
+	  if nb_of_failures_before_error > 0 and failures > nb_of_failures_before_error:
+	    break;
+	  if change[0] == 'A':
+	    path = change[4:].strip()
+	    if not checkPath(path,autoprops):
+	      sys.stderr.write("props not set correctly for %s\n" % path)
+	      failures = failures + 1
+	log_message ("checkprop: done\n");
+	if failures > 0:
+	  MESSAGE = "ERROR: %d failure(s) " %( failures )
+	  if nb_of_failures_before_error > 0 and failures > nb_of_failures_before_error:
+	    MESSAGE = "%s (or more)" % (MESSAGE)
+	  MESSAGE = "%s occurred during auto-props checking.\n" %(MESSAGE)
+	  USAGE = """%s Please set the auto-props in your subversion config file,
+  [auto-props]:  * = svn:keywords=Author Date Id Revision'
+  Location(linux): $HOME/.subversion/config '
+  Location(windows): $APPDATA\subversion\config
+    or in HKCU\\Software\\Tigris.org\\Subversion\\Config\\miscellany
+  Or you can execute: svn propset svn:keywords "Author Date Id Revision"
+
+For more details, visit http://www.ise/wiki/index.php/SubversionAtISE
+"""
+
+	  hr = "\n" + "-" * 80 + "\n"
+	  sys.stderr.write("%s%s%s%s" % (hr, MESSAGE, USAGE, hr)
+	if log_enabled: logfile.close()
+	sys.exit(failures) 
+except SystemExit:
+	sys.exit(failures) 
+except:
+	if log_enabled: logfile.close()
+	einfo = sys.exc_info()
+	sys.excepthook(einfo[0], einfo[1], einfo[2]);
+	sys.stderr.write ("\nCheckProp: Error occurred ... ask your system administrator \n")
+	sys.exit(-1) 
 
