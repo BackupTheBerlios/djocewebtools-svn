@@ -79,7 +79,7 @@ def checkPath(path,autoprops):
           cmd = "%s propget -t %s %s %s %s" % (SVNLOOK,trans,repos,propname,path)
           #propget = Popen(split (cmd), stdout=PIPE).stdout
           #log_message("Launch command=%s \n" % (cmd))
-          (propget, prop_in) = popen2.popen2(cmd)
+          (propget, prop_in) = popen2.popen4(cmd)
           #log_message("Read output \n")
           propval = lower(propget.read())
           status = propget.close()
@@ -88,12 +88,14 @@ def checkPath(path,autoprops):
           if propval.find(expected) < 0:
             okay = 0
             #if not status:
-            sys.stderr.write("hook: Property value '%s=%s' not found (or not expected) on path '%s'\n" % (propname,expected,path))
+            #sys.stderr.write("Property value '%s=%s' not found (or not expected) on path '%s'\n" % (propname,expected,path))
+            sys.stderr.write("Props '%s=%s' missing (or not expected)\n" % (propname,expected))
   log_message ("checkPath: [%s] done\n" % (path));
   return okay
 
 try:
 	log_message ("checkprop: start\n");
+	hr = "-" * 74 + "\n"
 
 	config = ConfigParser()
 	config.read(CONFIG)
@@ -116,31 +118,31 @@ try:
 	cmd_out.close()
 	cmd_in.close()
 	for change in changes:
-	  if nb_of_failures_before_error > 0 and failures > nb_of_failures_before_error:
-	    break;
 	  if change[0] == 'A':
 	    path = change[4:].strip()
 	    if not checkPath(path,autoprops):
-	      sys.stderr.write("props not set correctly for %s\n" % path)
+	      sys.stderr.write("Props issue on: %s\n" % path)
+	      sys.stderr.write(hr)
 	      failures = failures + 1
+	  if nb_of_failures_before_error > 0 and failures >= nb_of_failures_before_error:
+	    break;
 	log_message ("checkprop: done\n");
 	if failures > 0:
-	  MESSAGE = "ERROR: %d failure(s) " %( failures )
-	  if nb_of_failures_before_error > 0 and failures > nb_of_failures_before_error:
+	  MESSAGE = "! ERROR: %d failure(s) " %( failures )
+	  if nb_of_failures_before_error > 0 and failures >= nb_of_failures_before_error:
 	    MESSAGE = "%s (or more)" % (MESSAGE)
 	  MESSAGE = "%s occurred during auto-props checking.\n" %(MESSAGE)
-	  USAGE = """%s Please set the auto-props in your subversion config file,
-  [auto-props]:  * = svn:keywords=Author Date Id Revision'
-  Location(linux): $HOME/.subversion/config '
-  Location(windows): $APPDATA\subversion\config
-    or in HKCU\\Software\\Tigris.org\\Subversion\\Config\\miscellany
-  Or you can execute: svn propset svn:keywords "Author Date Id Revision"
-
-For more details, visit http://www.ise/wiki/index.php/SubversionAtISE
+	  USAGE = """! Please set the auto-props value in your subversion config file : 
+! Location(linux): $HOME/.subversion/config '
+! Location(windows): $APPDATA\subversion\config
+! or in HKCU\\Software\\Tigris.org\\Subversion\\Config\\miscellany
+! You can also execute: svn propset svn:keywords "Author Date Id Revision"
+! (use flag -R for recursive if needed)
+! 
+! For more details, visit http://www.ise/wiki/index.php/SubversionAtISE
 """
 
-	  hr = "\n" + "-" * 80 + "\n"
-	  sys.stderr.write("%s%s%s%s" % (hr, MESSAGE, USAGE, hr)
+	  sys.stderr.write("\n%s%s!\n%s%s" % (hr, MESSAGE, USAGE, hr))
 	if log_enabled: logfile.close()
 	sys.exit(failures) 
 except SystemExit:
