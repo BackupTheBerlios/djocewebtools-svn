@@ -49,14 +49,23 @@ Usage:  svn_log.py -rev revision -svnrepo path -l logfile
 	-l logfile	    - for the logfile to append to
 """
 
+def dprint (txt):
+	sys.stderr.write (txt)
+	#alogfile = open ("/tmp/svn_log.logs", 'a')
+	#alogfile.write (msg)
+	#alogfile.flush ()
+	#alogfile.close ()
+
 def output_of (cmd):
 	#output = subprocess.Popen(string.split (cmd), stdout=subprocess.PIPE).communicate()[0]
+	dprint ("Exec: " + cmd + "\n")
 	(std_output, std_input) = popen2.popen2(cmd);
 	output = std_output.read();
 	return output[:-1]
 
 def process_main():
-	svnlook_cmd = "svnlook"
+	dprint ("process_main() start \n")
+	svnlook_cmd = "/usr/bin/svnlook"
 	logfile = ''
 	revision = ''
 	repository = ''
@@ -78,11 +87,12 @@ def process_main():
 			#nop
 			#print "? Ignored : [%s] ?" %(arg)
 
+	dprint ("Building svn_log for repository=%s and revision=%s ...\n" % (repository, revision))
+
 	if logfile == '':
 		sys.stderr.write ("You must specify at least the logfile\n")
 		sys.stderr.write (usage ())
 		sys.exit (2)
-	sys.stderr.write ("You must specify at least the logfile\n")
 
 	### Let's get the message content (from CVS)
 	text = ''
@@ -112,7 +122,7 @@ def process_main():
 	z_logfile.write (text)
 	z_logfile.close ();
 
-	sys.exit();
 
 if __name__ == '__main__':
 	process_main()
+	sys.exit();
