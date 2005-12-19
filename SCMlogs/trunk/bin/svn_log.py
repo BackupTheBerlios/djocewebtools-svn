@@ -94,9 +94,6 @@ def process_main():
 		sys.stderr.write (usage ())
 		sys.exit (2)
 
-	### Let's get the message content (from CVS)
-	text = ''
-
 	#date = strftime ("%A %B %d, %Y @ %H:%M:%S", localtime(time()))
 	date = output_of ("%s date %s -r %s" % (svnlook_cmd, repository, revision))
 	text_dirchanged = output_of ("%s dirs-changed %s -r %s" %(svnlook_cmd, repository, revision))
@@ -105,7 +102,6 @@ def process_main():
 	login = output_of ("%s author %s -r %s" % (svnlook_cmd, repository, revision))
 	if len (login) == 0:
 		login = os.environ['USER'] + "?"
-	text = "%s\n" 				% (text)
 
 	### Build the log text
 	text = "------------------------------------------------------------------------\n"
