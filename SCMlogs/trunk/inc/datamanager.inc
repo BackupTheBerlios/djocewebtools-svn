@@ -2,8 +2,7 @@
 
 if (! defined("_DATAMANAGER_")) { define ("_DATAMANAGER_", 1);
 
-	require "conf/config.inc";
-	require "lib/file.inc";
+	require LIB_DIR."file.inc";
 
 	Function listOfUsers () {
 		global $SCMLOGS;
