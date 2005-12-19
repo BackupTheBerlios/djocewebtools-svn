@@ -1,11 +1,9 @@
 <?php
 ini_set ("session.use_trans_sid", 1);
+//ini_set('magic_quotes_runtime', 0);
+//ini_set('magic_quotes_gpc', 0);
 
 $this_url = $_SERVER['REQUEST_URI'];
-
-ini_set('magic_quotes_runtime', 0);
-ini_set('magic_quotes_gpc', 0);
-
 session_start();
 
 //echo "<pre>"; print_r ($_SERVER); echo "</pre>";
