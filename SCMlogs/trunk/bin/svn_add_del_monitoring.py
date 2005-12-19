@@ -34,7 +34,7 @@ superuser_email      = "webmaster" + at_domain_name
 def sendMailToFromSubjectOfOn (z_to_emails, z_from_name, z_from, z_mail, z_server) :
         fromaddr = 'From: "' + z_from_name + '" <' + z_from + '>'
         msg = z_mail
-        server = smtplib.SMTP(z_server, 5025)
+        server = smtplib.SMTP(z_server)
         for m in z_to_emails :
                 toaddrs = 'To: <' + m + '>'
                 server.sendmail(fromaddr, toaddrs, msg)
@@ -159,7 +159,7 @@ def process_main():
 			message_header = message_header +  "To: <%s>\n" % (to_emails_str)
 			if cc_emails_str != '':
 					message_header = message_header +  "Cc: %s\n" % (cc_emails_str)
-			message_header = message_header +  "Subject: [SCMlogs] %d added, %d deleted" % (len(additions), len(deletions))
+			message_header = message_header +  "Subject: [SCM:added=%d deleted=%d] %s\n" % (len(additions), len(deletions), date)
 			message_header = message_header +  "Organization: %s \n" % (organization_name)
 
 			message = "%s\n%s" % (message_header, text)
