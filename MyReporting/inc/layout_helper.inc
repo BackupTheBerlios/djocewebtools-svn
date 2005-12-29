@@ -61,7 +61,7 @@ function week_HTML_RADIO_SELECT ($year, $week, $fieldName, $formName) {
 
 	$result .= "<select name='$fieldName'>";
 	$i = 1;
-	while ($i < 53) {
+	while ($i <= 53) {
 		$result .= "<option value='$i' "; 
 		if ($i == $week) { 
 			$result .= " SELECTED ";
