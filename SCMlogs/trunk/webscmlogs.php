@@ -1,6 +1,7 @@
 <?php
 	// Classes
 
+
 class webappUrlEngine {
 	Function webappUrlEngine ($baseurl, $reponame) {
 		$this->baseurl = $baseurl;
@@ -111,29 +112,7 @@ class viewcvsUrlEngine extends webappUrlEngine {
 	}
 }
 
-	
-	// Conﬁg
-	
-	@$webapp = $_GET['webapp'];
-	if (!isset ($webapp)) {
-		$webapp = 'websvn';
-		$webapp = 'viewcvs';
-	}
-	
-	// Start operation
-	@$op = $_GET['op'];
-	@$reponame = $_GET['repname'];
-
-	switch ($webapp) {
-		case 'websvn':
-			$appUrlEngine = new websvnUrlEngine ("http://localhost:8000/~jfiat/websvn/trunk/", $reponame);
-			break;
-		case 'viewcvs':
-			$appUrlEngine = new viewcvsUrlEngine ("http://localhost:8000/cgi-bin/viewcvs.cgi/", $reponame);
-		default:
-			break;
-	}
-
+Function url_for_operation_on_browser ($op, $appUrlEngine){
 	switch ($op) {
 		case 'fileshow':
 		case 'fileblame':
@@ -169,9 +148,72 @@ class viewcvsUrlEngine extends webappUrlEngine {
 		default:
 			$url = $appUrlEngine->urlBrowser();
 			break;
+		}
+	return $url;
+}
+
+Function url_for_browser ($appUrlEngine){
+	//echo "<PRE>"; print_r ($_SERVER); echo "</PRE>";
+	return $_SERVER['REQUEST_URI'] . "&webapp=" . $appUrlEngine . "&remindwebapp=1";
+}
+
+	// Config
+	
+	$delay = 1;
+	$cookie_id = "scmlogs_webapp_cookie";
+
+	if (!isset ($_GET['webapp'])) {
+		if (isset ($_COOKIE[$cookie_id])) {
+			$cookie = $_COOKIE[$cookie_id];
+			@$webapp = $cookie['webapp'];
+			$delay = 1;
+		}
+	} else {
+		$delay = 0;
+		$webapp = $_GET['webapp'];
 	}
+	if (isset ($webapp)) {
+		if (isset ($_GET['remindwebapp'])) {
+			setcookie($cookie_id."[webapp]", $webapp, 
+				time() + 24 * 3600 * 7
+				);
+		}
+	} else {
+		$delay = 3;
+		$webapp = 'websvn';
+		$webapp = 'viewcvs';
+	}
+	
+	// Start operation
+	@$op = $_GET['op'];
+	@$reponame = $_GET['repname'];
+	$urlEngineIds = array ('websvn' => Null, 'viewcvs' => Null);
+	$urlEngineIds['websvn'] = new websvnUrlEngine ("http://www.ise/websvn/", $reponame);
+	$urlEngineIds['viewcvs'] = new viewcvsUrlEngine ("http://www.ise/viewcvs/", $reponame);
+	$appUrlEngine = $urlEngineIds[$webapp];
+	$url = url_for_operation_on_browser ($op, $appUrlEngine);
+	echo '<meta http-equiv="refresh" content="'.$delay.'; url='.$url.'">';
+	echo '<div style="text-align: center;">';
+	if ($delay > 0) {
+		echo 'In '.$delay.' seconds, you will be redirected to <br/>';
+	} else {
+		echo 'Redirected to <br/>';
+	}
+	echo '<a href="'.$url.'">"'.$url . '</a>';
+	echo '</div><br/>';
+
+	echo '<ul>';
+	foreach ($urlEngineIds as $ids => $eng) {
+		$url = url_for_browser ($ids);
+		//$url = url_for_operation_on_browser ($op, $urlEngineIds[$ids]);
+		echo '<li>Click to use  <a href="'.$url.'">'.$ids . '</a> ';
+		if ($ids == $webapp) { echo "(default)"; }
+		echo '</li>';
+	}
+	echo '</ul>';
 //	echo $url;
-	header ("Location: $url");
+	#header ("Location: $url");
+
 	exit;
 
 ?>
