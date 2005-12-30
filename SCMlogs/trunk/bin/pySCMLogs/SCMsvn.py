@@ -123,6 +123,7 @@ class SvnLogEntries:
 		line = loglines[cursor];
 		tmp = line[len("Revision:"):].strip()
 		self.revision = atoi(tmp)
+		#print "[[%d]]<br/>" % (self.revision);
 		cursor = cursor + 1
 		line = loglines[cursor];
 		if line[:len("DirChanged:")] == "DirChanged:":
@@ -168,9 +169,10 @@ class SvnLogEntries:
 			print "Warning: Issue while processing logmessage: delta = %d <br/>" % (loglines_nb)
 		if len(self.logmessage) > 0:
 			rstrip(self.logmessage)
-			while self.logmessage[-1] == '\n' or self.logmessage[-1] == ' ':
+			while len(self.logmessage) > 0 and (self.logmessage[-1] == '\n' or self.logmessage[-1] == ' '):
 				self.logmessage = self.logmessage[:-1]
 				rstrip(self.logmessage)
+		#print "[[%d]] completed<br/>" % (self.revision);
 
 	def to_logEntries(self):
 		result = [];

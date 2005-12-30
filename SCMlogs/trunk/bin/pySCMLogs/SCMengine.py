@@ -13,6 +13,7 @@ from SCMconfig import SCMconfig
 
 import SCMsvn
 import SCMcvs
+import SCMerr
 import webAppEngine
 
 
@@ -135,12 +136,21 @@ class SCMLogsFactory:
 		self.webUrl_engine = wurl
 
 	def logs_from (self, log):
-		if self.mode == 'cvs' :
-			o = SCMcvs.CvsLogEntry(self.config, self.webUrl_engine);
-		elif self.mode == 'svn':
-			o = SCMsvn.SvnLogEntries(self.config, self.webUrl_engine);
-		o.load_log (log)
-		return o.to_logEntries();
+		try:
+			if self.mode == 'cvs' :
+				o = SCMcvs.CvsLogEntry(self.config, self.webUrl_engine);
+			elif self.mode == 'svn':
+				o = SCMsvn.SvnLogEntries(self.config, self.webUrl_engine);
+			o.load_log (log)
+			return o.to_logEntries();
+		except:
+			print "Error occurred <br>"
+			print "[" 
+			print o
+			print "]<br>"
+			o = SCMerr.ErrLogEntry(self.config, self.webUrl_engine);
+			o.load_log (log)
+			return [o]
 
 class SCMLogsApplication:
 	def __init__(self, param, cfg=''):
@@ -365,12 +375,16 @@ class SCMLogsApplication:
 		dirs_listed = {}
 		for log_obj in all_logs:
 			is_selected = 1;
-			if (is_selected and self.only_user != ''):
-				is_selected = is_selected and log_obj.author == self.only_user
-			# FIXME ...
-			if (is_selected and self.only_tag != ''):
-				is_selected = is_selected and log_obj.tag == self.only_tag
-			is_selected = is_selected and self.logDirectorySelected (log_obj, mydirectories)
+			has_error = len (log_obj.error_message) > 0;
+			if has_error:
+				is_selected = 1
+			else:
+				if (is_selected and self.only_user != ''):
+					is_selected = is_selected and log_obj.author == self.only_user
+				# FIXME ...
+				if (is_selected and self.only_tag != ''):
+					is_selected = is_selected and log_obj.tag == self.only_tag
+				is_selected = is_selected and self.logDirectorySelected (log_obj, mydirectories)
 
 			#is_selected = 1;#FIXME
 

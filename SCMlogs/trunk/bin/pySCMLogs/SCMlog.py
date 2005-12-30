@@ -60,8 +60,10 @@ class SCMLogEntry:
 		offset = "  "
 		result = ""
 		result = "%s%s" % (result, offset +"_"*70+"\n");
-		result = "%s%s[ Author     ] %s\n"  %(result, offset, self.author);
-		result = "%s%s[ Date       ] %s\n"  %(result, offset, self.date);
+		if self.author:
+			result = "%s%s[ Author     ] %s\n"  %(result, offset, self.author);
+		if self.date:
+			result = "%s%s[ Date       ] %s\n"  %(result, offset, self.date);
 		result = "%s%s[ Directory  ] %s\n"  %(result, offset, self.directory);
 		result = "%s%s"  %(result, self.info_to_text (offset));
 		if self.modified:
@@ -72,7 +74,8 @@ class SCMLogEntry:
 			result = "%s%s" % (result, self.list_to_text (self.removed, "Removed ", offset, tab))
 		if self.error_message:
 			result = "%s%s[ Error msg  ] %s\n"  %(result, offset, replace (self.error_message, "\n","\n"+offset+ tab + ": "));
-		result = "%s%s[ LogMessage ] %s\n"  %(result, offset, replace (self.logmessage, "\n","\n"+offset+ tab + ": "));
+		if self.logmessage:
+			result = "%s%s[ LogMessage ] %s\n"  %(result, offset, replace (self.logmessage, "\n","\n"+offset+ tab + ": "));
 		return result
 
 	def list_to_text (self, lst, title, offset, tab):
@@ -90,19 +93,20 @@ class SCMLogEntry:
 
 	def to_html (self):
 		result = ""
-		result = "%s<tr><td class=date >Date</td>\
-				<td>%s</td>\
-				<td class=author >Author</td>\
-				<td>%s</td></tr>\n" \
-				%(result, self.date, self.author);
-
-		result = "%s<tr><td class=directory >Directory</td><td colspan=3>" % (result)
-		result = "%s<a href=\"%s\" target=\"_MyLogs_\" >%s</a>" % (result, \
-				self.webappUrlForListDirectory (self.directory, self.revision), self.directory);
-		if self.config.SCMmode == 'svn':
-			result = "%s (<a href=\"%s\" target=\"_MyLogs_\" >diff</a>)" % (result, \
-				self.webappUrlForDiffDirectory (self.directory, self.revision, self.revision - 1));
-		result = "%s</td></tr>\n"  %(result)
+		if self.author or self.date:
+			result = "%s<tr><td class=date >Date</td>\
+					<td>%s</td>\
+					<td class=author >Author</td>\
+					<td>%s</td></tr>\n" \
+					%(result, self.date, self.author);
+		if len(self.error_message) == 0:
+			result = "%s<tr><td class=directory >Directory</td><td colspan=3>" % (result)
+			result = "%s<a href=\"%s\" target=\"_MyLogs_\" >%s</a>" % (result, \
+					self.webappUrlForListDirectory (self.directory, self.revision), self.directory);
+			if self.config.SCMmode == 'svn':
+				result = "%s (<a href=\"%s\" target=\"_MyLogs_\" >diff</a>)" % (result, \
+					self.webappUrlForDiffDirectory (self.directory, self.revision, self.revision - 1));
+			result = "%s</td></tr>\n"  %(result)
 		result =  "%s%s"  %(result, self.info_to_html());
 
 		### Files and Co
@@ -116,8 +120,9 @@ class SCMLogEntry:
 		if self.error_message:
 			result = "%s<tr><td class=log >ErrorMessage</td><td colspan=3 class=logmessage>%s</td></tr>"  %(result, \
 					text_to_formated_html_escape (self.error_message));
-		result = "%s<tr><td class=log >LogMessage</td><td colspan=3 class=logmessage>%s</td></tr>"  %(result, \
-				text_to_formated_html_escape (self.logmessage));
+		if self.logmessage:
+			result = "%s<tr><td class=log >LogMessage</td><td colspan=3 class=logmessage>%s</td></tr>"  %(result, \
+					text_to_formated_html_escape (self.logmessage));
 		return result
 
 	def list_to_html (self, lst_id, lst, title, cssclass):
