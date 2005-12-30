@@ -23,13 +23,12 @@ import popen2;
 # Configuration
 debug_enabled = 0
 
-organization_name    = PLEASE FILL THIS STRING ""
-smtp_server          = PLEASE FILL THIS STRING ""
-at_domain_name       = PLEASE FILL THIS STRING "@domain.com"
-sender_name          = "SCMLogs"
+organization_name    = "Eiffel Software"
+smtp_server          = "smtp.ise"
+at_domain_name       = "@eiffel.com"
+sender_name          = "SCMLogs [ES]"
 sender_email         = "postmaster" + at_domain_name
-superuser_email      = "webmaster" + at_domain_name
-
+superuser_email      = "jfiat" + at_domain_name
 
 def sendMailToFromSubjectOfOn (z_to_emails, z_from_name, z_from, z_mail, z_server) :
         fromaddr = 'From: "' + z_from_name + '" <' + z_from + '>'
@@ -113,6 +112,7 @@ def process_main():
 			### Let's get the message content 
 			text = ''
 			date = output_of ("%s date %s -r %s" % (svnlook_cmd, repository, revision))
+			#short_date = date[:10]
 			text_logs = output_of ("%s log %s -r %s" %(svnlook_cmd, repository, revision))
 			login = output_of ("%s author %s -r %s" % (svnlook_cmd, repository, revision))
 			if len (login) == 0:
@@ -159,7 +159,7 @@ def process_main():
 			message_header = message_header +  "To: <%s>\n" % (to_emails_str)
 			if cc_emails_str != '':
 					message_header = message_header +  "Cc: %s\n" % (cc_emails_str)
-			message_header = message_header +  "Subject: [SCM:added=%d deleted=%d] %s\n" % (len(additions), len(deletions), date)
+			message_header = message_header +  "Subject: [SCM:added=%d deleted=%d] by %s on %s\n" % (len(additions), len(deletions), author, date)
 			message_header = message_header +  "Organization: %s \n" % (organization_name)
 
 			message = "%s\n%s" % (message_header, text)
