@@ -145,9 +145,6 @@ class SCMLogsFactory:
 			return o.to_logEntries();
 		except:
 			print "Error occurred <br>"
-			print "[" 
-			print o
-			print "]<br>"
 			o = SCMerr.ErrLogEntry(self.config, self.webUrl_engine);
 			o.load_log (log)
 			return [o]
@@ -168,14 +165,13 @@ class SCMLogsApplication:
 		self.opt_output_format = '';
 
 		self.opt_SCM_repo = '';
-
-		self.opt_output_format = '';
 		if len(cfg) == 0:
 			self.opt_cfg = 'SCMlogs.conf';
 		else:
 			self.opt_cfg = cfg;
 
 			# Get arguments
+		#print param
 		self.load_parameters(param)
 		self.check_parameters()
 
@@ -267,7 +263,7 @@ class SCMLogsApplication:
 		for d in list_keys:
 			logs = dirs_listed[d]
 			dirs_changed = "%s - %s :: (%d)\n" % (dirs_changed, d, len (logs) )
-			logs_text = "%s%s.:: DIRECTORY %s  --  %d change(s) \n%s" % (logs_text, separatorLog, d, len(logs), separatorLog);
+			logs_text = "%s%s.:: %s  --  %d change(s) \n%s" % (logs_text, separatorLog, d, len(logs), separatorLog);
 			for log in logs:
 				logs_text = "%s%s\n%s" % (logs_text, self.formatedTextLog (log), "")
 		logs_text = "%s\n" %(logs_text)
@@ -361,7 +357,7 @@ class SCMLogsApplication:
 			user_profile.load_directories(a_filter_fn)
 			mydirectories = user_profile.directories
 			
-		if self.opt_output_format != '':
+		if len (self.opt_output_format) > 0:
 			output_format = self.opt_output_format
 		else:
 			output_format = user_profile.format
@@ -397,7 +393,6 @@ class SCMLogsApplication:
 		#
 		# Build the mail text content regarding logs
 		#
-
 		(filtred_logs_text, dirs_changed) = self.formatedFilteredLogs (dirs_listed, output_format)
 
 		#

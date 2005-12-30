@@ -64,7 +64,8 @@ class SCMLogEntry:
 			result = "%s%s[ Author     ] %s\n"  %(result, offset, self.author);
 		if self.date:
 			result = "%s%s[ Date       ] %s\n"  %(result, offset, self.date);
-		result = "%s%s[ Directory  ] %s\n"  %(result, offset, self.directory);
+		if len(self.error_message) == 0:
+			result = "%s%s[ Directory  ] %s\n"  %(result, offset, self.directory);
 		result = "%s%s"  %(result, self.info_to_text (offset));
 		if self.modified:
 			result = "%s%s" % (result, self.list_to_text (self.modified, "Modified", offset, tab))
