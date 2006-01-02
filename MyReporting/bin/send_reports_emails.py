@@ -4,7 +4,6 @@ import string
 import os
 import sys
 import re
-import regsub
 from time import *
 
 # Configuration
@@ -26,7 +25,7 @@ def sendMailToFromSubjectOfOn (z_to, z_from_name, z_from, z_mail, z_server) :
 def ActiveUsers (z_reporters_file):
 	# Get the reporters file content as a list of lines
 	myfile = open (z_reporters_file, 'r');
-	reporters_lines = regsub.split (myfile.read(), "\n")
+	reporters_lines = re.split ("\n", myfile.read())
 	myfile.close ();
 
 	regexp = "^([a-zA-Z]+)\s*,\s*(.*)\s*,\s*(.*)\s*,\s*(.*)\s*,\s*(.*)\s*$"
