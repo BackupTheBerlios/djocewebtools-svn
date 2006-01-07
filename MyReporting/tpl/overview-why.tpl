@@ -1,8 +1,5 @@
-<TABLE bgcolor=White cellpadding=5 cellspacing=1 border='1' width="100%">
-<TR><TD width="20" /><TD /></TR>
-<TR><TD COLSPAN=2 class="subtitle">Reporting, Why ?</TD></TR>
-<TR><TD><A HREF="overview.php"><IMG SRC="img/quill.gif" border=0 ></A></TD>
-<TD>
+<div class="subtitle">Reporting, Why ?</div>
+<a class="leftimg" href="overview.php"><img src="img/quill.gif" border=0 ></a>
 Why should we report our activity ? This is common question, a few quick answers would be, 
 <UL>
 <LI>At the beginning, this is often seen as a waste of time, or just a borring task, but soon you'll get used to it, and this will help you in many ways.</LI>
@@ -18,10 +15,7 @@ Why should we report our activity ? This is common question, a few quick answers
 <LI>in a local team, this is very useful, and in the context of distributed team, this is essential for everyone to keep in touch with the company's life.</LI>
 <LI>This contribute to keep, and grow the company's knowlegde and each one's knowledge</LI>
 </UL>
-</TD></TR>
-<TR><TD COLSPAN=2 class="subtitle">Back to ...</TD></TR>
-<TR><TD><A HREF="overview.php"><IMG SRC="img/quill.gif" border=0 ></A></TD>
-<TD>
-Back to overview :: <A style="font-weight: bold; color: blue;" HREF="overview.php">[HERE]</A>.
-</TD></TR>
-</TABLE>
+
+<div class="subtitle">Back to ...</div>
+<a class="leftimg" href="overview.php"><img src="img/quill.gif" border=0 ></a>
+Back to overview :: <a style="font-weight: bold; color: blue;" href="overview.php">[HERE]</a>.

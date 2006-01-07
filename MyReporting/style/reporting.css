@@ -60,7 +60,8 @@ H3.old {
         color: #0033FF;
         margin-left : 25px;
 }
-TD.header, TABLE.header {
+
+div#header {
 	background-color: #003366;
 	color: #ffffff;
 	font-size: 18pt;
@@ -85,21 +86,28 @@ TD.field {
 	font-weight : bold;
 }
 TABLE.subframe {
-	background-color: #ffffff;
+	background-color: #ffffcc;
 }
-
 TD {
 	vertical-align: top;
 }
 DIV.apptitle {
-	color: #FFFFFF;
-	background-color: #bbccdd;
-	font-weight: bold;
+        font-size: smaller;
+        font-style: italic;
+	color: #009;
+        border-bottom: dotted 2px #00f;
+        margin: 0 0 10 0;
+        padding: 1 0 1 10;
 }
-TD.subtitle {
-	color: #000000;
-	background-color: #bbccee;
+div.subtitle {
+	clear: both;
+	color: #00c;
+	border-left: solid 6px #ccf;
+	border-bottom: solid 1px #009;
 	font-weight: bold;
+	padding-left: 10px;
+	margin-top: 10px;
+	margin-bottom: 10px;
 }
 TD.subcontent {
 	background-color: #ffffff;
@@ -107,13 +115,15 @@ TD.subcontent {
 }
 
 TD.menu {
-	background-color: #e0e0e0;
+	background-color: #eef;
+        border-right: dotted 1px #99c;
 	padding: 10px;
-	text-align: center;
+	text-align: left;
 }
 
 TD.main {
-	background-color: #eeeeee;
+        padding-left: 10px;
+	background-color: #fff;
 }
 
 FONT.selection {
@@ -150,6 +160,13 @@ INPUT.button {
 	font-size: 11px; font-family: Verdana, Arial, Helvetica, sans-serif;
 	border-style : ridge;
 }
-
-
-
+.leftimg {
+	float: left;
+	margin: 5px;
+}
+div#browseusers {
+	width: 100%;
+	padding: 20px; 
+	background-color: #ffeeaa;
+	border: solid #aaaaaa 1pt;
+}

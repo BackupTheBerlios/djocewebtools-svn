@@ -3,9 +3,9 @@
 <TABLE border='0' cellpadding=4 cellspacing=1 width='90%'>
 {foreach from=$ListYears key=yearKey item=yearItems}
 <TR>
-	<TD bgcolor='#ffffcc'>
+	<TD style="background-color: #fff; color: #900; text-align: right; padding-right: 5px;">
 	<strong>Reports {$yearKey}</strong></TD>
-	<TD style="" bgcolor='#ffffff'>
+	<TD style="background-color: #fff;">
 	{if $yearItems.weeks}
 		<TABLE WIDTH=100% BORDER=0 CELLPADDING=3 CELLSPACING=1 bgcolor=#dddddd>
 			<TR bgcolor=#eeeeee >
@@ -46,7 +46,7 @@
 <TABLE border='0' cellpadding=4 cellspacing=1 width='90%'>
 <TR>
 <TD>
-	<DIV width=100% style="padding: 20px; background-color: #ffffff; border: solid #aaaaaa 1pt;">
+	<DIV id="browseusers">
 	<DIV style="margin-left: 25px;">
 	Browse user's reports .... |
 {foreach from=$ListUsers key=kUser item=vUser}

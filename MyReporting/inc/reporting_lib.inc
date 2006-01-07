@@ -172,7 +172,7 @@ Function makeReportingWeekFileFor ($year, $week, $include_missing_reporter=True)
 
 		$smarty = new Smarty;
 		$smarty->template_dir = 'tpl'. DIRECTORY_SEPARATOR;
-		$smarty->compile_dir = $smarty->template_dir . '_compiled' . DIRECTORY_SEPARATOR;
+		$smarty->compile_dir = TMP_DIR . '_compiled' . DIRECTORY_SEPARATOR;
 
 		$smarty->assign("VAR_REPORTING_CSS_STYLE","../../../$stylesheet_viewer_src");
 		$smarty->assign("VAR_YEAR","$year");

@@ -55,6 +55,7 @@ function year_week_HTML_RADIO_SELECT ($year, $week, $yearFieldName, $weekFieldNa
 //-->
 </script>
 JS;
+	$result .= '<div id="week_selector">';
 	foreach (range ($year - 1, $year + 1) as $y) {
 		$result .= "<input type='radio' name='$yearFieldName' value='".$y."' ";
 		$result .= ' onclick="blockDivBox(\'_year'.$y.'\',true);';
@@ -70,7 +71,7 @@ JS;
 			$result .= $y;
 		}
 	}
-	$result .= '<div style="padding: 5px; border: dotted 1px #aaa;">';
+	$result .= '<div style="padding: 5px; border: dotted 1px #aaa; background-color: #fff;">';
 	foreach (range($year - 1, $year + 1) as $y) {
 		$result .= "\n";
 		$result .= '<div id="_year'.$y.'" ';
@@ -80,7 +81,7 @@ JS;
 		$result .= '</div>';
 	}
 	$result .= '</div>';
-
+	$result .= '</div>';
 	$result .= "<!-- end : year_week_HTML_RADIO_SELECT -->\n";
 	return $result;
 
