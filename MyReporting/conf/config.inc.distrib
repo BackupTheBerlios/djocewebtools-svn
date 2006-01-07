@@ -8,20 +8,22 @@ define ("__CONFIG_INC__", True);
 	define ('LIB_DIR', ROOT_DIR.'lib'.DIRECTORY_SEPARATOR);
 	define ('TPL_DIR', ROOT_DIR.'tpl'.DIRECTORY_SEPARATOR);
 	define ('DATA_DIR', ROOT_DIR.'data'.DIRECTORY_SEPARATOR);
+	define ('TMP_DIR', DATA_DIR.'tmp'.DIRECTORY_SEPARATOR);
 	define ('REPORT_DIR', DATA_DIR.'reports'.DIRECTORY_SEPARATOR);
 
 	define ('CSS_URL', 'style/');
 	define ('REPORT_URL', 'data/reports/');
 
-
 	// Location path of the MyReporting installation directory (on the web server)
-	$myreporting['dir'] = "/usr/local/www/MyReporting/";
+	//$myreporting['dir'] = "/usr/local/www/MyReporting/";
+	$myreporting['dir'] = realpath(ROOT_DIR);
 
 	// Specify the path for the Python executable
-	$send_reports_mail_script = "/usr/bin/python " . $myreporting['dir']."bin/send_reports_emails.py";
+	$send_reports_mail_script = "python " . $myreporting['dir']."bin/send_reports_emails.py";
 
 	// The url, can be relative or absolute 
-	$myreporting_url = "/MyReporting";
+	//$myreporting_url = "/MyReporting";
+	$myreporting_url = "../..";
 
 	// The admin's password
 	$myreporting['admin_passwd'] = 'admin!';
