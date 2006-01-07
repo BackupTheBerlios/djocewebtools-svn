@@ -6,9 +6,11 @@
 	include LIB_DIR."date.inc";
 
 
-	$year = value_from_POST_GET ('year', strftime ("%Y"));
+	$year = value_from_POST_GET ('year', currentYear());
 	$thisweek = value_from_POST_GET ('week', currentWeekNumber ());
 	$week = value_from_POST_GET ('week'.$year, $thisweek);
+//	echo "[Y=" . currentYear() . "]"; 
+//	echo "[W=" . currentWeekNumber() . "]"; 
 
 	if (isset($GLOBALS['username'])) { $username = $GLOBALS['username']; }
 	if (!isset ($username)) {

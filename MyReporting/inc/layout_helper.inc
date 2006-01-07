@@ -90,6 +90,7 @@ JS;
 function week_HTML_RADIO_SELECT ($year, $week, $fieldName, $formName) {
 	$listFieldName = $fieldName.$year;
 	$firstweeknb = firstWeekNumberOfYear ($year);
+	if ($firstweeknb == 0) { $firstweeknb = 1; }
 	$lastweeknb = lastWeekNumberOfYear ($year);
 	foreach (range ($week - 1, $week + 1) as $w) {
 		if ($w >= $firstweeknb and $w <= $lastweeknb) { 

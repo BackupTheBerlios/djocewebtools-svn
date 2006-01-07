@@ -24,19 +24,19 @@ Function lastDayOfWeek ($weeknumber, $year) {
 	return mktime (0,0,0,$month, $day + 6, $year);
 }
 
-Function firstDayOfWeekOn ($time) {
-	$month = strftime ("%m", $time);
-	$day = strftime ("%d", $time);
-	$year = strftime ("%Y", $time);
-	$wday = strftime ("%u", $time);
+Function firstDayOfWeekOn ($t) {
+	$month = strftime ("%m", $t);
+	$day = strftime ("%d", $t);
+	$year = strftime ("%Y", $t);
+	$wday = strftime ("%u", $t);
 	return strftime ("%B %d, %Y",mktime (0,0,0,$month, $day-$wday + 1 + 1, $year));
 }
 
-Function lastDayOfWeekOn ($time) {
-	$month = strftime ("%m", $time);
-	$day = strftime ("%d", $time);
-	$year = strftime ("%Y", $time);
-	$wday = strftime ("%u", $time);
+Function lastDayOfWeekOn ($t) {
+	$month = strftime ("%m", $t);
+	$day = strftime ("%d", $t);
+	$year = strftime ("%Y", $t);
+	$wday = strftime ("%u", $t);
 	return strftime ("%B %d, %Y",mktime (0,0,0,$month,$day+7-$wday + 1, $year));
 }
 
@@ -47,28 +47,47 @@ Function lastWeekNumberOfYear ($year) {
 	return weekNumberFor (mktime(0,0,0, 12, 31, $year));
 }
 
-Function weekNumberFor ($time) {
-        return 1 + strftime ("%W", $time);
+Function weekNumberFor ($t) {
+        return strftime ("%W", $t);
 }
 
 Function currentDay () {
-	return getdate ();
+	return getdate (currentTime());
 }
 
 Function currentWeekNumber () {
-	return weekNumberFor (time ());
+	$wn = weekNumberFor (currentTime ());
+	if ($wn == 0) {
+		return lastWeekNumberOfYear(realCurrentYear() - 1);
+	} else {
+		return $wn;
+	}
+}
+
+Function currentTime() {
+//	return mktime(12,0,0, 1, 1, 2006);
+	return time();
 }
 
 Function currentYear () {
-	return strftime ("%Y");
+	$t = currentTime();
+	$res = strftime ("%Y", $t);
+	$wn = weekNumberFor($t);
+	if ($wn == 0) {
+		$res = $res - 1;
+	}
+	return $res;
+}
+Function realCurrentYear () {
+	return strftime ("%Y", currentTime());
 }
 
 Function firstDayOfCurrentWeek () {
-	return firstDayOfWeekOn (time());
+	return firstDayOfWeekOn (currentTime());
 }
 
 Function lastDayOfCurrentWeek () {
-	return lastDayOfWeekOn (time());
+	return lastDayOfWeekOn (currentTime());
 }
 
 }
