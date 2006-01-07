@@ -35,11 +35,19 @@ Please select year : <BR>
 
 <BR>
 {foreach from=$ListUserReports key=kWeek item=vWeekfile}
+{php}
+	$week = $this->get_template_vars('kWeek');
+	$year = $this->get_template_vars('SelectedYear');
+	$user = $this->get_template_vars('SelectedUser');
+	$this->assign("VAR_USER_EDIT_REPORT", myreporting_edit_url ($user->login, $year, $week) );
+{/php}
+
 <DIV style="padding: 4px; text-align: left; background-color: #ffffff; border: solid 1pt #dddddd;">
-<A NAME="w{$kWeek}" ></A>
-<DIV style="padding: 4px; background-color: #eeeeff; font-weight: bold; border: solid 1px #dddddd;">
-<A style="font-size: 60%;" HREF="#TOP">[^]</A> Week {$kWeek}
-</DIV>
+<a name="w{$kWeek}" ></A>
+<div style="padding: 4px; background-color: #eeeeff; font-weight: bold; border: solid 1px #dddddd;">
+<a style="font-size: 60%;" HREF="#TOP">[^]</A> Week {$kWeek}
+<a href="{$VAR_USER_EDIT_REPORT}"><img src="{$VAR_REPORTING_URL}/img/small_image.gif" border=0 /></a>
+</div>
 <DIV style="margin-left: 20px">
 {$vWeekfile}
 </DIV>
