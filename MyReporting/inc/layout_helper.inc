@@ -92,16 +92,15 @@ function week_HTML_RADIO_SELECT ($year, $week, $fieldName, $formName) {
 	$lastweeknb = lastWeekNumberOfYear ($year);
 	foreach (range ($week - 1, $week + 1) as $w) {
 		if ($w >= $firstweeknb and $w <= $lastweeknb) { 
-			$this_week = $w; 
-			$result .= "<input CHECKED type='radio' name='week-selector' value='$this_week' ";
+			$result .= "<input type='radio' name='week$year-selector' value='$w' ";
+			if ($w == $week) { $result .= " CHECKED "; }
 			$result .= " onclick=\"";
-			$result .= "document.$formName.$listFieldName.options[".($this_week - 1)."].selected = true;";
-			//$result .= "document.$formName.$fieldName.value = $this_week;";
+			$result .= "document.$formName.$listFieldName.options[".($w - 1)."].selected = true;";
 			$result .= "\" />\n";
-			if ($this_week == $week) {
-				$result .= "<font class='selection'>".$this_week."</font>";
+			if ($w == $week) {
+				$result .= "<font class='selection'>".$w."</font>";
 			} else {
-				$result .= $this_week;
+				$result .= $w;
 			}
 		}
 	}
@@ -112,9 +111,7 @@ function week_HTML_RADIO_SELECT ($year, $week, $fieldName, $formName) {
 	$i = $firstweeknb;
 	while ($i <= $lastweeknb) {
 		$result .= '<option value="'.$i.'" '; 
-		if ($i == $week) { 
-			$result .= " SELECTED ";
-		}
+		if ($i == $week) { $result .= " SELECTED "; }
 		$result .= ">";
 		$result .= "[" . $year . "] ";
 		$result .= "Week $i ... ";
