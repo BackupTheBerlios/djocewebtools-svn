@@ -21,9 +21,8 @@
 	} else {
 		$smarty->assign("PageMainSrc","edit-post.tpl");
 		$smarty->assign("VAR_EDIT_USERNAME_HTML_SELECT", $DIS_PostUsername_HTML_SELECT);
-		$smarty->assign("VAR_EDIT_YEAR_HTML_3_RADIO", $DIS_PostYear_HTML_3_RADIO);
 		$smarty->assign("VAR_EDIT_CURRENT_WEEK_TEXT", $DIS_PostCurrent_Week_text);
-		$smarty->assign("VAR_EDIT_WEEK_HTML_RADIO_SELECT", $DIS_PostWeek_HTML_RADIO_SELECT);
+		$smarty->assign("VAR_EDIT_YEAR_WEEK_HTML_RADIO_SELECT", $DIS_PostYearWeek_HTML_RADIO_SELECT);
 		$smarty->assign("VAR_EDIT_CATEGORIES_CHECK_LIST", $DIS_PostCategories_HTML_CHECK_LIST);
 		if (isset ($DIS_PostWarning)) {
 			$smarty->assign("VAR_EDIT_WARNING", $DIS_PostWarning);

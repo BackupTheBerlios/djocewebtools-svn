@@ -7,7 +7,8 @@
 
 
 	$year = value_from_POST_GET ('year', strftime ("%Y"));
-	$week = value_from_POST_GET ('week', currentWeekNumber ());
+	$thisweek = value_from_POST_GET ('week', currentWeekNumber ());
+	$week = value_from_POST_GET ('week'.$year, $thisweek);
 
 	if (isset($GLOBALS['username'])) { $username = $GLOBALS['username']; }
 	if (!isset ($username)) {
@@ -15,7 +16,14 @@
 	}
 	if (strlen ($username) == 0) { unset ($username); }
 
-	$data_filled = ((isset($_POST['year']) && isset($_POST['week'])) || ((isset($_GET['year']) && isset($_GET['week'])))); // Except Username, this is a special case
+	$data_filled = false;
+	if (isset($_POST['year'])) {
+		$_y = $_POST['year'];
+		$data_filled = isset($_POST['week'.$_y]) || isset($_POST['week']);
+	} elseif (isset ($_GET['year'])) {
+		$_y = $_GET['year'];
+		$data_filled = isset($_GET['week'.$_y]) || isset($_GET['week']);
+	}
 	$go_for_editing = isset ($username) && $data_filled;
 
 	if ($go_for_editing) {
@@ -75,18 +83,20 @@
 		$users = $GLOBALS['reporting']['users'];
 		@$DIS_PostUsername_HTML_SELECT = userList_HTML_SELECT ('username', $users, 'Select your username', $username);
 
-		// Year
-		$DIS_PostYear_HTML_3_RADIO = number_HTML_3_RADIO ('year', $year);
-
-		// Week
-		$DIS_PostWeek_HTML_3_RADIO = number_HTML_3_RADIO ('week', $week);
+//		// Year
+//		$DIS_PostYear_HTML_3_RADIO = number_HTML_3_RADIO ('year', $year);
+//
+//		// Week
+//		$DIS_PostWeek_HTML_3_RADIO = number_HTML_3_RADIO ('week', $week);
 
 		$today = currentDay ();
 		$firstday_of_week = firstDayOfCurrentWeek ();
 		$lastday_of_week = lastDayOfCurrentWeek ();
-		$DIS_PostCurrent_Week_text = "<STRONG>".currentWeekNumber()."</STRONG> [".$firstday_of_week." - ".$lastday_of_week."]";
+		$DIS_PostCurrent_Week_text = "week <strong>#".currentWeekNumber()."</strong> [".$firstday_of_week." - ".$lastday_of_week."]";
 
-		$DIS_PostWeek_HTML_RADIO_SELECT = week_HTML_RADIO_SELECT ($year, $week, 'week', 'postreportingForm');
+		//$DIS_PostWeek_HTML_RADIO_SELECT = week_HTML_RADIO_SELECT ($year, $week, 'week', 'postreportingForm');
+
+		$DIS_PostYearWeek_HTML_RADIO_SELECT = year_week_HTML_RADIO_SELECT ($year, $week, 'year', 'week', 'postreportingForm');
 
 		$categories = $GLOBALS['reporting']["categories"];
 		$DIS_PostCategories_HTML_CHECK_LIST = categories_HTML_CHECK_LIST ($categories, 'cat_sel[]');

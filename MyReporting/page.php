@@ -27,10 +27,10 @@ ini_set('magic_quotes_gpc', 0);
 // Smarty
 	require_once SMARTY_DIR.'Smarty.class.php';
 	$smarty = new Smarty;
-	$smarty->template_dir = 'tpl'. DIRECTORY_SEPARATOR;
+	$smarty->template_dir = TPL_DIR;
 	$smarty->config_dir = $smarty->template_dir . '_config' . DIRECTORY_SEPARATOR;
-	$smarty->compile_dir = $smarty->template_dir . '_compiled' . DIRECTORY_SEPARATOR;
-	$smarty->cache_dir = $smarty->template_dir . '_cache' . DIRECTORY_SEPARATOR;
+	$smarty->compile_dir = TMP_DIR . '_compiled' . DIRECTORY_SEPARATOR;
+	$smarty->cache_dir = TMP_DIR . '_cache' . DIRECTORY_SEPARATOR;
 	if (False) {
 		$smarty->compile_check = true;
 		$smarty->debugging = true;

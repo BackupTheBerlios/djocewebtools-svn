@@ -32,41 +32,92 @@ function number_HTML_3_RADIO ($name, $number) {
 	return $result;
 }
 
+function year_week_HTML_RADIO_SELECT ($year, $week, $yearFieldName, $weekFieldName, $formName) {
+	$result = "<!-- start : year_week_HTML_RADIO_SELECT -->\n";
+	$result .= <<<JS
+<script type="text/javascript">
+<!--
+	function blockDivBox(nr,state)
+	{
+		var displayable;
+		if (document.getElementById)
+		{
+			document.getElementById(nr).style.display = state ? 'block' : 'none';
+		} else if (document.layers)
+		{
+			document.layers[nr].display = state ? 'block' : 'none';
+		}
+		else if (document.all)
+		{
+			document.all[nr].style.display = state ? 'block' : 'none';
+		}
+	}
+//-->
+</script>
+JS;
+	foreach (range ($year - 1, $year + 1) as $y) {
+		$result .= "<input type='radio' name='$yearFieldName' value='".$y."' ";
+		$result .= ' onclick="blockDivBox(\'_year'.$y.'\',true);';
+		foreach (range ($year - 1, $year + 1) as $i) {
+			if ($i != $y) { $result .= "blockDivBox('_year$i', false);"; }
+		}
+		$result .= '" ';
+		if ($y == $year) { $result .= " CHECKED "; }
+		$result .= "/>\n";
+		if ($y == $year) {
+			$result .= "<font class='selection'>".$y."</font>";
+		} else {
+			$result .= $y;
+		}
+	}
+	$result .= '<div style="padding: 5px; border: dotted 1px #aaa;">';
+	foreach (range($year - 1, $year + 1) as $y) {
+		$result .= "\n";
+		$result .= '<div id="_year'.$y.'" ';
+		if ($year != $y) { $result .= 'style="display: none;"'; }
+		$result .= '><Strong>Year '.$y.' : </strong>';
+		$result .= week_HTML_RADIO_SELECT ($y, $week, $weekFieldName, $formName);
+		$result .= '</div>';
+	}
+	$result .= '</div>';
+
+	$result .= "<!-- end : year_week_HTML_RADIO_SELECT -->\n";
+	return $result;
+
+}
+
 function week_HTML_RADIO_SELECT ($year, $week, $fieldName, $formName) {
-		// Previous Week
-	if ($week == 1) { 
-		$this_week = 52; 
-	} else {
-		$this_week = $week - 1;
+	$listFieldName = $fieldName.$year;
+	$firstweeknb = firstWeekNumberOfYear ($year);
+	$lastweeknb = lastWeekNumberOfYear ($year);
+	foreach (range ($week - 1, $week + 1) as $w) {
+		if ($w >= $firstweeknb and $w <= $lastweeknb) { 
+			$this_week = $w; 
+			$result .= "<input CHECKED type='radio' name='week-selector' value='$this_week' ";
+			$result .= " onclick=\"";
+			$result .= "document.$formName.$listFieldName.options[".($this_week - 1)."].selected = true;";
+			//$result .= "document.$formName.$fieldName.value = $this_week;";
+			$result .= "\" />\n";
+			if ($this_week == $week) {
+				$result .= "<font class='selection'>".$this_week."</font>";
+			} else {
+				$result .= $this_week;
+			}
+		}
 	}
-	$result = "<INPUT type='radio' name='week-selector' value='$this_week' onclick=\"document.$formName.$fieldName.options[".($this_week - 1)."].selected = true\"/>\n";
-	$result .= $this_week;
-
-		// Current Week
-	$this_week = $week ;
-	$result .= "<INPUT CHECKED type='radio' name='week-selector' value='$this_week' onclick=\"document.$formName.$fieldName.options[".($this_week - 1)."].selected = true\"/>\n";
-	$result .= "<FONT class='selection'>".($this_week)."</FONT>";
-
-		// Next Week
-	if ($week == 52) { 
-		$this_week = 1; 
-	} else {
-		$this_week = $week + 1;
-	}
-	$result .= "<INPUT type='radio' name='week-selector' value='$this_week' onclick=\"document.$formName.$fieldName.options[".($this_week - 1)."].selected = true\"/>\n";
-	$result .= $this_week;
-
-	$result .= "<BR>";
+	$result .= "<br/>";
 	// Choice
 
-	$result .= "<select name='$fieldName'>";
-	$i = 1;
-	while ($i <= 53) {
-		$result .= "<option value='$i' "; 
+	$result .= "<select name='$listFieldName'>";
+	$i = $firstweeknb;
+	while ($i <= $lastweeknb) {
+		$result .= '<option value="'.$i.'" '; 
 		if ($i == $week) { 
 			$result .= " SELECTED ";
 		}
-		$result .= ">Week $i ... ";
+		$result .= ">";
+		$result .= "[" . $year . "] ";
+		$result .= "Week $i ... ";
 		$result .= strftime ("%b %d", firstDayOfWeek ($i, $year));
 		$result .= " -- ";
 		$result .= strftime ("%b %d", lastDayOfWeek ($i, $year));
@@ -75,6 +126,7 @@ function week_HTML_RADIO_SELECT ($year, $week, $fieldName, $formName) {
 	}
 	$result .= "</select>\n";
 	$result .= " &lt;&lt; Real Week value for $year (monday to sunday)\n";
+//	$result .= '<br/><input type="text" name="'.$fieldName.'" value="toto" />';
 
 	return $result;
 }

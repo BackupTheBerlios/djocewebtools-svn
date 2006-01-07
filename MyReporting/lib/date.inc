@@ -40,6 +40,13 @@ Function lastDayOfWeekOn ($time) {
 	return strftime ("%B %d, %Y",mktime (0,0,0,$month,$day+7-$wday + 1, $year));
 }
 
+Function firstWeekNumberOfYear ($year) {
+	return weekNumberFor (mktime(0,0,0, 01, 01, $year));
+}
+Function lastWeekNumberOfYear ($year) {
+	return weekNumberFor (mktime(0,0,0, 12, 31, $year));
+}
+
 Function weekNumberFor ($time) {
         return 1 + strftime ("%W", $time);
 }
