@@ -8,6 +8,7 @@
 		$smarty->assign("VAR_SAVE_USERNAME", $DIS_Username);
 		$smarty->assign("VAR_SAVE_YEAR", $DIS_Year);
 		$smarty->assign("VAR_SAVE_WEEK", $DIS_Week);
+		$smarty->assign("VAR_SAVE_RELATED_DATE", $DIS_SaveRelatedDate);
 
 		$smarty->assign("VAR_SAVE_PREVIEW", $DIS_PreviewText);
 		$DIS_PreviewText = ereg_replace("&", "&amp;",$DIS_PreviewText);

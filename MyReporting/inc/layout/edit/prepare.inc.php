@@ -31,6 +31,14 @@
 		$DIS_EditUsername = $username;
 		$DIS_EditWeek = "$week";
 		$DIS_EditYear = "$year";
+
+		$DIS_EditRelatedDate = "";
+		$DIS_EditRelatedDate .= "Week $week : ";
+		$DIS_EditRelatedDate .= strftime ("%b %d", firstDayOfWeek ($week, $year));
+		$DIS_EditRelatedDate .= " -- ";
+		$DIS_EditRelatedDate .= strftime ("%b %d", lastDayOfWeek ($week, $year));
+		$DIS_EditRelatedDate .= " of " . $year;
+
 		$DIS_EditReportingText = "";
 		$already_exists = False;
 		$is_read_only = False;

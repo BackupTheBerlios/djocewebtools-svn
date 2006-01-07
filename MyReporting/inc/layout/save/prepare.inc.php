@@ -13,6 +13,7 @@
 	$op = value_from_POST('op');
 	if (isset($op)) { 
 
+
 //		echo "<BR>###".$op."###<BR>";
 		$has_confirmation = ($op == "Confirmation");
 
@@ -56,6 +57,13 @@
 			$DIS_Year = $year;
 			$DIS_Week = $week;
 			$DIS_PreviewText = $report_content;
+
+			$DIS_SaveRelatedDate = "";
+			$DIS_SaveRelatedDate .= "Week $week : ";
+			$DIS_SaveRelatedDate .= strftime ("%b %d", firstDayOfWeek ($week, $year));
+			$DIS_SaveRelatedDate .= " -- ";
+			$DIS_SaveRelatedDate .= strftime ("%b %d", lastDayOfWeek ($week, $year));
+			$DIS_SaveRelatedDate .= " of " . $year;
 
 			if (strlen($report_content) == 0) {
 				$DIS_SaveMessage = "ERROR ... the content of your report is empty.<BR>";

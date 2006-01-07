@@ -1,4 +1,6 @@
-Confirmation :
+<div class="question">
+Do you confirm this report for {$VAR_SAVE_RELATED_DATE} ?
+</div>
 
 <FORM ACTION="save.php" METHOD="POST">
 <DIV style="margin-left: 10pt">

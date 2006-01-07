@@ -19,22 +19,23 @@ var tinyMCEmode = true;
 <!-- /tinyMCE -->
 {/literal}
 <FORM action='save.php' method='POST' ENCTYPE='multipart/form-data' NAME='editreportform' >
-<TABLE border=0 width='100%' bgcolor='#ffffdd' >
-<TR><TD>
-	<TABLE border=0>
-	<TR><TD>UserName</TD><TD><INPUT type='text' name='username' value='{$VAR_EDIT_USERNAME}'/></TD></TR>
-	</TABLE>
-</TD><TD>&nbsp;</TD>
-<TD>
-	<TABLE>
-	<TR><TD>WeekNumber</TD><TD><INPUT type='text' name='week' value='{$VAR_EDIT_WEEK}'/></TD></TR>
-	<TR><TD>YearNumber</TD><TD><INPUT type='text' name='year' value='{$VAR_EDIT_YEAR}'/></TD></TR>
-	</TABLE>
-</TD></TR>
-<TR><TD colspan=3 style="color: red; font-weight: bold; background-color: #ffff66;">
+<table border=0 width='100%' bgcolor='#ffffdd' >
+<tr><td>
+	<table border=0>
+	<tr><td>UserName</td><td><input type='text' name='username' value='{$VAR_EDIT_USERNAME}'/></td></tr>
+	<tr><td>Related date</td><td><strong>{$VAR_EDIT_RELATED_DATE}</strong></td></tr>
+	</table>
+</td><td>&nbsp;</td>
+<td>
+	<table>
+	<tr><td>WeekNumber</td><td><input type='text' name='week' value='{$VAR_EDIT_WEEK}'/></td></tr>
+	<tr><td>YearNumber</td><td><input type='text' name='year' value='{$VAR_EDIT_YEAR}'/></td></tr>
+	</table>
+</td></tr>
+<tr><td colspan=3 style="color: red; font-weight: bold; background-color: #ffff66;">
 {$VAR_EDIT_MESSAGE}
-</TD></TR>
-</TABLE>
+</td></tr>
+</table>
 
 {if isset ($VAR_EDIT_READ_ONLY)}
 {else}

@@ -12,6 +12,7 @@
 		}
 		$smarty->assign("VAR_EDIT_MESSAGE", $DIS_EditMessage);
 		$smarty->assign("VAR_EDIT_USERNAME", $DIS_EditUsername);
+		$smarty->assign("VAR_EDIT_RELATED_DATE", $DIS_EditRelatedDate);
 		$smarty->assign("VAR_EDIT_WEEK", $DIS_EditWeek);
 		$smarty->assign("VAR_EDIT_YEAR", $DIS_EditYear);
 		if (isset ($DIS_EditReportingText)) {
