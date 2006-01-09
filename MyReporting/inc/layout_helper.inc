@@ -89,11 +89,9 @@ JS;
 
 function week_HTML_RADIO_SELECT ($year, $week, $fieldName, $formName) {
 	$listFieldName = $fieldName.$year;
-	$firstweeknb = firstWeekNumberOfYear ($year);
-	if ($firstweeknb == 0) { $firstweeknb = 1; }
 	$lastweeknb = lastWeekNumberOfYear ($year);
 	foreach (range ($week - 1, $week + 1) as $w) {
-		if ($w >= $firstweeknb and $w <= $lastweeknb) { 
+		if ($w >= 1 and $w <= $lastweeknb) { 
 			$result .= "<input type='radio' name='week$year-selector' value='$w' ";
 			if ($w == $week) { $result .= " CHECKED "; }
 			$result .= " onclick=\"";
@@ -110,8 +108,8 @@ function week_HTML_RADIO_SELECT ($year, $week, $fieldName, $formName) {
 	// Choice
 
 	$result .= "<select name='$listFieldName'>";
-	$i = $firstweeknb;
-	while ($i <= $lastweeknb) {
+	$i = 1;
+	while ($i >= 1 and $i <= $lastweeknb) {
 		$result .= '<option value="'.$i.'" '; 
 		if ($i == $week) { $result .= " SELECTED "; }
 		$result .= ">";

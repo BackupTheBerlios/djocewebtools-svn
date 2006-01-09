@@ -9,8 +9,7 @@
 	$year = value_from_POST_GET ('year', currentYear());
 	$thisweek = value_from_POST_GET ('week', currentWeekNumber ());
 	$week = value_from_POST_GET ('week'.$year, $thisweek);
-//	echo "[Y=" . currentYear() . "]"; 
-//	echo "[W=" . currentWeekNumber() . "]"; 
+//	echo "[Today=".currentDayToString()."][Y=" . currentYear() . "][W=" . currentWeekNumber() . "]<br/>"; 
 
 	if (isset($GLOBALS['username'])) { $username = $GLOBALS['username']; }
 	if (!isset ($username)) {
