@@ -23,12 +23,21 @@ import popen2;
 # Configuration
 debug_enabled = 0
 
+
 organization_name    = "Eiffel Software"
 smtp_server          = "smtp.ise"
 at_domain_name       = "@eiffel.com"
 sender_name          = "SCMLogs [ES]"
 sender_email         = "postmaster" + at_domain_name
 superuser_email      = "jfiat" + at_domain_name
+
+def dprint (txt):
+	if debug_enabled:
+		sys.stderr.write (txt)
+		alogfile = open ("/tmp/svn_log_add_del_.logs", 'a')
+		alogfile.write (txt)
+		alogfile.flush ()
+		alogfile.close ()
 
 def sendMailToFromSubjectOfOn (z_to_emails, z_from_name, z_from, z_mail, z_server) :
         fromaddr = 'From: "' + z_from_name + '" <' + z_from + '>'
@@ -46,13 +55,6 @@ Usage:  svn_monitor_add_del.py -rev revision -svnrepo path
 	-svnrepo path 	- repository path
 	-e email	    - for the logfile to append to
 """
-def dprint (txt):
-	if debug_enabled:
-		sys.stderr.write (txt)
-#		alogfile = open ("/tmp/svn_log.logs", 'a')
-#		alogfile.write (msg)
-#		alogfile.flush ()
-#		alogfile.close ()
 
 def output_of (cmd):
 #	output = subprocess.Popen(string.split (cmd), stdout=subprocess.PIPE).communicate()[0]
@@ -156,13 +158,16 @@ def process_main():
 				if len(to_emails) > 2:
 					for m in to_emails [2:]:
 						cc_emails_str = "%s, <%s> " % (cc_emails_str, m)
+			dprint ("\nTO:" + to_emails_str)
+			dprint ("\nCC:" + cc_emails_str)
 			message_header = message_header +  "To: <%s>\n" % (to_emails_str)
-			if cc_emails_str != '':
-					message_header = message_header +  "Cc: %s\n" % (cc_emails_str)
-			message_header = message_header +  "Subject: [SCM:added=%d deleted=%d] by %s on %s\n" % (len(additions), len(deletions), author, date)
+			if len(cc_emails_str) > 0:
+				message_header = "%sCc: %s\n" % (message_header, cc_emails_str)
+			message_header = message_header +  "Subject: [SCM:added=%d deleted=%d] by %s on %s\n" % (len(additions), len(deletions), login, date)
 			message_header = message_header +  "Organization: %s \n" % (organization_name)
 
 			message = "%s\n%s" % (message_header, text)
+			dprint("\nMESSAGE=\n" + message)
 			sendMailToFromSubjectOfOn (to_emails, sender_name, sender_email, message, smtp_server)
 
 if __name__ == '__main__':
