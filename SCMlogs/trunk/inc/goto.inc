@@ -3,7 +3,7 @@ $GOTO['auth_pid'] = "auth";
 $GOTO['doc_pid'] = "doc";
 $GOTO['admin_pid'] = "admin";
 $GOTO['stats_pid'] = "stats";
-$GOTO['extra_pid'] = "extra";
+$GOTO['query_pid'] = "query";
 
 if (!isset($goto)) { $goto = $GOTO['auth_pid']; }
 switch ($goto) {
@@ -24,9 +24,9 @@ switch ($goto) {
 		$goto_title = "Stats";
 		$goto_src = "inc/stats.inc";
 		break;
-	case $GOTO['extra_pid']:
-		$goto_title = "Extra";
-		$goto_src = "inc/extra.inc";
+	case $GOTO['query_pid']:
+		$goto_title = "Query";
+		$goto_src = "inc/query.inc";
 		break;
 }
 
