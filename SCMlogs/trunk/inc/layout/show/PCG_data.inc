@@ -120,17 +120,19 @@
 		$file_tempo_name = tempnam ($SCMLOGS['tmpdir'], "TEMPO_");
 		$file_tempo = fopen ($file_tempo_name, "w");
 		$DIS_Files ="";
+		$repo = SCMLogs_repository();
+		$logsdir = $repo->logsdir;
 		while (list ($k, $v_file) = each ($commitsfiles)) {
-			$DIS_Files .= "<LI>$v_file";
+			$DIS_Files .= "<li>$v_file";
 			if (preg_match("/^([0-9][0-9][0-9][0-9])-([0-9][0-9])-([0-9][0-9])$/", $v_file, $matches)) {
-				$v_file = $SCMLOGS['logsdir'] .'/'.$matches[1].'/'.$matches[2].'/'. $v_file;
+				$v_file = $logsdir .'/'.$matches[1].'/'.$matches[2].'/'. $v_file;
 			}
 			if (preg_match("/^(".SCMLogs_CurrentCommitFile().")$/", $v_file, $matches)) {
-				$v_file = $SCMLOGS['logsdir'] .'/'.$v_file;
+				$v_file = $logsdir .'/'.$v_file;
 			}
 
-			//$DIS_Files .= " :: <EM>$v_file</EM>";
-			$DIS_Files .= "</LI>\n";
+			//$DIS_Files .= " :: <em>$v_file</em>";
+			$DIS_Files .= "</li>\n";
 			fwrite ($file_tempo, ContentOfFile ($v_file));
 		}
 		fclose ($file_tempo);

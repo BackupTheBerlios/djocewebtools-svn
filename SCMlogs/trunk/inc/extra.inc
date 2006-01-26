@@ -8,6 +8,8 @@ include "inc/query.inc";
 $this_script = $_SERVER['PHP_SELF']; 
 $this_script .= "?user=$user";
 
+$repo = SCMLogs_repository();
+
 if (!isset ($extra_op)) {
 
 	echo "<FORM ACTION=\"$this_script\" NAME=\"EXTRA_FORM\" METHOD=\"POST\">\n";
@@ -15,11 +17,11 @@ if (!isset ($extra_op)) {
 	echo "<TABLE border=0 cellpadding='5' cellspacing='5' >";
 	echo "<TR><TD class='subtitle' COLSPAN=2 >Current log file</TD></TR>";
 	echo "<TR><TD class=text>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD><TD class='inlist'>";
-	echo "<INPUT TYPE=checkbox NAME='commitsfiles[]' VALUE='".$SCMLOGS['logsdir']."/commits.txt'>";
+	echo "<INPUT TYPE=checkbox NAME='commitsfiles[]' VALUE='".$repo->logsdir."/commits.txt'>";
 	echo "Current commit file";
 	echo "</TD></TR>";
 
-	$list_years = listOfDir ($SCMLOGS['logsdir']);
+	$list_years = listOfDir ($repo->logsdir);
 	reset ($list_years);
 	krsort ($list_years);
 	while (list ($key, $val) = each ($list_years)) {
@@ -107,7 +109,7 @@ if (!isset ($extra_op)) {
 		echo "<UL>\n";
 		while (list ($k, $v_file) = each ($commitsfiles)) {
 			if (preg_match("/([0-9][0-9][0-9][0-9])-([0-9][0-9])-([0-9][0-9])/", $v_file, $matches)) {
-				$v_file = $SCMLOGS['logsdir'] .'/'.$matches[1].'/'.$matches[2].'/'. $v_file;
+				$v_file = $repo->logsdir .'/'.$matches[1].'/'.$matches[2].'/'. $v_file;
 			}
 
 			fwrite ($file_tempo, ContentOfFile ($v_file));
