@@ -96,6 +96,9 @@ if (! defined("_DATAMANAGER_")) { define ("_DATAMANAGER_", 1);
 			RemoveFile (userPrefFilename ($user));
 		}
 	}
+	Function hasUserProfile ($user) {
+		return file_exists(userConfigFilename ($user));
+	}
 
 	Function cleanedTextModule ($text_modules) {
 		$modules = split ("\n", $text_modules);

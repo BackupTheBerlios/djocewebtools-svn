@@ -8,6 +8,12 @@ global $SCMLOGS;
 if (isset($_GET['repo'])) {
 	$asked_repo = $_GET['repo'];
 }
+if (isset($_GET['op'])) {
+	$op = $_GET['op'];
+} else {
+	$op = 'admin';
+}
+
 if (isset ($asked_repo)) {
 	if ($asked_repo == SCMLogs_repository_id()) {
 	} else {
@@ -45,6 +51,15 @@ a:hover {
 .valid { padding-left: 10px; color: #090; font-weight: bold; }
 .error { padding-left: 10px; color: #f00; font-weight: bold; }
 .warning { padding-left: 10px; color: #f80; font-weight: bold; }
+div.question { 
+	margin-left: 10%;
+	width: 200px;
+	padding: 10px; 
+	color: #000; 
+	background-color: #ccccff;
+	border: solid 2px #009;
+	font-weight: bold;
+}
 </style>
 <?php
 $last_check_had_error = false;
@@ -65,42 +80,113 @@ function adminCheckPath($path,$required=true) {
 	}
 	return $res;
 }
-echo "<a href=\"..\">Back to application</a><br/><br/>";
-echo "<strong>Selected repository</strong> : " . $repo->id . "<br/>";
-echo '<div class="box">';
-echo '- <strong>data dir</strong> : ' . adminCheckPath(dataDirectory()) . '<br/>';
-echo '- <strong>repository type dir</strong> : ' . adminCheckPath(repositoryTypeDirectory()) . '<br/>';
-echo '- <strong>repository config dir</strong> : ' . adminCheckPath(repositoryCfgDirectory()) . '<br/>';
-if (!$last_check_had_error) {
-	echo '- <strong>default user config</strong> : ' . adminCheckPath(userCfgDefaultFilename()) . '<br/>';
-	echo '- <strong>default user pref</strong> : ' . adminCheckPath(userPrefDefaultFilename()) . '<br/>';
-	echo '<br/>';
-	echo '- <strong>Users </strong> : <br/>';
-	echo '<ul>';
-		$users = listOfUsers();
-		foreach ($users as $u ) {
-			echo '<li>';
-			echo $u;
-			echo '<ul>';
-			echo adminCheckPath(userConfigFilename($u));
-			echo '<br/>';
-			echo adminCheckPath(userPrefFilename($u),false);
-			echo '</ul>';
-			echo '</li>';
-		}
-	echo '</ul>';
+if (isset($_GET['user'])) {
+	$w_user = $_GET['user'];
 }
-echo '</div>';
+if (isset($_GET['confirm'])) {
+	$w_confirm = $_GET['confirm'] == 'yes';
+} else {
+	$w_confirm = false;
+}
 
-foreach ($SCMLOGS['repositories'] as $k_id => $repo) {
-	echo '- <a class="title" href="?repo='.$repo->id.'">'.$repo->id . "</a>";
-	echo ' (<a class="nota" href="?repo='.$repo->id.'">browse</a>)';
-	echo '<div style="margin-left: 40px; padding: 5px;">';
-	echo '- <strong>type</strong> : ' . $repo->mode . '<br/>';
-	echo '- <strong>path</strong> : ' . adminCheckPath($repo->path) . '<br/>';
-	echo '- <strong>logs</strong> : ' . adminCheckPath($repo->logsdir) . '<br/>';
-	echo '</div>';
+echo "<h1>Administration</h1>";
+switch ($op) {
+	case 'remove':
+		if (isset ($w_user)) {
+			echo "Removing ..." . $w_user;
+			echo '<br/>';
+		}
+		if ($w_confirm) {
+			deleteUserFile($w_user);
+			if (hasUserProfile($w_user)) {
+				echo "operation failed";
+				echo '<br/>';
+			} else {
+				echo "[$w_user] successfully removed";
+				echo '<br/>';
+			}
+		} else {
+			echo '<div class="question">';
+			echo 'Do you confirm ? ';
+			echo '<a href="?op='.$op.'&user='.$w_user.'&confirm=yes">Yes</a>';
+			echo ' | ';
+			echo '<a href="index.php">No</a>';
+			echo '</div>';
+
+		}
+		break;
+	case 'create':
+		if (isset ($w_user)) {
+			echo "creating ..." . $w_user;
+			echo '<br/>';
+		}
+		if ($w_confirm) {
+			createUserFile($w_user);
+			if (hasUserProfile($w_user)) {
+				echo "[$w_user] successfully created";
+				echo '<br/>';
+			} else {
+				echo "operation failed";
+				echo '<br/>';
+			}
+		} else {
+			echo '<div class="question">';
+			echo 'Do you confirm ? ';
+			echo '<a href="?op='.$op.'&user='.$w_user.'&confirm=yes">Yes</a>';
+			echo ' | ';
+			echo '<a href="index.php">No</a>';
+			echo '</div>';
+		}
+		break;
+	case 'admin':
+		echo "<a href=\"..\">Back to application</a><br/><br/>";
+		echo "<strong>Selected repository</strong> : " . $repo->id . "<br/>";
+		echo '<div class="box">';
+		echo '- <strong>data dir</strong> : ' . adminCheckPath(dataDirectory()) . '<br/>';
+		echo '- <strong>repository type dir</strong> : ' . adminCheckPath(repositoryTypeDirectory()) . '<br/>';
+		echo '- <strong>repository config dir</strong> : ' . adminCheckPath(repositoryCfgDirectory()) . '<br/>';
+		if (!$last_check_had_error) {
+			echo '- <strong>default user config</strong> : ' . adminCheckPath(userCfgDefaultFilename()) . '<br/>';
+			echo '- <strong>default user pref</strong> : ' . adminCheckPath(userPrefDefaultFilename()) . '<br/>';
+			echo '<br/>';
+			echo '<form action="" method="GET">';
+			echo '- <strong>Users </strong> : ';
+			echo '<input type="text" name="user" value=""/>';
+			echo '<input type="submit" name="op" value="create"/>';
+			echo '<input type="submit" name="op" value="remove"/>';
+			echo '<br/>';
+			echo '</form>';
+			echo '<ul>';
+				$users = listOfUsers();
+				foreach ($users as $u ) {
+					echo '<li>';
+					echo $u;
+					echo ' [ <a href="?op=remove&user='.$u.'">remove</a> ]';
+					echo '<ul>';
+					echo adminCheckPath(userConfigFilename($u));
+					echo '<br/>';
+					echo adminCheckPath(userPrefFilename($u),false);
+					echo '</ul>';
+					echo '</li>';
+				}
+			echo '</ul>';
+		}
+		echo '</div>';
+
+		foreach ($SCMLOGS['repositories'] as $k_id => $repo) {
+			echo '- <a class="title" href="?repo='.$repo->id.'">'.$repo->id . "</a>";
+			echo ' (<a class="nota" href="?repo='.$repo->id.'">browse</a>)';
+			echo '<div style="margin-left: 40px; padding: 5px;">';
+			echo '- <strong>type</strong> : ' . $repo->mode . '<br/>';
+			echo '- <strong>path</strong> : ' . adminCheckPath($repo->path) . '<br/>';
+			echo '- <strong>logs</strong> : ' . adminCheckPath($repo->logsdir) . '<br/>';
+			echo '</div>';
+		}
+		break;
+	default:
+		break;
 }
+echo '<br/><br/><a href="index.php">Back to administration</a>';
 
 
 ?>
