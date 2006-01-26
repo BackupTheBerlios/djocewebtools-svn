@@ -148,17 +148,3 @@ function EndBoxBlockControl() {
 	return true;
 }
 
-function StartBoxBlockControl(title,id,t_open,t_close,expanded)
-{
-	var bl_id= BC_BlockId(id);
-	var fOpen = BC_BlockControlIsOpened(bl_id, expanded);
-	document.write('<h1>');
-	document.write(' <a href="#" onclick="BC_BlockToggle(\'' + bl_id + '\',this,\'' + t_open + '\',\''+ t_close + '\');return true;" class="_block_control" >');
-	document.write(fOpen ? t_close : t_open);
-	document.write('</a>');
-	document.write(title);
-	document.write('</h1>');
-	document.write('<div id="' + bl_id + '" style="display: ' + (fOpen ? 'block' : 'none') + '">');
-	return true;
-}
-

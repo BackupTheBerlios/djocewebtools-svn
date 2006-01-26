@@ -5,28 +5,11 @@ include INC_DIR."require.inc";
 include INC_DIR."datamanager.inc";
 global $SCMLOGS;
 
-if (isset($_GET['repo'])) {
-	$asked_repo = $_GET['repo'];
-}
-if (isset($_GET['op'])) {
-	$op = $_GET['op'];
-} else {
-	$op = 'admin';
-}
-
-if (isset ($asked_repo)) {
-	if ($asked_repo == SCMLogs_repository_id()) {
-	} else {
-		SCMLogs_set_repository_by_id ($asked_repo);
-	}
-}
-
-$repo =& SCMLogs_repository();
-$msg_exists = "<span class=\"valid\">EXISTS</span>"; 
-$msg_missing = "<span class=\"error\">MISSING</span>"; 
-$msg_not_found = "<span class=\"warning\">NOT FOUND</span>"; 
-
 ?>
+<html>
+<head>
+<title>Administration</title>
+<script language="javascript" type="text/javascript" src="../styles/block_control.js"></script>
 <style>
 a {
 	text-decoration: none; 
@@ -61,7 +44,31 @@ div.question {
 	font-weight: bold;
 }
 </style>
+</head>
+<body>
 <?php
+
+if (isset($_GET['repo'])) {
+	$asked_repo = $_GET['repo'];
+}
+if (isset($_GET['op'])) {
+	$op = $_GET['op'];
+} else {
+	$op = 'admin';
+}
+
+if (isset ($asked_repo)) {
+	if ($asked_repo == SCMLogs_repository_id()) {
+	} else {
+		SCMLogs_set_repository_by_id ($asked_repo);
+	}
+}
+
+$repo =& SCMLogs_repository();
+$msg_exists = "<span class=\"valid\">EXISTS</span>"; 
+$msg_missing = "<span class=\"error\">MISSING</span>"; 
+$msg_not_found = "<span class=\"warning\">NOT FOUND</span>"; 
+
 $last_check_had_error = false;
 function adminCheckPath($path,$required=true) {
 	global $msg_exists, $msg_not_found, $msg_missing;
@@ -151,10 +158,11 @@ switch ($op) {
 			echo '<br/>';
 			echo '<form action="" method="GET">';
 			echo '- <strong>Users </strong> : ';
-			echo '<input type="text" name="user" value=""/>';
+			echo '<script>StartBlockControl("users","+","-",false);</script>';
+			echo '<ul><input type="text" name="user" value=""/>';
 			echo '<input type="submit" name="op" value="create"/>';
 			echo '<input type="submit" name="op" value="remove"/>';
-			echo '<br/>';
+			echo '</ul>';
 			echo '</form>';
 			echo '<ul>';
 				$users = listOfUsers();
@@ -170,6 +178,7 @@ switch ($op) {
 					echo '</li>';
 				}
 			echo '</ul>';
+			echo '<script>EndBlockControl("users")</script>';
 		}
 		echo '</div>';
 
@@ -190,3 +199,5 @@ echo '<br/><br/><a href="index.php">Back to administration</a>';
 
 
 ?>
+</body>
+</html>
