@@ -7,10 +7,10 @@ if (! defined("_DATAMANAGER_")) { define ("_DATAMANAGER_", 1);
 	Function listOfUsers () {
 		global $SCMLOGS;
 		$filter = "[a-z_\.]*.".$SCMLOGS['user.cfg.ext']."$";
-		$ls_result = listDirFilter (usersCfgDirectory(), $filter);
+		$ls_result = listDirFilter (repositoryCfgDirectory(), $filter);
 		$result = array();
 		while (list($key, $val) = each ($ls_result)) {
-			$result[] = substr ($val, 1 + strlen (usersCfgDirectory()), +1 - strlen (','.$SCMLOGS['user.cfg.ext']) );
+			$result[] = substr ($val, 1 + strlen (repositoryCfgDirectory()), +1 - strlen (','.$SCMLOGS['user.cfg.ext']) );
 		}
 		return $result;
 	}
@@ -45,29 +45,36 @@ if (! defined("_DATAMANAGER_")) { define ("_DATAMANAGER_", 1);
 		}
 	}
 
-	Function usersDataDirectory () {
+	Function dataDirectory () {
 		global $SCMLOGS;
 		return $SCMLOGS['datadir'];
 	}
-	Function usersCfgDirectory () {
-		$dir = usersDataDirectory();
-		$dir .= SCMLogs_repository_mode().DIRECTORY_SEPARATOR;
-		$dir .= SCMLogs_repository_id() . DIRECTORY_SEPARATOR;
+	Function repositoryTypeDirectory () {
+		$dir = dataDirectory();
+		$repo =& SCMLogs_repository(); 
+		$dir .= $repo->mode .DIRECTORY_SEPARATOR;
+		return $dir;
+	}
+
+	Function repositoryCfgDirectory () {
+		$dir = repositoryTypeDirectory();
+		$repo =& SCMLogs_repository(); 
+		$dir .= $repo->id . DIRECTORY_SEPARATOR;
 		return $dir;
 	}
 	Function userPrefFilename ($user) {
 		global $SCMLOGS;
-		return usersCfgDirectory().$user.$SCMLOGS['user.pref.ext'];
+		return repositoryCfgDirectory().$user.$SCMLOGS['user.pref.ext'];
 	}
 	Function userCfgDefaultFilename () {
-		return usersCfgDirectory().'cfg.tpl';
+		return repositoryCfgDirectory().'cfg.tpl';
 	}
 	Function userPrefDefaultFilename () {
-		return usersCfgDirectory().'pref.tpl';
+		return repositoryCfgDirectory().'pref.tpl';
 	}
 	Function userConfigFilename ($user) {
 		global $SCMLOGS;
-		return usersCfgDirectory().$user.$SCMLOGS['user.cfg.ext'];
+		return repositoryCfgDirectory().$user.$SCMLOGS['user.cfg.ext'];
 	}
 
 	Function userCfgDefaultText() {
@@ -136,7 +143,7 @@ if (! defined("_DATAMANAGER_")) { define ("_DATAMANAGER_", 1);
 
 	Function allModules () {
 		global $SCMLOGS;
-		$all_cfg = ContentOfFile (usersCfgDirectory()."all.tpl");
+		$all_cfg = ContentOfFile (repositoryCfgDirectory()."all.tpl");
 		$lst = split ("\n", $all_cfg);
 		return convertSimpleModListToModRespList ($lst);
 	}

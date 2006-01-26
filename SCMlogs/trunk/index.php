@@ -39,12 +39,12 @@ if (isset($_GET['repo'])) {
 	$asked_repo = $_SESSION['repo'];
 }
 if (isset ($asked_repo)) {
-	if ($asked_repo == $SCMLOGS['repository_id']) {
+	if ($asked_repo == SCMLogs_repository_id()) {
 		$_SESSION['repo'] = Null;
 		unset ($_SESSION['repo']);
 	} else {
-		SCMLogs_set_repository_id ($asked_repo);
-		$_SESSION['repo'] = $SCMLOGS['repository_id'];
+		SCMLogs_set_repository_by_id ($asked_repo);
+		$_SESSION['repo'] = SCMLogs_repository_id();
 	}
 }
 

@@ -25,15 +25,35 @@ if (! defined("_CONFIG_")) { define ("_CONFIG_", 1);
 	$SCMLOGS['style.css'] = 'base.css';
 	$SCMLOGS['app.url'] = $cfg['global']['SCMlogs_appurl'];
 
+	class RepositoryProfile {
+		var $id;
+		var $mode;
+		var $logsdir;
+		var $path;
+
+		function RepositoryProfile ($id) {
+			global $SCMLOGS;
+			$this->id = trim($id);
+
+			$cfgsection = $SCMLOGS['cfg.data']['repo:'.$this->id];
+			$this->mode = $cfgsection['mode'];
+			$this->logsdir = $cfgsection['logs_dir'];
+			$this->path = $cfgsection['repository_path'];
+		}
+	}
+
 	if (isset ($cfg['global']['SCM_repositories'])) {
 		$repo_list_id = split (',' , $cfg['global']['SCM_repositories']);
+		$repositories = array ();
+		foreach ($repo_list_id as $krid => $rid) {
+			$repositories[trim($rid)] =& new RepositoryProfile ($rid);
+		}
 		$repo_id = $repo_list_id[1];
 	}
 	if (isset ($cfg['global']['SCM_default_repository'])) {
 		$repo_id = $cfg['global']['SCM_default_repository'];
 	}
-	$SCMLOGS['repository_list_id'] = $repo_list_id;
-	$SCMLOGS['repository_id'] = $repo_id;
+	$SCMLOGS['repositories'] =& $repositories;
 
 
 	//// Dir to store users profiles
@@ -63,47 +83,33 @@ if (! defined("_CONFIG_")) { define ("_CONFIG_", 1);
 	}
 
 
-	function SCMLogs_set_repository_id ($repo_id) {
+	function &SCMLogs_repository () {
 		global $SCMLOGS;
-		$repo_section = 'repo:'.$repo_id;
-		$cfg = $SCMLOGS['cfg.data'];
-		$SCMLOGS['repository_id'] = $repo_id;
-		$SCMLOGS['scm_mode'] = $cfg[$repo_section]['mode'];
-		$SCMLOGS['logsdir'] = $cfg[$repo_section]['logs_dir'];
-		$SCMLOGS['repository_root'] = $cfg[$repo_section]['repository_path'];
-	}
-
-	function SCMLogs_logs_dir () {
-		global $SCMLOGS;
-		return $SCMLOGS['logsdir'];
-	}
-	function SCMLogs_repository_mode () {
-		global $SCMLOGS;
-		return $SCMLOGS['scm_mode'];
+		return $SCMLOGS['repository'];
 	}
 	function SCMLogs_repository_id () {
-		global $SCMLOGS;
-		return $SCMLOGS['repository_id'];
+		$repo =& SCMLogs_repository();
+		return $repo->id;
 	}
-	function SCMLogs_sendlogs_cmd ($repo=NULL) {
+	function SCMLogs_set_repository_by_id ($repo_id) {
+		global $SCMLOGS;
+		$SCMLOGS['repository'] = $SCMLOGS['repositories'][$repo_id];
+	}
+
+	function SCMLogs_sendlogs_cmd ($repo_id=NULL) {
 		global $SCMLOGS;
 		$cmd = 'python ' . $SCMLOGS['appdir'].'bin/scm_sendlogs.py ';
 		$cmd .= ' -cfg '.$SCMLOGS['cfg.filename'];
-		if (isset ($repo)) {
-			$cmd .= ' -repo ' . $repo;
+		if (isset ($repo_id)) {
+			$cmd .= ' -repo ' . $repo_id;
 		} else {
 			$cmd .= ' -repo ' . SCMLogs_repository_id();
 		}
 		return $cmd;
 	}
-
 	function SCMLogs_CurrentCommitFile () {
 		global $SCMLOGS;
 		return $SCMLOGS['currentcommitfile'];
-	}
-	function SCMLogs_Repository () {
-		global $SCMLOGS;
-		return $SCMLOGS['repository_root'];
 	}
 	function SCMLogs_WebBrowsing () {
 		global $SCMLOGS;
@@ -115,7 +121,7 @@ if (! defined("_CONFIG_")) { define ("_CONFIG_", 1);
 		return $url;
 	}
 
-	SCMLogs_set_repository_id ($SCMLOGS['repository_id']);
+	SCMLogs_set_repository_by_id ($repo_id);
 } 
 
 ?>

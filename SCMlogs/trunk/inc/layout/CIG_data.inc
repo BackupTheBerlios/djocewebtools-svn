@@ -22,19 +22,20 @@
 		$is_authentificated = False;
 		$DIS_Title = " :: Authentification";
 	}
-	$DIS_REPOSITORY = SCMLogs_Repository();
+	$repo =& SCMLogs_repository();
+	$DIS_REPOSITORY = $repo->path;
 	$DIS_REPO_BROWSING = SCMLogs_WebBrowsing();
 
-	if (isset ($SCMLOGS['repository_list_id'])) {
-		$ids = $SCMLOGS['repository_list_id'];
+	if (isset ($SCMLOGS['repositories'])) {
+		$repos = $SCMLOGS['repositories'];
 		$html = ' <form action="'.$this_url.'" method="GET"><input type="submit" value="&gt;&gt;" />';
 		$html .= '<select name="repo">';
-		foreach ($ids as $k_id => $v_id) {
-			$html .= '<option value="'.$v_id.'" ';
-			if ($v_id == $SCMLOGS['repository_id']) {
+		foreach ($repos as $k_repoid => $v_repo) {
+			$html .= '<option value="'.$v_repo->id.'" ';
+			if ($v_repo->id == SCMLogs_repository_id()) {
 				$html .= ' SELECTED ';
 			}
-			$html .= '>'.$v_id.'</option>';
+			$html .= '>'.$v_repo->id.'</option>';
 		}
 		$html .= '</select></form>';
 		$DIS_VAR_PAGE_REPO_LIST = $html;
