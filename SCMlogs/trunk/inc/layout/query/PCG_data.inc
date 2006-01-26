@@ -29,7 +29,6 @@
 	}
 
 	$DIS_Application = "query";
-//	global $SCMLOGS;
 
 
 	// Commit files
@@ -41,7 +40,8 @@
 	$DIS_UserFilter = userModulesText ($SCMUSER);
 	
 	$DIS_CommitFiles = array (); // [years => [month => [key=>files]]]
-	$list_years = listOfDir ($SCMLOGS['logsdir']);
+	$repo = SCMLogs_repository();
+	$list_years = listOfDir ($repo->logsdir);
 	reset ($list_years);
 	krsort ($list_years);
 	while (list ($k_year, $v_year_dir) = each ($list_years)) {
