@@ -61,6 +61,11 @@ if (! defined("_CONFIG_")) { define ("_CONFIG_", 1);
 	$SCMLOGS['currentcommitfile'] = 'commits.txt';
 	$SCMLOGS['appdir'] = $cfg['global']['SCMlogs_appdir'];
 	$SCMLOGS['datadir'] = $SCMLOGS['appdir'].'data'.DIRECTORY_SEPARATOR;
+	if (isset ($cfg['global']['python_exec_path'])) {
+		$SCMLOGS['python_exec'] = $cfg['global']['python_exec_path'];
+	} else {
+		$SCMLOGS['python_exec'] = '' ;
+	}
 
 	/// Misc
 	if (isset($cfg['users']['cfg_extension'])) {
@@ -98,7 +103,7 @@ if (! defined("_CONFIG_")) { define ("_CONFIG_", 1);
 
 	function SCMLogs_sendlogs_cmd ($repo_id=NULL) {
 		global $SCMLOGS;
-		$cmd = 'python ' . $SCMLOGS['appdir'].'bin/scm_sendlogs.py ';
+		$cmd = $SCMLOGS['python_exec'] . ' ' . $SCMLOGS['appdir'].'bin/scm_sendlogs.py ';
 		$cmd .= ' -cfg '.$SCMLOGS['cfg.filename'];
 		if (isset ($repo_id)) {
 			$cmd .= ' -repo ' . $repo_id;
