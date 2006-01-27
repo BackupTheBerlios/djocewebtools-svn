@@ -42,7 +42,7 @@ if (! defined("_CONFIG_")) { define ("_CONFIG_", 1);
 		}
 
 		function svnfile_root() {
-			$res = "file:///" . $this->path;
+			$res = "file://" . $this->path;
 			return str_replace ("\\", "/", $res);
 		}
 	}
