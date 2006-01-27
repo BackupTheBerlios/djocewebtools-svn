@@ -5,7 +5,7 @@ from string import split, replace, rstrip, strip, atoi ;
 import bots;
 
 # Global
-p_bot = re.compile ("(\[([a-zA-Z]+)#([a-zA-Z0-9]+)\])")
+p_bot = bots.bot_compiled_regexp()
 
 def processed_formatted_html (html):
 	global p_bot
