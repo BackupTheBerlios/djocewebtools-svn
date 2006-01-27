@@ -29,33 +29,33 @@ class websvnUrlEngine extends webappUrlEngine {
 		$url = $this->urlTmp ('filedetails');
 		if ($r1 >= 0) { $url .= "&rev=$r1"; }
 		$url .= "&sc=1";
-		$url .= "&path=/$dir/$file";
+		$url .= "&path=$dir/$file";
 		return $url;
 	}
 	function urlBlameFile ($file, $dir, $r1) {
 		$url = $this->urlTmp ('blame');
 		if ($r1 >= 0) { $url .= "&rev=r1"; }
 		$url .= "&sc=1";
-		$url .= "&path=/$dir/$file";
+		$url .= "&path=$dir/$file";
 		return $url;
 	}
 	function urlDiffFile ($file, $dir, $r1, $r2) {
 		$url = $this->urlTmp ('diff');
 		if ($r1 >= 0) { $url .= "&rev=r1"; }
 		$url .= "&sc=1";
-		$url .= "&path=/$dir/$file";
+		$url .= "&path=$dir/$file";
 		return $url;
 	}
 	function urlShowDir ($dir, $r1) {
 		$url = $this->urlTmp ('listing');
 		if ($r1 >= 0) { $url .= "&rev=$r1"; }
 		$url .= "&sc=1";
-		$url .= "&path=/$dir";
+		$url .= "&path=$dir";
 		return $url;
 	}
 	function urlDiffDir ($dir, $r1, $r2) {
 		$url = $this->urlTmp ('comp');
-		$url .= "&compare[]=/$dir@$r1&compare[]=/$dir@$r2";
+		$url .= "&compare[]=$dir@$r1&compare[]=$dir@$r2";
 		return $url;
 	}
 }
