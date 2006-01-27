@@ -4,30 +4,7 @@ import os
 import re
 from string import split, replace, rstrip, strip, atoi ;
 #from misc import * ;
-import bots;
-
-def text_to_formated_html_escape (txt):
-	# escape the  '<' and '>' to htmlentities
-	result = "%s"  % (txt)
-	result = replace (result, "<","&lt;")
-	result = replace (result, ">","&gt;")
-	result = replace (result, "\n", "<br/>\n")
-	#result = replace (result, "\ ", "&nbsp;")
-	result = replace (result, "    ", "&nbsp;&nbsp;&nbsp;&nbsp;")
-	result = replace (result, "\t", "&nbsp;&nbsp;&nbsp;&nbsp;")
-	return result
-
-
-def processed_formatted_html (html):
-	regexp = "(\[([a-zA-Z]+)#([a-zA-Z0-9]+)\])"
-	p = re.compile (regexp)
-	results = p.findall( html)
-	if results:
-		for res in results:
-			url = bots.html_url_for(res[1],res[2],res[0])
-			if len(url) > 0:
-				html = replace (html, res[0], url)
-	return html
+from htmlFormatterHelpers import *;
 
 # classes Declaration
 class SCMLogEntry:
