@@ -155,8 +155,8 @@ $error = false;
 				$DIS_Data .= " to HEAD";
 			}
 			$datesforsvn = str_replace ("/", "-", $datesforsvn);
+			$ccmd = $SCMLOGS['svn_bin_path'] . 'svn log --config-dir . -v -r "' . $datesforsvn . '" ' . $repo->svnfile_root();
 			ob_start();
-			$ccmd = $SCMLOGS['svn_bin_path'] . 'svn log -v -r "' . $datesforsvn . '" ' . $repo->svnfile_root();
 			$res = system ($ccmd);
 			$logs = ob_get_contents();
 			fwrite ($file_tempo, $logs);
