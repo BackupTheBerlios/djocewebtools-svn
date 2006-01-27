@@ -6,6 +6,9 @@ SCMlogs_appurl = "http://url-to/SCMlogs/"
 SCM_repositories= testsvn,repo_cvs
 SCM_default_repository= testsvn
 
+;svn_bin_path=
+; if svn is not in the path, precise the full path to the bin dir
+
 python_exec_path=python
 ; if python is not in the path, precise the full path
 ; if 'python_exec_path' is empty, the python script has to be executable directly

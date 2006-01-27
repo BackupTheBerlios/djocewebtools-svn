@@ -4,16 +4,37 @@
 	include "lib/file.inc";
 	include "inc/query.inc";
 
-	@$commitsmonthfiles = $_POST['commitsmonthfiles'];
-	if (isset ($commitsmonthfiles)) { 
-		$commitsfiles = array (); 
-		while (list ($y, $v_yfiles) = each ($commitsmonthfiles)) {
-			while (list ($m, $v_mfiles) = each ($v_yfiles)) {
-				while (list ($d, $v_file) = each ($v_mfiles)) {
-					$commitsfiles[] = $v_file;
+function isValidDate($s){
+	$year = (int)substr($s, 0,4);
+	$month = (int)substr($s, 5,7);
+	$day = (int)substr($s, 8,10);
+	return checkdate($month, $day, $year);
+}
+
+$error = false;
+
+//	echo "<pre>"; print_r ($_POST); echo "</pre>";
+	$data_src = $_POST['datasrc'];
+	$data_source_is_dates = ($data_src == "dates");
+	if ($data_source_is_dates) {
+		$start_date = $_POST['startdate'];
+		$end_date = $_POST['enddate'];
+		$error = !isValidDate($start_date) or (
+				!empty($end_date) and !isValidDate($end_date)
+			);
+	} else {
+		@$commitsmonthfiles = $_POST['commitsmonthfiles'];
+		if (isset ($commitsmonthfiles)) { 
+			$commitsfiles = array (); 
+			while (list ($y, $v_yfiles) = each ($commitsmonthfiles)) {
+				while (list ($m, $v_mfiles) = each ($v_yfiles)) {
+					while (list ($d, $v_file) = each ($v_mfiles)) {
+						$commitsfiles[] = $v_file;
+					}
 				}
 			}
 		}
+		$error = count($commitsfiles) == 0;
 	}
 //	@$commitsfiles = $_POST['commitsfiles'];
 
@@ -32,10 +53,9 @@
 	$DIS_Application = "show";
 
 	$DIS_Command = "cmd";
-	
 	$DIS_Result = "Result";
 
-	if (count ($commitsfiles) > 0) {
+	if (!$error) {
 		@$operation = $_POST['show'];
 		if (!isset ($operation)) { $operation = 'ShowLogs'; }
 
@@ -119,21 +139,43 @@
 
 		$file_tempo_name = tempnam ($SCMLOGS['tmpdir'], "TEMPO_");
 		$file_tempo = fopen ($file_tempo_name, "w");
-		$DIS_Files ="";
+		$DIS_Data ="";
 		$repo = SCMLogs_repository();
-		$logsdir = $repo->logsdir;
-		while (list ($k, $v_file) = each ($commitsfiles)) {
-			$DIS_Files .= "<li>$v_file";
-			if (preg_match("/^([0-9][0-9][0-9][0-9])-([0-9][0-9])-([0-9][0-9])$/", $v_file, $matches)) {
-				$v_file = $logsdir .'/'.$matches[1].'/'.$matches[2].'/'. $v_file;
+		if ($data_source_is_dates) {
+			$datesforsvn = "{" . $start_date . "}";
+			$DIS_Data .= "from " . $start_date . " ";
+			if (empty($end_date)) {
+				$datesforsvn .= ":HEAD";
+				$DIS_Data .= " to HEAD";
+			} elseif (isValidDate($end_date)) {
+				$datesforsvn .= ":{" . $end_date . "}";
+				$DIS_Data .= " to " . $end_date . " ";
+			} else {
+				$datesforsvn .= ":HEAD";
+				$DIS_Data .= " to HEAD";
 			}
-			if (preg_match("/^(".SCMLogs_CurrentCommitFile().")$/", $v_file, $matches)) {
-				$v_file = $logsdir .'/'.$v_file;
-			}
+			$datesforsvn = str_replace ("/", "-", $datesforsvn);
+			ob_start();
+			$ccmd = $SCMLOGS['svn_bin_path'] . 'svn log -v -r "' . $datesforsvn . '" ' . $repo->svnfile_root();
+			$res = system ($ccmd);
+			$logs = ob_get_contents();
+			fwrite ($file_tempo, $logs);
+			ob_end_clean();
+		} else {
+			$logsdir = $repo->logsdir;
+			while (list ($k, $v_file) = each ($commitsfiles)) {
+				$DIS_Data .= "<li>$v_file";
+				if (preg_match("/^([0-9][0-9][0-9][0-9])-([0-9][0-9])-([0-9][0-9])$/", $v_file, $matches)) {
+					$v_file = $logsdir .'/'.$matches[1].'/'.$matches[2].'/'. $v_file;
+				}
+				if (preg_match("/^(".SCMLogs_CurrentCommitFile().")$/", $v_file, $matches)) {
+					$v_file = $logsdir .'/'.$v_file;
+				}
 
-			//$DIS_Files .= " :: <em>$v_file</em>";
-			$DIS_Files .= "</li>\n";
-			fwrite ($file_tempo, ContentOfFile ($v_file));
+				//$DIS_Data .= " :: <em>$v_file</em>";
+				$DIS_Data .= "</li>\n";
+				fwrite ($file_tempo, ContentOfFile ($v_file));
+			}
 		}
 		fclose ($file_tempo);
 		if ($processing_fct != '') {
@@ -159,10 +201,10 @@
 		RemoveFile ($file_tempo_name);
 	} else {
 		$DIS_Format = '';
-		$DIS_Message = "Please select at least one file !!!";
+		$DIS_Message = "Please select at least one file or valid dates!!!";
 		$DIS_Parameters = "...";
 		$DIS_Command = "...";
-		$DIS_Files = "no file selected";
+		$DIS_Data = "no file or valid dates selected";
 		$DIS_Result = "...";
 	}
 

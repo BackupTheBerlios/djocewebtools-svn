@@ -82,8 +82,11 @@ div.tree {
 	text-align: left;
 }
 
-#queryfiles {
+td#datasrc {
 	width: 220px;
+}
+#queryfiles {
+	width: 100%;
 	background-color: #fff;
 }
 #queryfiles h1 {
@@ -127,5 +130,21 @@ div.tree {
 }
 
 #queryfiles a._block_control {
+}
+
+#datasrcdates {
+	padding: 5px; 
+	margin: 4px 0 5px 0; 
+	border: solid 2px #090;
+	background-color: #eeffee;
+}
+#datasrcdates input {
+	margin: 4px 0 3px 30px;
+}
+#datasrcdates #datasrcdatestext {
+	background-color: #6b6;
+	color: #eeffee;
+	padding: 2px;
+	font-size: 90%;
 }
 

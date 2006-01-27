@@ -5,7 +5,7 @@
 	$t->setVar ("VAR_PAGE_SHOW_MESSAGE", $DIS_Message);
 	$t->setVar ("VAR_PAGE_SHOW_PARAM", $DIS_Parameters);
 	$t->setVar ("VAR_SELECTED_YEARS_GET", $DIS_GET_SelectedYear);
-	$t->setVar ("VAR_PAGE_SHOW_FILES", $DIS_Files);
+	$t->setVar ("VAR_PAGE_SHOW_DATA", $DIS_Data);
 	$t->setVar ("VAR_PAGE_SHOW_COMMAND", $DIS_Command);
 	if ($DIS_Format == 'text') {
 		$t->setVar ("VAR_PAGE_SHOW_RESULT", "<PRE>$DIS_Result</PRE>");

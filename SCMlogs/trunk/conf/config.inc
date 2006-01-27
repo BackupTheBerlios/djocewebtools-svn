@@ -40,6 +40,11 @@ if (! defined("_CONFIG_")) { define ("_CONFIG_", 1);
 			$this->logsdir = $cfgsection['logs_dir'];
 			$this->path = $cfgsection['repository_path'];
 		}
+
+		function svnfile_root() {
+			$res = "file:///" . $this->path;
+			return str_replace ("\\", "/", $res);
+		}
 	}
 
 	if (isset ($cfg['global']['SCM_repositories'])) {
@@ -61,6 +66,11 @@ if (! defined("_CONFIG_")) { define ("_CONFIG_", 1);
 	$SCMLOGS['currentcommitfile'] = 'commits.txt';
 	$SCMLOGS['appdir'] = $cfg['global']['SCMlogs_appdir'];
 	$SCMLOGS['datadir'] = $SCMLOGS['appdir'].'data'.DIRECTORY_SEPARATOR;
+	if (isset ($cfg['global']['svn_bin_path'])) {
+		$SCMLOGS['svn_bin_path'] = $cfg['global']['svn_bin_path'] . DIRECTORY_SEPARATOR;
+	} else {
+		$SCMLOGS['svn_bin_path'] = '' ;
+	}
 	if (isset ($cfg['global']['python_exec_path'])) {
 		$SCMLOGS['python_exec'] = $cfg['global']['python_exec_path'];
 	} else {
