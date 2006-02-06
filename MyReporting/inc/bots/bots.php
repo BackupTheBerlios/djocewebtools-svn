@@ -1,7 +1,7 @@
 <?php
 
 function processed_bots_html ($txt) {
-	$engine =& new Bots_engine();
+	$engine =& new Bots_engine("(([a-zA-Z]+)#([a-zA-Z0-9_]+))");
 	return $engine->processed_bots_html ($txt);
 }
 
@@ -16,12 +16,14 @@ class Bot_agent {
 
 class Bots_engine {
 	var $bots_dir;
-	function Bots_engine() {
+	var $pattern;
+	function Bots_engine($pattern) {
 		$this->bots_dir =realpath (dirname(__FILE__)).DIRECTORY_SEPARATOR ;
+		$this->pattern = $pattern;
 	}
 	function processed_bots_html($txt) {
 		$html = $txt;
-		$res = preg_match_all ("(([a-zA-Z]+)#([a-zA-Z0-9_]+))", $html, $matches, PREG_SET_ORDER);
+		$res = preg_match_all ($this->pattern, $html, $matches, PREG_SET_ORDER);
 		if ($res > 0) {
 			foreach ($matches as $val) {
 				$url = $this->html_url_for ($val[1], $val[2], $val[0]);
