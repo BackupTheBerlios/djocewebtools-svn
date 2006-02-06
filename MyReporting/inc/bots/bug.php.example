@@ -1,0 +1,9 @@
+<?php
+
+class bots_bug extends Bot_agent {
+	function url_for ($id) {
+		return "http://bug/". $id;
+	}
+}
+
+?>
