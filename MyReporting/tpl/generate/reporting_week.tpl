@@ -35,7 +35,7 @@
 	$year = $this->get_template_vars('VAR_YEAR');
 
 	if (isset ($userItem['week_filename'])) {
-		$text = ContentOfFile ($userItem['week_filename']);
+		$text = processed_bots_html (ContentOfFile ($userItem['week_filename']));
 		$this->assign("userText", $text);
 	}
 	$this->assign("VAR_USER_EDIT_REPORT", myreporting_edit_url ($userItem['login'], $year, $week) );
