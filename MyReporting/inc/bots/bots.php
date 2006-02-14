@@ -1,7 +1,7 @@
 <?php
 
 function processed_bots_html ($txt) {
-	$engine =& new Bots_engine("(([a-zA-Z]+)#([a-zA-Z0-9_]+))");
+	$engine =& new Bots_engine("(([a-z][a-zA-Z_]+)#([a-zA-Z0-9_]+))");
 	return $engine->processed_bots_html ($txt);
 }
 

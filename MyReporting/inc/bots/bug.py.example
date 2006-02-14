@@ -1,8 +1,5 @@
 #!/usr/local/bin/python
 
-def bot_id():
-	return "bug"
-
 def url_for (id):
 	return "http://%s/%s" % (bot_id(), id)
 
