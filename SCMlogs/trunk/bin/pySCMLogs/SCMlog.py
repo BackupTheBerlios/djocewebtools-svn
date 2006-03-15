@@ -3,7 +3,6 @@
 import os
 import re
 from string import split, replace, rstrip, strip, atoi ;
-#from misc import * ;
 from htmlFormatterHelpers import *;
 
 # classes Declaration
