@@ -405,7 +405,7 @@ class SCMLogsApplication:
 			bottom_text = "";
 			if output_format == 'text':
 				if a_logskey != '':
-					top_text = "Check online commits  :: [%s/show.php?user=%s&key=%s] :: [%s]\n%s" % (self.config.webapp_url, a_user, a_logskey, a_logskey, top_text)
+					top_text = "Check online commits  :: [%s/show.php?user=%s&key=%s] :: [%s]\n%s" % (self.config.SCMlogs_appurl, a_user, a_logskey, a_logskey, top_text)
 				top_text = "%sYour selection containing changes : \n\n%s\n" % (top_text, dirs_changed)
 				top_text = "%sTotal :: %d / %d logs\n" % (top_text, nb_logs, nb_all_logs)
 
@@ -418,7 +418,7 @@ class SCMLogsApplication:
 				bottom_text = "%sIf you want to change your preferences, (like not receiving SCMLogs emails), go to [%s?user=%s]\n\n" % (bottom_text, self.config.webapp_url, a_user)
 			else :
 				if a_logskey != '':
-					top_text = "Check online commits  ::<a href=\"%s/show.php?user=%s&key=%s\">[%s]</a><br>\n%s" % (self.config.webapp_url, a_user, a_logskey, a_logskey, top_text)
+					top_text = "Check online commits  ::<a href=\"%s/show.php?user=%s&key=%s\">[%s]</a><br>\n%s" % (self.config.SCMlogs_appurl, a_user, a_logskey, a_logskey, top_text)
 				top_text = "%s<a name=\"TOP\"></a>Your selection containing changes : \n<br><ul>%s</ul>" % (top_text, dirs_changed)
 				top_text = "%s<br><b>Total</b> :: %d / %d logs" % (top_text, nb_logs, nb_all_logs)
 				top_text = "%s<br><br>\n" % (top_text)

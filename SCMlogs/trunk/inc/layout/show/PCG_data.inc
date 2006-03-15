@@ -14,7 +14,12 @@ function isValidDate($s){
 $error = false;
 
 //	echo "<pre>"; print_r ($_POST); echo "</pre>";
-	$data_src = $_POST['datasrc'];
+	if (isset($_GET['key'])) {
+		$data_src = 'key';
+		$data_key = $_GET['key'];
+	} else {
+		$data_src = $_POST['datasrc'];	
+	}
 	$data_source_is_dates = ($data_src == "dates");
 	if ($data_source_is_dates) {
 		$start_date = $_POST['startdate'];
@@ -22,6 +27,8 @@ $error = false;
 		$error = !isValidDate($start_date) or (
 				!empty($end_date) and !isValidDate($end_date)
 			);
+	} elseif ($data_src == 'key') {
+		$commitsfiles = array ($data_key); 
 	} else {
 		@$commitsmonthfiles = $_POST['commitsmonthfiles'];
 		if (isset ($commitsmonthfiles)) { 
@@ -47,7 +54,7 @@ $error = false;
 	}
 
 	if (!isset ($commitsfiles)) { $commitsfiles = array (); }
-	if (isset ($_GET['key'])) { $commitsfiles[] = $_GET['key']; };
+	// if (isset ($_GET['key'])) { $commitsfiles[] = $_GET['key']; };
 
 	$user = $SCMUSER;
 	$DIS_Application = "show";

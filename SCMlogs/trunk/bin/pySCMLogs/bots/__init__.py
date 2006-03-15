@@ -8,7 +8,7 @@ import re;
 from string import replace;
 
 def bot_compiled_regexp():
-       return re.compile ("(([a-zA-Z]+)#([a-zA-Z0-9_]+))")
+       return re.compile ("(([a-z][a-zA-Z_]+) ?#([a-zA-Z0-9_]+))")
        #return re.compile ("(\[([a-zA-Z]+)#([a-zA-Z0-9]+)\])")
 
 # Global
@@ -22,8 +22,6 @@ def html_url_for(bot,id,name):
 		return eval(cmd)
 	except:
 		return ""
-
-
 
 def bots_html (html):
 	global p_bot
