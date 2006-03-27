@@ -30,7 +30,7 @@ class Bots_engine {
 				$url = $this->html_url_for ($val[1][0], $val[2][0], $val[0][0]);
 				if (strlen($url) > 0) {
 					$html = substr_replace ($html, $url, $offset + $val[0][1], strlen($val[0][0]));
-					$offset = strlen ($url) - strlen ($val[0][0]);
+					$offset = $offset + strlen ($url) - strlen ($val[0][0]);
 				}
 			}
 		}
