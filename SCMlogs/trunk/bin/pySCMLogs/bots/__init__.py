@@ -23,13 +23,30 @@ def html_url_for(bot,id,name):
 	except:
 		return ""
 
-def bots_html (html):
+def bots_html_replace (html):
 	global p_bot
+#issue if more than one link with same substring .. 123 and 12345
 	results = p_bot.findall( html)
+	offset = 0
 	if results:
 		for res in results:
 			url = html_url_for(res[1],res[2],res[0])
 			if len(url) > 0:
 				html = replace (html, res[0], url)
+				offset = offset + len(url) - len(res[0])
+	return html
+
+def bots_html (html):
+	global p_bot
+	iterator = p_bot.finditer( html)
+	offset = 0
+	i1 = i2 = 0
+	for res in iterator:
+		url = html_url_for(res.group(2),res.group(3),res.group(0))
+		if len(url) > 0:
+			i1 = offset + res.start(0)
+			i2 = offset + res.end(0)
+			html = "%s%s%s" % (html[:i1], url, html[i2:])
+			offset = offset + len(url) - len(res.group(0))
 	return html
 
