@@ -56,7 +56,7 @@
 			$DIS_Username = $username;
 			$DIS_Year = $year;
 			$DIS_Week = $week;
-			$DIS_PreviewText = processed_bots_html($report_content);
+			$DIS_RawText = $report_content;
 
 			$DIS_SaveRelatedDate = "";
 			$DIS_SaveRelatedDate .= "Week $week : ";

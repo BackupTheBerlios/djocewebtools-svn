@@ -23,12 +23,14 @@ class Bots_engine {
 	}
 	function processed_bots_html($txt) {
 		$html = $txt;
-		$res = preg_match_all ($this->pattern, $html, $matches, PREG_SET_ORDER);
+		$res = preg_match_all ($this->pattern, $html, $matches, PREG_SET_ORDER + PREG_OFFSET_CAPTURE);
+		$offset = 0;
 		if ($res > 0) {
 			foreach ($matches as $val) {
-				$url = $this->html_url_for ($val[1], $val[2], $val[0]);
+				$url = $this->html_url_for ($val[1][0], $val[2][0], $val[0][0]);
 				if (strlen($url) > 0) {
-					$html = str_replace ($val[0], $url, $html);
+					$html = substr_replace ($html, $url, $offset + $val[0][1], strlen($val[0][0]));
+					$offset = strlen ($url) - strlen ($val[0][0]);
 				}
 			}
 		}

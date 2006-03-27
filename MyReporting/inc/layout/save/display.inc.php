@@ -10,9 +10,10 @@
 		$smarty->assign("VAR_SAVE_WEEK", $DIS_Week);
 		$smarty->assign("VAR_SAVE_RELATED_DATE", $DIS_SaveRelatedDate);
 
-		$smarty->assign("VAR_SAVE_PREVIEW", $DIS_PreviewText);
+		$DIS_PreviewText = processed_bots_html($DIS_RawText);
 		$DIS_PreviewText = ereg_replace("&", "&amp;",$DIS_PreviewText);
-		$smarty->assign("VAR_SAVE_TEXT", $DIS_PreviewText);
+		$smarty->assign("VAR_SAVE_PREVIEW", $DIS_PreviewText);
+		$smarty->assign("VAR_SAVE_TEXT", $DIS_RawText);
 	} else  {
 		$smarty->assign ("PageMainSrc", "save.tpl");
 	}
