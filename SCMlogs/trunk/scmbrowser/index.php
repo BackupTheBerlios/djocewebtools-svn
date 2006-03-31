@@ -85,12 +85,10 @@ require_once "inc/config.php";
 		require_once "engines/$engine_name.php";
 		$urlEngineIds[$engine_name] = new $classname($engine_url, $reponame);
 	}
-//	$urlEngineIds = array (
-//			'websvn' => new websvnUrlEngine (WEBSVN_URL, $reponame) ,
-//			'trac' => new tracUrlEngine (TRAC_URL, $reponame),
-//			//'viewvc' => new viewvcUrlEngine (VIEWVC_URL, $reponame),
-//		);
 
+	if (!isset($urlEngineIds[$webapp])) {
+		$webapp = $scmlogs_conf['engines.default'];
+	}
 	$appUrlEngine = $urlEngineIds[$webapp];
 	$url = url_for_operation_on_browser ($op, $appUrlEngine);
 	echo '<meta http-equiv="refresh" content="'.$delay.'; url='.$url.'">';
