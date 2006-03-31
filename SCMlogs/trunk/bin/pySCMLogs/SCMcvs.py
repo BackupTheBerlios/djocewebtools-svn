@@ -92,7 +92,7 @@ class CvsLogEntry(SCMLogEntry):
 		result = "";
 		if self.info:
 			infos = split (self.info)
-			result = "%s<tr><td class=info >Info/Diff</td><td colspan=3>" % (result)
+			result = "%s<tr><td class=i >Info/Diff</td><td colspan=3>" % (result)
 			infos_text = ""
 			for diff in infos:
 				diff_info = split (diff, ',')
@@ -100,7 +100,7 @@ class CvsLogEntry(SCMLogEntry):
 					infos_text = "%s\n\t<a href=\"%s\" target=\"_MyLogs_\">%s</a>" % (infos_text, \
 							self.webappUrlForDiffFileInDirectory (diff_info[0], self.directory, diff_info[1], diff_info[2]), \
 								diff_info[0] )
-					infos_text = "%s<small class=\"diff\"> (%s|%s)</small>, " % (infos_text, \
+					infos_text = "%s<small class=df> (%s|%s)</small>, " % (infos_text, \
 							diff_info[1], diff_info[2])
 			if len (infos_text) == 0:
 				#print self.directory + " " + self.info + "<BR>"
@@ -109,13 +109,13 @@ class CvsLogEntry(SCMLogEntry):
 			result = "%s%s</td></tr>\n"  %(result, infos_text);
 			result = "%s\n" % (result)
 		if self.tag:
-			result =  "%s<tr><td class=info >Tag</td><td colspan=3>%s</td></tr>\n"  %(result, self.tag);
+			result =  "%s<tr><td class=i >Tag</td><td colspan=3>%s</td></tr>\n"  %(result, self.tag);
 		return result
 
 	def list_to_html (self, lst_id, lst, title, cssclass):
 		result = ""
 		if len(lst) > 0:
-			result = "%s<tr><td class=\"%s\" >%s</td><td colspan=3>" % (result, cssclass, title)
+			result = "%s<tr><td class=%s >%s</td><td colspan=3>" % (result, cssclass, title)
 			for file in lst: 
 				result = "%s\n\t - <a href=\"%s\" target=\"_MyLogs_\">%s</a> " %(result, \
 						self.webappUrlForShowFileInDirectory (file, self.directory), \

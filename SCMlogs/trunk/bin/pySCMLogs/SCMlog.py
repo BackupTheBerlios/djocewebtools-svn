@@ -82,13 +82,13 @@ class SCMLogEntry:
 	def to_html (self):
 		result = ""
 		if self.author or self.date:
-			result = "%s<tr><td class=date >Date</td>\
+			result = "%s<tr><td class=d >Date</td>\
 					<td>%s</td>\
-					<td class=author >Author</td>\
+					<td class=a >Author</td>\
 					<td>%s</td></tr>\n" \
 					%(result, self.date, self.author);
 		if len(self.error_message) == 0:
-			result = "%s<tr><td class=directory >Directory</td><td colspan=3>" % (result)
+			result = "%s<tr><td class=dir >Directory</td><td colspan=3>" % (result)
 			result = "%s<a href=\"%s\" target=\"_MyLogs_\" >%s</a>" % (result, \
 					self.webappUrlForListDirectory (self.directory, self.revision), self.directory);
 			if self.config.SCMmode == 'svn':
@@ -99,17 +99,17 @@ class SCMLogEntry:
 
 		### Files and Co
 		if self.modified:
-			result = "%s%s" % (result, self.list_to_html (self.modified_id, self.modified, "Modified", "modified"))
+			result = "%s%s" % (result, self.list_to_html (self.modified_id, self.modified, "Modified", "mo"))
 		if self.added:
-			result = "%s%s" % (result, self.list_to_html (self.added_id, self.added, "Added", "added"))
+			result = "%s%s" % (result, self.list_to_html (self.added_id, self.added, "Added", "ad"))
 		if self.removed:
-			result = "%s%s" % (result, self.list_to_html (self.removed_id, self.removed, "Removed", "removed"))
+			result = "%s%s" % (result, self.list_to_html (self.removed_id, self.removed, "Removed", "re"))
 		result = "%s\n"  %(result)
 		if self.error_message:
-			result = "%s<tr><td class=log >ErrorMessage</td><td colspan=3 class=logmessage>%s</td></tr>"  %(result, \
+			result = "%s<tr><td class=l >ErrorMessage</td><td colspan=3 class=lm>%s</td></tr>"  %(result, \
 					text_to_formated_html_escape (self.error_message));
 		if self.logmessage:
-			result = "%s<tr><td class=log >LogMessage</td><td colspan=3 class=logmessage>%s</td></tr>"  %(result, \
+			result = "%s<tr><td class=l >LogMessage</td><td colspan=3 class=lm>%s</td></tr>"  %(result, \
 					processed_formatted_html (text_to_formated_html_escape (self.logmessage)));
 		return result
 

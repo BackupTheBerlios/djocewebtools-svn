@@ -75,7 +75,7 @@ class UserProfile:
 			self.email = user + self.config.at_domain_name
 
 	def user_pref_filename (self, user):
-		return self.config.data_dir + user + self.config.pref_ext
+		return self.config.cfg_dir + user + self.config.pref_ext
 
 	def user_cfg_filename (self, user):
 		return self.config.cfg_dir + user + self.config.cfg_ext
@@ -116,15 +116,16 @@ def htmlStyleCode ():
 		a { text-decoration: none; }
 		a:hover { color: red ; background-color: yellow; } 
 		td { vertical-align: top; } 
-		td.author, td.date { background-color: #ddddee; font-weight: bold; } 
-		td.directory { background-color: #aaaacc; font-weight: bold; } 
-		td.info { background-color: #ffbb99; font-weight: bold; } 
-		td.modified, td.added, td.removed { background-color: #ffddbb; font-weight: bold; } 
-		td.log { background-color: #ffffdd; font-weight: bold; } 
-		td.logmessage { font-size: smaller; color: black; background-color: white; padding: 2pt; } 
-		td.separator { font-size: 8pt; text-align: right; background-color: #ffffff; } 
-		td.subdir { font-weight: bold; color: #00ff00; background-color: #000000; } 
-		.diff, .diff a { color: darkred; font-size: 8pt; } 
+		td.a, td.d { background-color: #ddddee; font-weight: bold; } 
+		td.dir { background-color: #aaaacc; font-weight: bold; } 
+		td.i { background-color: #ffbb99; font-weight: bold; } 
+		td.mo, td.ad, td.re { background-color: #ffddbb; font-weight: bold; } 
+		td.l { background-color: #ffffdd; font-weight: bold; } 
+		td.lm { font-size: smaller; color: black; background-color: white; padding: 2pt; } 
+		td.sep { font-size: 8pt; text-align: right; background-color: #ffffff; } 
+		td.sd { font-weight: bold; color: #00ff00; background-color: #000000; } 
+		td.sd em { color: yellow; }
+		.df, .df a { color: darkred; font-size: 8pt; } 
 		div.warning { color: red; font-size: 12pt; font-weight: bold; } 
 		</style>
 		"""
@@ -269,7 +270,7 @@ class SCMLogsApplication:
 		return (logs_text, dirs_changed)
 
 	def formatedHtmlFilteredLogs (self, dirs_listed):
-		separatorHtmlLog = "<tr><td class=separator colspan=4><a href=\"#top\">top</a></td></tr>\n";
+		separatorHtmlLog = "<tr><td class=sep colspan=4><a href=\"#top\">top</a></td></tr>\n";
 		logs_text = "<table border=1 width=\"100%\" cellpadding=1 cellspacing=0 >\n"
 		dirs_changed = ""
 		list_keys = dirs_listed.keys ();
@@ -278,7 +279,7 @@ class SCMLogsApplication:
 			logs = dirs_listed[d]
 			dirs_changed = "%s<li><a href=\"#%s\">%s</a> (%d)</li>\n" % (dirs_changed, \
 					hrefNameFor(d), d, len (logs) )
-			logs_text = "%s<tr><td class=subdir colspan=4><a name=\"%s\"></a>directory %s <em style=\"color: yellow;\"> --  %d change(s)</em></td></tr>\n%s" % (logs_text, \
+			logs_text = "%s<tr><td class=sd colspan=4><a name=\"%s\"></a>directory %s <em > --  %d change(s)</em></td></tr>\n%s" % (logs_text, \
 					hrefNameFor (d) ,d, len(logs), separatorHtmlLog);
 			for log in logs:
 				logs_text = "%s\n%s\n%s" % (logs_text, self.formatedHtmlLog (log), separatorHtmlLog)
@@ -333,7 +334,7 @@ class SCMLogsApplication:
 
 	def listOfUsers (self):
 		dir_list = os.listdir (self.config.cfg_dir)
-		regexp = "^([a-zA-Z\.]+)%s$" % (self.config.cfg_ext)
+		regexp = "^([a-zA-Z\.-_]+)%s$" % (self.config.cfg_ext)
 		puser = re.compile (regexp);
 		users = []
 		for file in dir_list:
@@ -351,6 +352,7 @@ class SCMLogsApplication:
 			rel_appurl = "%s/" % (self.config.SCMlogs_appurl)
 
 		user_profile = UserProfile(a_user, self.config)
+		#DBG# print "user: email=%s" % (user_profile.email)
 
 		if self.opt_output == 'mail' and not user_profile.send_email:
 			return 
@@ -405,7 +407,7 @@ class SCMLogsApplication:
 		#
 		# send the mail only if there are some logs events.
 		#
-	#	print "-> %s \t[%d/%d logs]" % (user, nb_logs, nb_all_logs);
+		#print "-> %s \t[%d/%d logs]" % (user, nb_logs, nb_all_logs);
 		if nb_logs > 0 or user_profile.send_emptylogs :
 			### Top Text
 			header_text = "";
@@ -431,7 +433,7 @@ class SCMLogsApplication:
 					header_text = ""
 
 				if a_logskey != '':
-					top_text = "Check online commits  ::<a href=\"show.php?user=%s&key=%s\">[%s]</a><br>\n%s" % (rel_appurl, a_user, a_logskey, a_logskey, top_text)
+					top_text = "Check online commits  ::<a href=\"%sshow.php?user=%s&key=%s\">[%s]</a><br>\n%s" % (rel_appurl, a_user, a_logskey, a_logskey, top_text)
 				top_text = "%s<a name=\"TOP\"></a>Your selection containing changes : \n<br><ul>%s</ul>" % (top_text, dirs_changed)
 				top_text = "%s<br><b>Total</b> :: %d / %d logs" % (top_text, nb_logs, nb_all_logs)
 				top_text = "%s<br><br>\n" % (top_text)
@@ -492,7 +494,7 @@ class SCMLogsApplication:
 					mail_text = mail_text + "</body></html>\n";
 
 
-				#print "Sending mail to %s " % (user_profile)
+				#DBG# print "Sending mail to %s " % (user_profile)
 				self.sendLogByEmailTo (mail_text, user_profile, nb_logs, nb_all_logs, self.opt_subject, (output_format == 'html'))
 
 	def execute(self):
@@ -519,10 +521,12 @@ class SCMLogsApplication:
 			# For each user (thoses who have a .cfg file in the correct directory
 			# send an email regarding the directories affected.
 			for user in self.listOfUsers ():
+				#print user
 				try:
 					self.processUser (user, 'profil', '', all_logs, self.logskey)
 				except:
 					print "Error while processing user [%s] \n" % (user)
-
-
+					#print "Unexpected error: %s" %( sys.exc_info()[0])
+					#einfo = sys.exc_info()
+					#sys.excepthook(einfo[0], einfo[1], einfo[2]);
 

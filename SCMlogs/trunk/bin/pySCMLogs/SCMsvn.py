@@ -21,13 +21,13 @@ class SvnLogEntry(SCMLogEntry):
 	def info_to_html (self):
 		result = ""
 		if self.revision > 0:
-			result =  "%s<tr><td class=info >Revision</td><td colspan=3>%d</td></tr>\n"  %(result, self.revision);
+			result =  "%s<tr><td class=i >Revision</td><td colspan=3>%d</td></tr>\n"  %(result, self.revision);
 		return result
 
 	def list_to_html (self, lst_id, lst, title, cssclass):
 		result = ""
 		if len(lst) > 0:
-			result = "%s<tr><td class=\"%s\" >%s</td><td colspan=3>" % (result, cssclass, title)
+			result = "%s<tr><td class=%s >%s</td><td colspan=3>" % (result, cssclass, title)
 			for file in lst: 
 				result = "%s\n\t - <a href=\"%s\" target=\"_MyLogs_\">%s</a> " %(result, \
 						self.webappUrlForShowFileInDirectory (file, self.directory), \
@@ -45,7 +45,7 @@ class SvnLogEntry(SCMLogEntry):
 							self.webappUrlForBlameFileInDirectory (file, self.directory, self.revision) \
 						)
 				if len (tmp) > 0:
-					result = "%s (<small class=\"diff\">%s</small>)" % (result, tmp)
+					result = "%s (<small class=df>%s</small>)" % (result, tmp)
 				tmp =''
 				result = "%s<br/>\n" % (result)
 			result = "%s</td></tr>\n" % (result)
