@@ -334,7 +334,7 @@ class SCMLogsApplication:
 
 	def listOfUsers (self):
 		dir_list = os.listdir (self.config.cfg_dir)
-		regexp = "^([a-zA-Z\.-_]+)%s$" % (self.config.cfg_ext)
+		regexp = "^([a-zA-Z][a-zA-Z0-9_\.\-]*)%s$" % (self.config.cfg_ext)
 		puser = re.compile (regexp);
 		users = []
 		for file in dir_list:
