@@ -7,7 +7,7 @@ class viewvcUrlEngine extends webappUrlEngine {
 		parent::webappUrlEngine ($baseurl, $repository_name);
 	}
 	function urlTmp ($dir, $file='') {
-		$url = $this->baseurl . "$dir/$file";
+		$url = $this->baseurl . $this->cleaned_path($dir)."/$file";
 		if (!empty($this->reponame)) {
 			$url .= "?root=" . $this->reponame;
 		} else {
