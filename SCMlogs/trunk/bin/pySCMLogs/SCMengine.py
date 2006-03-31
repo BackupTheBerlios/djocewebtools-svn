@@ -181,7 +181,12 @@ class SCMLogsApplication:
 		if len (self.logskey) > 0:
 			self.logsfile = self.commitsFileFor (self.logskey)
 
-		self.webUrlEngine = webAppEngine.webscmlogs(self.config.webapp_url, self.config.repository_name)
+		self.abs_appurl = self.config.SCMlogs_appurl;
+		self.use_basetag = (self.opt_output == 'mail') and (self.opt_output_format == 'html')
+		if self.use_basetag:
+			self.webUrlEngine = webAppEngine.webscmlogs(self.config.webapp_script, self.config.repository_name)
+		else:
+			self.webUrlEngine = webAppEngine.webscmlogs(self.config.webapp_url, self.config.repository_name)
 		self.webUrlEngine.set_default_webapp (self.config.browsing);
 #		if self.config.browsing == 'websvn':
 #			self.webUrlEngine = webAppEngine.websvn(self.config.webapp_url, self.config.repository_name)
@@ -343,6 +348,13 @@ class SCMLogsApplication:
 		return users
 
 	def processUser (self, a_user, a_filter, a_filter_fn, all_logs, a_logskey):
+		if self.use_basetag:
+			basetag_url = "%s" % (self.config.SCMlogs_appurl)
+			rel_appurl = ""
+		else:
+			basetag_url = ""
+			rel_appurl = "%s/" % (self.config.SCMlogs_appurl)
+
 		user_profile = UserProfile(a_user, self.config)
 
 		if self.opt_output == 'mail' and not user_profile.send_email:
@@ -401,11 +413,12 @@ class SCMLogsApplication:
 	#	print "-> %s \t[%d/%d logs]" % (user, nb_logs, nb_all_logs);
 		if nb_logs > 0 or user_profile.send_emptylogs :
 			### Top Text
+			header_text = "";
 			top_text = "";
 			bottom_text = "";
 			if output_format == 'text':
 				if a_logskey != '':
-					top_text = "Check online commits  :: [%s/show.php?user=%s&key=%s] :: [%s]\n%s" % (self.config.SCMlogs_appurl, a_user, a_logskey, a_logskey, top_text)
+					top_text = "Check online commits  :: [%s/show.php?user=%s&key=%s] :: [%s]\n%s" % (self.abs_appurl, a_user, a_logskey, a_logskey, top_text)
 				top_text = "%sYour selection containing changes : \n\n%s\n" % (top_text, dirs_changed)
 				top_text = "%sTotal :: %d / %d logs\n" % (top_text, nb_logs, nb_all_logs)
 
@@ -417,30 +430,37 @@ class SCMLogsApplication:
 				bottom_text = "%s%s\n\n" % (bottom_text, mydirectories_text)
 				bottom_text = "%sIf you want to change your preferences, (like not receiving SCMLogs emails), go to [%s?user=%s]\n\n" % (bottom_text, self.config.webapp_url, a_user)
 			else :
+				if self.use_basetag:
+					header_text = "<BASE href=\"%s/\">\n" % (basetag_url)
+				else:
+					header_text = ""
+
 				if a_logskey != '':
-					top_text = "Check online commits  ::<a href=\"%s/show.php?user=%s&key=%s\">[%s]</a><br>\n%s" % (self.config.SCMlogs_appurl, a_user, a_logskey, a_logskey, top_text)
+					top_text = "Check online commits  ::<a href=\"show.php?user=%s&key=%s\">[%s]</a><br>\n%s" % (rel_appurl, a_user, a_logskey, a_logskey, top_text)
 				top_text = "%s<a name=\"TOP\"></a>Your selection containing changes : \n<br><ul>%s</ul>" % (top_text, dirs_changed)
 				top_text = "%s<br><b>Total</b> :: %d / %d logs" % (top_text, nb_logs, nb_all_logs)
 				top_text = "%s<br><br>\n" % (top_text)
 
 				### Bottom Text
 				bottom_text = "";
-				bottom_text = "%s<BR>\nYou are viewing only the following directories (and their subdirectories) : <br>\n" % (bottom_text)
+				bottom_text = "%s<br/>\nYou are viewing only the following directories (and their subdirectories) : <br>\n" % (bottom_text)
 				mydirectories_text = ""
 				for m in mydirectories:
 					mydirectories_text = "%s :: %s \n" % (mydirectories_text, m)
 				bottom_text = "%s<em>%s</em><br><br>\n" % (bottom_text, mydirectories_text)
-				bottom_text = "%sIf you want to change your preferences, (like not receiving SCMLogs emails), go to <a href=\"%s?user=%s\">%s</a><br>\n\n" % (bottom_text, self.config.SCMlogs_appurl, a_user, self.config.SCMlogs_appurl)
+				bottom_text = "%sIf you want to change your preferences, (like not receiving SCMLogs emails), go to <a href=\"%s?user=%s\">%s</a><br>\n\n" % (bottom_text, rel_appurl, a_user, self.abs_appurl)
 
 			if self.opt_output == 'out':
 				if output_format == 'text':
 					output_text = ""
+					output_text = "%s\n%s" % (output_text, header_text)
 					output_text = "%s\n%s" % (output_text, top_text)
 					output_text = "%s\n%s" % (output_text, filtred_logs_text)
 					output_text = "%s\n%s" % (output_text, bottom_text)
 					print "%s" % (output_text)
 				else:
 					output_text = htmlStyleCode();
+					output_text = "%s\n%s" % (output_text, header_text)
 					output_text = "%s\n%s" % (output_text, top_text)
 					output_text = "%s\n%s" % (output_text, filtred_logs_text)
 					output_text = "%s<br>\n%s" % (output_text, bottom_text)
@@ -454,6 +474,7 @@ class SCMLogsApplication:
 						mail_text = "%sWARNING: filter on author=%s\n" % (mail_text, self.only_user)
 					if self.only_tag != '':
 						mail_text = "%sWARNING: filter on tag=%s\n" % (mail_text, self.only_tag)
+					mail_text = "%s\n%s" % (mail_text, header_text)
 					mail_text = "%s\n%s" % (mail_text, top_text)
 					mail_text = "%s\n%s" % (mail_text, filtred_logs_text)
 					mail_text = "%s\n%s" % (mail_text, bottom_text)
@@ -469,6 +490,7 @@ class SCMLogsApplication:
 						mail_text = "%s<div class=warning>WARNING: filter on author=%s</div>\n" % (mail_text, self.only_user)
 					if self.only_tag != '':
 						mail_text = "%s<div class=warning>WARNING: filter on tag=%s</div>\n" % (mail_text, self.only_tag)
+					mail_text = "%s\n%s" % (mail_text, header_text)
 					mail_text = "%s\n%s" % (mail_text, top_text)
 					mail_text = "%s<br>\n%s" % (mail_text, filtred_logs_text)
 					mail_text = "%s<br>\n%s" % (mail_text, bottom_text)

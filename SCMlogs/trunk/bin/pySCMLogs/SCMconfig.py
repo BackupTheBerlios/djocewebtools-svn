@@ -74,11 +74,13 @@ class SCMconfig:
 
 		# Browsing
 		if cfg.has_option ("global", "browsing"):
+			self.webapp_script = "";
 			self.browsing = self.option (cfg, "global", "browsing")
 			self.webapp_url = self.remove_double_quotes (self.option (cfg, self.browsing, "webapp_url"))
 		else:
+			self.webapp_script = "webscmlogs.php";
 			self.browsing = ""
-			self.webapp_url = "%s%s" % (self.SCMlogs_appurl, "webscmlogs.php")
+			self.webapp_url = "%s%s" % (self.SCMlogs_appurl, self.webapp_script)
 		# Email
 		self.smtp_server = self.option (cfg, "email", "smtp_server")
 		self.at_domain_name = self.option (cfg, "email", "at_domain_name")
