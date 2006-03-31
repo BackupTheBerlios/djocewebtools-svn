@@ -1,6 +1,9 @@
 <?php
 	// Classes
 
+define('WEBSVN_URL', "http://www.ise/websvn/");
+define('VIEWVC_URL', "http://www.ise/viewcvs/");
+define('TRAC_URL', "https://origo.ethz.ch/cgi-bin/trac.fcgi/eiffelstudio/");
 
 class webappUrlEngine {
 	Function webappUrlEngine ($baseurl, $reponame) {
@@ -34,14 +37,14 @@ class websvnUrlEngine extends webappUrlEngine {
 	}
 	function urlBlameFile ($file, $dir, $r1) {
 		$url = $this->urlTmp ('blame');
-		if ($r1 >= 0) { $url .= "&rev=r1"; }
+		if ($r1 >= 0) { $url .= "&rev=$r1"; }
 		$url .= "&sc=1";
 		$url .= "&path=$dir/$file";
 		return $url;
 	}
 	function urlDiffFile ($file, $dir, $r1, $r2) {
 		$url = $this->urlTmp ('diff');
-		if ($r1 >= 0) { $url .= "&rev=r1"; }
+		if ($r1 >= 0) { $url .= "&rev=$r1"; }
 		$url .= "&sc=1";
 		$url .= "&path=$dir/$file";
 		return $url;
@@ -57,6 +60,54 @@ class websvnUrlEngine extends webappUrlEngine {
 		$url = $this->urlTmp ('comp');
 		$url .= "&compare[]=$dir@$r1&compare[]=$dir@$r2";
 		return $url;
+	}
+}
+
+class tracUrlEngine extends webappUrlEngine {
+	Function tracUrlEngine ($baseurl, $repository_name) {
+		/* No repo name support */
+		parent::webappUrlEngine ($baseurl, $repository_name);
+	}
+	function urlTmp ($op) {
+		$res = $this->baseurl . "/";
+		if (strlen($op) > 0) {
+			$res = $res . $op . "/" ;
+		}
+		return $res;
+	}
+	function urlBrowser () {
+		return $this->urlTmp ('browser');
+	}
+	function urlShowFile ($file, $dir, $r1) {
+		$url = $this->urlBrowser() .  $dir.'/'.$file;
+		if ($r1 >= 0) { $url .= "?rev=$r1"; }
+		return $url;
+	}
+	function urlBlameFile ($file, $dir, $r1) {
+		return $this->urlShowFile ($file, $dir, $r1);
+	}
+	function urlDiffFile ($file, $dir, $r1, $r2) {
+//		if ($r2 >= 0) {
+//			$url = $this->urlTmp ('');
+//			$url .= "anydiff?_";
+//			$url .= "&new_path=$dir/$file";
+//			$url .= "&old_path=$dir/$file";
+//			if ($r1 >= 0) { $url .= "&new_rev=".$r1; }
+//			if ($r2 >= 0) { $url .= "&old_rev=".$r2; }
+//		} else {
+			$url = $this->urlTmp ('changeset');
+			$url .= "$r1/";
+			$url .= "$dir/$file";
+//		}
+		return $url;
+	}
+	function urlShowDir ($dir, $r1) {
+		$url = $this->urlBrowser(). $dir;
+		if ($r1 >= 0) { $url .= "?rev=$r1"; }
+		return $url;
+	}
+	function urlDiffDir ($dir, $r1, $r2) {
+		return $this->urlDiffFile('', $dir, $r1, $r2);
 	}
 }
 
@@ -188,8 +239,9 @@ Function url_for_browser ($appUrlEngine){
 	@$op = $_GET['op'];
 	@$reponame = $_GET['repname'];
 	$urlEngineIds = array ('websvn' => Null, 'viewcvs' => Null);
-	$urlEngineIds['websvn'] = new websvnUrlEngine ("http://www.ise/websvn/", $reponame);
-	$urlEngineIds['viewcvs'] = new viewcvsUrlEngine ("http://www.ise/viewcvs/", $reponame);
+	$urlEngineIds['websvn'] = new websvnUrlEngine (WEBSVN_URL, $reponame);
+	$urlEngineIds['viewcvs'] = new viewcvsUrlEngine (VIEWVC_URL, $reponame);
+	$urlEngineIds['trac'] = new tracUrlEngine (TRAC_URL, $reponame);
 	$appUrlEngine = $urlEngineIds[$webapp];
 	$url = url_for_operation_on_browser ($op, $appUrlEngine);
 	echo '<meta http-equiv="refresh" content="'.$delay.'; url='.$url.'">';
