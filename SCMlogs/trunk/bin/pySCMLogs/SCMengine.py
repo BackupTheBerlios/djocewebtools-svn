@@ -307,7 +307,7 @@ class SCMLogsApplication:
 	def sendLogByEmailTo (self, logs, user_profile, logs_count, all_logs_count, a_subject='', is_html=0):
 		today = strftime ("%A %Y/%b/%d (%H:%M:%S)", localtime(time()))
 		if a_subject != '':
-			subject = "[SCM:%s]" % (a_subject)
+			subject = "[SCM:%s:%s]" % (self.config.repository_name, a_subject)
 		else:
 			subject = "[SCM:Commits @ %s] " % (user_profile.user)
 		subject = "%s %s <%d/%d logs>" % (subject, today, logs_count, all_logs_count)
