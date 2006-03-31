@@ -188,12 +188,6 @@ class SCMLogsApplication:
 		else:
 			self.webUrlEngine = webAppEngine.webscmlogs(self.config.webapp_url, self.config.repository_name)
 		self.webUrlEngine.set_default_webapp (self.config.browsing);
-#		if self.config.browsing == 'websvn':
-#			self.webUrlEngine = webAppEngine.websvn(self.config.webapp_url, self.config.repository_name)
-#		elif self.config.browsing == 'viewcvs':
-#			self.webUrlEngine = webAppEngine.viewcvs(self.config.webapp_url, self.config.repository_name)
-#		elif self.config.browsing == 'webscmlogs':
-#			self.webUrlEngine.set_default_webapp ();
 		self.logs_factory = SCMLogsFactory (self.config, self.webUrlEngine)
 
 	def load_parameters(self, param):
@@ -307,7 +301,7 @@ class SCMLogsApplication:
 	def sendLogByEmailTo (self, logs, user_profile, logs_count, all_logs_count, a_subject='', is_html=0):
 		today = strftime ("%A %Y/%b/%d (%H:%M:%S)", localtime(time()))
 		if a_subject != '':
-			subject = "[SCM:%s]" % (a_subject)
+			subject = "[SCM:%s] " % (a_subject)
 		else:
 			subject = "[SCM:Commits @ %s] " % (user_profile.user)
 		subject = "%s<%s> " % (subject, self.config.repository_name)
