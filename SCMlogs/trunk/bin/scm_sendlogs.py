@@ -24,6 +24,8 @@ class SCMLogsApplicationParameters:
 		self.add_option ("subject", 	0, None, 	"-subject", 	"Special subject to use in email")
 		self.add_option ("output_format", 		0, 'html', 	"-html", 	"generate HTML")
 		self.add_option ("output_format", 		0, 'text', 	"-text", 	"generate TEXT")
+		self.add_option ("output_type", 		0, 'filtered', 	"--filtered", 	"filter LOGs")
+		self.add_option ("output_type", 		0, 'raw', 	"--raw", 	"raw LOGs")
 		self.add_option ("output", 		0, 'out', 	"-out", 		"Display output in stdout")
 		self.add_option ("output", 		0, 'mail',	"-mail", 	"Send output by email")
 		self.add_option ("only_user", 	0, None, 	"-only_user","Use only_user's commits")
@@ -51,9 +53,10 @@ class SCMLogsApplicationParameters:
 		return self.options[opt][4] != None
 	def usage(self):
 		res = "Usage:\n"
-		res = "%s%s" %(res, " script (-k logskey |-f logfile) -u user {-p none or filterfile} (-text | -html) (-out | -mail) -only_user a_user -only_tag a_tag -subject subject -mesg message \n")
+		res = "%s%s" %(res, " script (-k logskey |-f logfile) -u user {-p none or filterfile} (-filtered | -raw) (-text | -html) (-out | -mail) -only_user a_user -only_tag a_tag -subject subject -mesg message \n")
 
 		for n,o,r,v,d in self.options:
+			print o
 			res = "%s\t%s\n" % (res, self.usage_option(o))
 		return res
 	def load_from_args(self, args):

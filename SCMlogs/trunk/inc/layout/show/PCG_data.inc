@@ -91,6 +91,12 @@ $error = false;
 		} else {
 			$DIS_Parameters .= "Formating used = $format <BR>";
 		}
+		@$type = $_POST['type'];
+		if (!isset ($type) or (strlen ($type) == 0)) { 
+			$type = 'filtered'; 
+		} else {
+			$DIS_Parameters .= "Output type used = $type <BR>";
+		}
 		@$only_user = $_POST['only_user'];
 		if (!isset ($only_user) or (strlen ($only_user) == 0)) { 
 			$only_user = ''; 
@@ -188,6 +194,7 @@ $error = false;
 		if ($processing_fct != '') {
 			ob_start ();
 			$DIS_Format = $format;
+			$DIS_Type = $type;
 
 			if ($filter == 'text') {
 				$param_filter = $filter_file_tempo_name;
@@ -195,7 +202,7 @@ $error = false;
 				$param_filter = $filter;
 			}
 			set_time_limit(150);
-			$DIS_Command = $processing_fct ($file_tempo_name, $user, $param_filter, $only_user, $only_tag, $format);
+			$DIS_Command = $processing_fct ($file_tempo_name, $user, $param_filter, $only_user, $only_tag, $format, $type);
 			$DIS_Result = ob_get_contents();
 			ob_end_clean();
 		} else {

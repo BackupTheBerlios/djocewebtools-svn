@@ -1,6 +1,6 @@
 #!/usr/bin/python
 #
-# Usage:  svn_sendlogs.py -f logfile { -u user } { -p filterfile or none } {-html}
+# Usage:  svn_sendlogs.py -f logfile { -u user } { -p filterfile or none } {-html} {-raw}
 #
 
 from time import *
@@ -60,9 +60,9 @@ class UserProfile:
 		self.user = user
 		self.email = ''
 		self.format = 'html'
+		self.type = 'filtered'
 		self.directories = []
 		self.send_email = 1
-		self.send_raw = 0
 		self.send_emptylogs = 0
 
 		fn = self.user_pref_filename (user)
@@ -90,10 +90,10 @@ class UserProfile:
 				self.email = value
 			if param == 'send_format':
 				self.format = value
+			if param == 'send_type':
+				self.type = value
 			if param == 'send_email':
 				self.send_email = (value != 'off')
-			if param == 'send_raw':
-				self.send_raw = (value == 'on')
 			if param == 'send_emptylogs':
 				self.send_emptylogs = (value == 'on')
 
@@ -152,6 +152,9 @@ class SCMLogsFactory:
 
 class SCMLogsApplication:
 	def __init__(self, param, cfg=''):
+		self.raw_logsfile_content = None
+		self.all_logs = None
+
 		self.user = '';
 		self.only_user = '';
 		self.only_tag = '';
@@ -164,6 +167,7 @@ class SCMLogsApplication:
 		self.opt_filter_fn = '';
 		self.opt_output = 'mail';
 		self.opt_output_format = '';
+		self.opt_output_type = '';
 
 		self.opt_SCM_repo = '';
 		if len(cfg) == 0:
@@ -221,12 +225,14 @@ class SCMLogsApplication:
 			self.opt_subject = param['subject']
 		if param.has_key ('output_format'): 
 			self.opt_output_format = param['output_format']
+		if param.has_key ('output_type'): 
+			self.opt_output_type = param['output_type']
 		if param.has_key ('output'): 
 			self.opt_output = param['output']
 
 	def check_parameters (self):
 		if self.logsfile == '' and self.logskey == '':
-			print "Usage: script (-k logskey |-f logfile) -u user {-p none or filterfile} -html -mail -only_user a_user -only_tag a_tag -mesg message \n"
+			print "Usage: script (-k logskey |-f logfile) -u user {-p none or filterfile} {-html|-text} {-filtered|-raw} {-mail|-out} -only_user a_user -only_tag a_tag -mesg message \n"
 			sys.exit ();
 
 	def load_config (self, repo):
@@ -343,7 +349,7 @@ class SCMLogsApplication:
 				users.append (result.group (1))
 		return users
 
-	def processUser (self, a_user, a_filter, a_filter_fn, all_logs, a_logskey):
+	def processUser (self, a_user, a_filter, a_filter_fn, a_logskey):
 		if self.use_basetag:
 			basetag_url = "%s" % (self.config.SCMlogs_appurl)
 			rel_appurl = ""
@@ -371,42 +377,47 @@ class SCMLogsApplication:
 		else:
 			output_format = user_profile.format
 
-		nb_all_logs = len (all_logs)
+		if len (self.opt_output_type) > 0:
+			output_type = self.opt_output_type
+		else:
+			output_type = user_profile.type
 
-		#
-		# Build a dict containing the logs indexed by directory name
-		#
-		nb_logs = 0
-		dirs_listed = {}
-		for log_obj in all_logs:
-			is_selected = 1;
-			has_error = len (log_obj.error_message) > 0;
-			if has_error:
-				is_selected = 1
-			else:
-				if (is_selected and self.only_user != ''):
-					is_selected = is_selected and log_obj.author == self.only_user
-				# FIXME ...
-				if (is_selected and self.only_tag != ''):
-					is_selected = is_selected and log_obj.tag == self.only_tag
-				is_selected = is_selected and self.logDirectorySelected (log_obj, mydirectories)
+		if output_type == 'raw':
+			nb_logs = self.raw_logsfile_count()
+			nb_all_logs = nb_logs
+			filtred_logs_text = self.raw_logsfile_content;
+			dirs_changed = ""
+		else:
+			self.get_all_logs()
+			nb_all_logs = len (self.all_logs)
 
-			#is_selected = 1;#FIXME
+			# Build a dict containing the logs indexed by directory name
+			nb_logs = 0
+			dirs_listed = {}
+			for log_obj in self.all_logs:
+				is_selected = 1;
+				has_error = len (log_obj.error_message) > 0;
+				if has_error:
+					is_selected = 1
+				else:
+					if (is_selected and self.only_user != ''):
+						is_selected = is_selected and log_obj.author == self.only_user
+					if (is_selected and self.only_tag != ''):
+						is_selected = is_selected and log_obj.tag == self.only_tag
+					is_selected = is_selected and self.logDirectorySelected (log_obj, mydirectories)
+				if is_selected:
+					if not dirs_listed.has_key (log_obj.directory):
+						dirs_listed[log_obj.directory] = [];
+					(dirs_listed[log_obj.directory]).append (log_obj)
+					nb_logs = nb_logs + 1
 
-			if is_selected:
-				if not dirs_listed.has_key (log_obj.directory):
-					dirs_listed[log_obj.directory] = [];
-				(dirs_listed[log_obj.directory]).append (log_obj)
-				nb_logs = nb_logs + 1
+			# Build the mail text content regarding logs
+			(filtred_logs_text, dirs_changed) = self.formatedFilteredLogs (dirs_listed, output_format)
 
-		#
-		# Build the mail text content regarding logs
-		#
-		(filtred_logs_text, dirs_changed) = self.formatedFilteredLogs (dirs_listed, output_format)
+		###########################################################
+		# send the mail only if there are some logs events.       #
+		###########################################################
 
-		#
-		# send the mail only if there are some logs events.
-		#
 		#print "-> %s \t[%d/%d logs]" % (user, nb_logs, nb_all_logs);
 		if nb_logs > 0 or user_profile.send_emptylogs :
 			### Top Text
@@ -416,15 +427,17 @@ class SCMLogsApplication:
 			if output_format == 'text':
 				if a_logskey != '':
 					top_text = "Check online commits  :: [%s/show.php?user=%s&key=%s] :: [%s]\n%s" % (self.abs_appurl, a_user, a_logskey, a_logskey, top_text)
-				top_text = "%sYour selection containing changes : \n\n%s\n" % (top_text, dirs_changed)
+				if len(dirs_changed) > 0:
+					top_text = "%sYour selection containing changes : \n\n%s\n" % (top_text, dirs_changed)
 				top_text = "%sTotal :: %d / %d logs\n" % (top_text, nb_logs, nb_all_logs)
 
 				### Bottom Text
-				bottom_text = "%s\nYou are viewing only the following directory (and their subdirectories) : \n" % (bottom_text)
-				mydirectories_text = ""
-				for m in mydirectories:
-					mydirectories_text = "%s :: %s \n" % (mydirectories_text, m)
-				bottom_text = "%s%s\n\n" % (bottom_text, mydirectories_text)
+				if output_type != 'raw':
+					bottom_text = "%s\nYou are viewing only the following directory (and their subdirectories) : \n" % (bottom_text)
+					mydirectories_text = ""
+					for m in mydirectories:
+						mydirectories_text = "%s :: %s \n" % (mydirectories_text, m)
+					bottom_text = "%s%s\n\n" % (bottom_text, mydirectories_text)
 				bottom_text = "%sIf you want to change your preferences, (like not receiving SCMLogs emails), go to [%s?user=%s]\n\n" % (bottom_text, self.config.webapp_url, a_user)
 			else :
 				if self.use_basetag:
@@ -434,17 +447,19 @@ class SCMLogsApplication:
 
 				if a_logskey != '':
 					top_text = "Check online commits  ::<a href=\"%sshow.php?user=%s&key=%s\">[%s]</a><br>\n%s" % (rel_appurl, a_user, a_logskey, a_logskey, top_text)
-				top_text = "%s<a name=\"TOP\"></a>Your selection containing changes : \n<br><ul>%s</ul>" % (top_text, dirs_changed)
+				if len(dirs_changed) > 0:
+					top_text = "%s<a name=\"TOP\"></a>Your selection containing changes : \n<br><ul>%s</ul>" % (top_text, dirs_changed)
 				top_text = "%s<br><b>Total</b> :: %d / %d logs" % (top_text, nb_logs, nb_all_logs)
 				top_text = "%s<br><br>\n" % (top_text)
 
 				### Bottom Text
 				bottom_text = "";
-				bottom_text = "%s<br/>\nYou are viewing only the following directories (and their subdirectories) : <br>\n" % (bottom_text)
-				mydirectories_text = ""
-				for m in mydirectories:
-					mydirectories_text = "%s :: %s \n" % (mydirectories_text, m)
-				bottom_text = "%s<em>%s</em><br><br>\n" % (bottom_text, mydirectories_text)
+				if output_type != 'raw':
+					bottom_text = "%s<br/>\nYou are viewing only the following directories (and their subdirectories) : <br>\n" % (bottom_text)
+					mydirectories_text = ""
+					for m in mydirectories:
+						mydirectories_text = "%s :: %s \n" % (mydirectories_text, m)
+					bottom_text = "%s<em>%s</em><br><br>\n" % (bottom_text, mydirectories_text)
 				bottom_text = "%sIf you want to change your preferences, (like not receiving SCMLogs emails), go to <a href=\"%s?user=%s\">%s</a><br>\n\n" % (bottom_text, rel_appurl, a_user, self.abs_appurl)
 
 			if self.opt_output == 'out':
@@ -459,7 +474,10 @@ class SCMLogsApplication:
 					output_text = htmlStyleCode();
 					output_text = "%s\n%s" % (output_text, header_text)
 					output_text = "%s\n%s" % (output_text, top_text)
-					output_text = "%s\n%s" % (output_text, filtred_logs_text)
+					if output_type == 'raw':
+						output_text = "%s\n<pre>%s</pre>" % (output_text, filtred_logs_text)
+					else:
+						output_text = "%s\n%s" % (output_text, filtred_logs_text)
 					output_text = "%s<br>\n%s" % (output_text, bottom_text)
 					print "%s" % (output_text)
 			else :
@@ -489,41 +507,58 @@ class SCMLogsApplication:
 						mail_text = "%s<div class=warning>WARNING: filter on tag=%s</div>\n" % (mail_text, self.only_tag)
 					mail_text = "%s\n%s" % (mail_text, header_text)
 					mail_text = "%s\n%s" % (mail_text, top_text)
-					mail_text = "%s<br>\n%s" % (mail_text, filtred_logs_text)
+
+					if output_type == 'raw':
+						mail_text = "%s<br>\n<pre>%s</pre>" % (mail_text, filtred_logs_text)
+					else:
+						mail_text = "%s<br>\n%s" % (mail_text, filtred_logs_text)
 					mail_text = "%s<br>\n%s" % (mail_text, bottom_text)
 					mail_text = mail_text + "</body></html>\n";
 
 
-				#DBG# print "Sending mail to %s " % (user_profile)
-				self.sendLogByEmailTo (mail_text, user_profile, nb_logs, nb_all_logs, self.opt_subject, (output_format == 'html'))
+					#DBG# print "Sending mail to %s " % (user_profile)
+					self.sendLogByEmailTo (mail_text, user_profile, nb_logs, nb_all_logs, self.opt_subject, (output_format == 'html'))
+	
+	def get_raw_logsfile_content(self):
+		mylogsfile = open (self.logsfile, 'r')
+		res = mylogsfile.read()
+		mylogsfile.close ()
+		self.raw_logsfile_content = res
+
+	def raw_logsfile_count(self):
+		reg = '^[-|\*]{40,}$'
+		p = re.compile(reg, re.MULTILINE)
+		mylogs = p.split (self.raw_logsfile_content);
+		return len(mylogs);
+
+	def get_all_logs(self):
+		print "fetch get_all_logs"
+		if self.all_logs == None:
+			reg = '^[-|\*]{40,}$'
+			p = re.compile(reg, re.MULTILINE)
+			mylogs = p.split (self.raw_logsfile_content);
+			self.all_logs = []
+			for log in mylogs[1:] :
+				try:
+					log_objs = self.getLogsFrom (log);
+					#print log_obj.directory + "   <BR>\n"
+					self.all_logs.extend (log_objs)
+				except:
+					print ("\n\n[!] Unable to create object for: \n<pre>[%s]</pre>\n" %(log) );
 
 	def execute(self):
 		# Read the cvs log file
-		mylogsfile = open (self.logsfile, 'r');
-		reg = '^[-|\*]{40,}$'
-		p = re.compile(reg, re.MULTILINE)
-		mylogs = p.split (mylogsfile.read());
-		mylogsfile.close ();
-
-		# parse and create a list of Cvs logs objects.
-		all_logs = []
-		for log in mylogs[1:] :
-			try:
-				log_objs = self.getLogsFrom (log);
-				#print log_obj.directory + "   <BR>\n"
-				all_logs.extend (log_objs)
-			except:
-				print ("\n\n[!] Unable to create object for: \n<pre>[%s]</pre>\n" %(log) );
-
+		self.get_raw_logsfile_content()
+		# and parse and create a list of Cvs logs objects.
 		if self.user != '':
-			self.processUser (self.user, self.opt_filter, self.opt_filter_fn, all_logs, self.logskey)
+			self.processUser (self.user, self.opt_filter, self.opt_filter_fn, self.logskey)
 		else:
 			# For each user (thoses who have a .cfg file in the correct directory
 			# send an email regarding the directories affected.
 			for user in self.listOfUsers ():
 				#print user
 				try:
-					self.processUser (user, 'profil', '', all_logs, self.logskey)
+					self.processUser (user, 'profil', '', self.logskey)
 				except:
 					print "Error while processing user [%s] \n" % (user)
 					#print "Unexpected error: %s" %( sys.exc_info()[0])

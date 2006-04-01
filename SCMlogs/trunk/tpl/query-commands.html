@@ -18,10 +18,7 @@ function setFilterMode(mn)
 </script>
 <div class="dlgbox" width="100%">
 	<div class=title>Global parameter</div>
-	<table border=0 cellpadding="2pt" cellspacing="2pt" width="100%">
-		<tr>
-			<td class=field>Filter to use</td>
-			<td class=text>
+	<strong>Filter to use:</strong>
 				<SELECT NAME="filter"
 					onchange="setFilterMode(this.options[this.selectedIndex].value);"
 				>
@@ -29,18 +26,21 @@ function setFilterMode(mn)
 				<OPTION VALUE="text" >Text</OPTION>
 				<OPTION VALUE="none" >None</OPTION>
 				</SELECT>
-			</td>
-			<td class=field>Format</td>
-			<td class=text>
+	<strong>Format:</strong>
 				<SELECT NAME=format>
-				<OPTION VALUE='html' CHECKED>html</OPTION>
-				<OPTION VALUE='text' >text</OPTION>
+				<OPTION VALUE='html' CHECKED>Html</OPTION>
+				<OPTION VALUE='text' >Text</OPTION>
 				</SELECT>
-			</td>
-		</tr>
-	</table>
+	<strong>Type:</strong>
+				<SELECT NAME=type>
+				<OPTION VALUE='filtered' CHECKED>Filtered logs</OPTION>
+				<OPTION VALUE='raw' >Raw logs</OPTION>
+				</SELECT>
 	<div class="comment" >(if filter is Profil, it will use the one from profil [{VAR_USER}]<br/>
-		if it is Text, you can specific your own filter down the page)</div>
+		if it is Text, you can specific your own filter down the page.<br/>
+		if type is Raw, the filter option will be ignored.
+		)
+	</div>
 	<br/>
 	<div class=title>According to the profil ({VAR_USER} or None)</div>
 	<table border=0 cellpadding="6pt" cellspacing="4pt" width="100%">

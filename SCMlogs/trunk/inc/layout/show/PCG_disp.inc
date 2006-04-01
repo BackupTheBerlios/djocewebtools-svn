@@ -14,6 +14,7 @@
 	}
 
 	$t->setVar ("VAR_FORMAT", $DIS_Format);
+	$t->setVar ("VAR_TYPE", $DIS_Type);
 
 	if (isset ($only_user)) {
 		$t->setVar ("VAR_ONLY_USER", $only_user);

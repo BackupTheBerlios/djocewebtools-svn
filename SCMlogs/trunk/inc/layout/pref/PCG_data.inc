@@ -10,10 +10,7 @@
 	if (!isset($oppref) && isset ($_GET['oppref'])) { $oppref = $_GET['oppref']; }
 	if (!isset($oppref) && isset ($_POST['oppref'])) { $oppref = $_POST['oppref']; }
 
-
-
 	$user = $SCMUSER;
-
 
 	ob_start ();
 		loadUserPref ($user);
@@ -22,7 +19,7 @@
 			if (isset ($_POST['email'])) { $email = $_POST['email']; }
 			if (isset ($_POST['activate'])) { $activate = $_POST['activate']; }
 			if (isset ($_POST['sendemptylogs'])) { $sendemptylogs = $_POST['sendemptylogs']; }
-			if (isset ($_POST['sendrawfile'])) { $sendrawfile = $_POST['sendrawfile']; }
+			if (isset ($_POST['sendtype'])) { $sendtype = $_POST['sendtype']; }
 			if (isset ($_POST['format'])) { $format = $_POST['format']; }
 			$tmp = "";
 			$tmp .= "email=".$email."\n";
@@ -30,15 +27,18 @@
 			$tmp .= "send_email=".$activate."\n";
 			if (!isset ($sendemptylogs) or ($sendemptylogs != 'on')) { $sendemptylogs = 'off'; }
 			$tmp .= "send_emptylogs=".$sendemptylogs."\n";
-			if (!isset ($sendrawfile) or ($sendrawfile != 'on')) { $sendrawfile = 'off'; }
-			$tmp .= "send_rawfile=".$sendrawfile."\n";
+			if ($sendtype != 'raw') { $sendtype = 'filtered'; }
+			$tmp .= "send_type=".$sendtype."\n";
 			if ($format != 'html') { $format = 'text'; }
 			$tmp .= "send_format=".$format."\n";
 
-			echo "<DIV class=info>Pref Saved for $user</DIV>";
+			echo "<DIV class=info>";
+			echo "Pref Saved for $user";
+//			echo "<pre style=\"text-align: left; font-size: smaller;\">$tmp</pre>";
+			echo "</DIV>";
 			saveUserPref ($tmp, $user);
 			loadUserPref ($user);
-			echo "<BR>";
+			echo "<br/>";
 		} 
 		if (True) {
 			echo "<FORM ACTION='$PHP_SELF' NAME='PREF-FORM' METHOD='POST' >\n";
@@ -47,25 +47,34 @@
 
 			global $SCMLOGS;
 			if ($SCMLOGS['email'] == '') { $SCMLOGS['email'] = $user; }
-			echo "Email Address <INPUT TYPE=text NAME=email VALUE=\"".$SCMLOGS['email']."\" ><BR><BR>";
+			echo "Email address <input type=text name=email value=\"".$SCMLOGS['email']."\" ><br><br>";
 
+			echo "<h3>Sending or not ?</h3>";
+			echo "<ul>";
 			if ($SCMLOGS['send_email'] == 'on') { $is_checked = 'CHECKED'; } else { $is_checked = '';}
-			echo "<INPUT TYPE=checkbox NAME=activate $is_checked >Email sending <BR>";
-
+			echo "<input type=checkbox name=activate $is_checked >Email sending <br>";
 			if ($SCMLOGS['send_emptylogs'] == 'on') { $is_checked = 'CHECKED'; } else { $is_checked = '';}
-			echo "<INPUT TYPE=checkbox NAME=sendemptylogs $is_checked >Email empty logs <BR>";
+			echo "<input type=checkbox name=sendemptylogs $is_checked >Email empty logs <br>";
+			echo "</ul>";
 
-			if ($SCMLOGS['send_rawfile'] == 'on') { $is_checked = 'CHECKED'; } else { $is_checked = '';}
-			echo "<INPUT TYPE=checkbox NAME=sendrawfile $is_checked >Email raw file (Not Yet Implemented)<BR>";
+			echo "<h3>Output message type:</h3>";
+			echo "<ul>";
+			if ($SCMLOGS['send_type'] == 'filtered') { $is_checked = 'CHECKED'; } else { $is_checked = '';}
+			echo "<INPUT TYPE=radio NAME=sendtype VALUE=\"separate\" $is_checked >Filtered logs <br/>";
+			if ($SCMLOGS['send_type'] == 'raw') { $is_checked = 'CHECKED'; } else { $is_checked = '';}
+			echo "<INPUT TYPE=radio NAME=sendtype VALUE=\"raw\" $is_checked >Raw logs <br/>";
+			echo "</ul>";
 
+			echo "<h3>Commits log message format:</h3>";
+			echo "<ul>";
 			if ($SCMLOGS['send_format'] == 'html') { $is_checked = 'CHECKED'; } else { $is_checked = '';}
-			echo "<INPUT TYPE=radio NAME=format VALUE=\"html\" $is_checked >HTML ";
-
+			echo "<INPUT TYPE=radio NAME=format VALUE=\"html\" $is_checked >HTML <br/>";
 			if ($SCMLOGS['send_format'] == 'text') { $is_checked = 'CHECKED'; } else { $is_checked = '';}
-			echo "<INPUT TYPE=radio NAME=format VALUE=\"text\" $is_checked >TEXT <BR> ";
+			echo "<input type=radio name=format value=\"text\" $is_checked >TEXT <br/> ";
+			echo "</ul>";
 
-			echo "<INPUT TYPE=submit NAME=oppref VALUE=\"SavePref\" > ";
-			echo "<INPUT TYPE=reset NAME=oppref VALUE=\"Reset\" > ";
+			echo "<input type=submit name=oppref value=\"SavePref\" > ";
+			echo "<input type=reset name=oppref value=\"Reset\" > ";
 			echo "</FORM>\n";
 		}	
 
