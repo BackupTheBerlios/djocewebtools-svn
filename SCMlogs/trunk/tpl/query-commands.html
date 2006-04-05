@@ -47,33 +47,33 @@ function setFilterMode(mn)
 		<tr>
 			<td class=field> RAW logs file </td>
 			<td class=text>
-				<INPUT TYPE=submit NAME=show VALUE='ShowRawLogs'><BR>
+				<input TYPE=submit NAME=show VALUE='ShowRawLogs'><BR>
 			</td>
 		</tr>
 		<tr>
 			<td class=field> All logs </td>
 			<td class=text>
-				<INPUT TYPE=submit NAME=show VALUE='ShowLogs'>
+				<input TYPE=submit NAME=show VALUE='ShowLogs'>
 ::
-				<INPUT TYPE=submit NAME=show VALUE='EmailLogs'>
+				<input TYPE=submit NAME=show VALUE='EmailLogs'>
 			</td>
 		</tr>
 		<tr>
 			<td class=field> Only {VAR_USER}'s commits logs </td>
 			<td class=text>
-				<INPUT TYPE=submit NAME=show VALUE='ShowMyLogs'>
+				<input TYPE=submit NAME=show VALUE='ShowMyLogs'>
 ::
-				<INPUT TYPE=submit NAME=show VALUE='EmailMyLogs'>
+				<input TYPE=submit NAME=show VALUE='EmailMyLogs'>
 			</td>
 		</tr>
 		<tr>
 			<td class=field> Only commits from <br/>author and/or for tag </td>
 			<td class=text>
-				<INPUT TYPE=text NAME=only_user VALUE="{VAR_ONLY_USER}" SIZE="8"> : Author <br/>
-				<INPUT TYPE=text NAME=only_tag VALUE="{VAR_ONLY_TAG}" SIZE="8"> : Tag (only for CVS)
+				<input TYPE=text NAME=only_user VALUE="{VAR_ONLY_USER}" SIZE="8"> : Author <br/>
+				<input TYPE=text NAME=only_tag VALUE="{VAR_ONLY_TAG}" SIZE="8"> : Tag (only for CVS)
 				<hr/>
-				<INPUT TYPE=submit NAME=show VALUE='ShowOnlyLogsFor'><br/>
-				<INPUT TYPE=submit NAME=show VALUE='EmailOnlyLogsFor'>
+				<input TYPE=submit NAME=show VALUE='ShowOnlyLogsFor'><br/>
+				<input TYPE=submit NAME=show VALUE='EmailOnlyLogsFor'>
 			</td>
 		</tr>
 	</table>

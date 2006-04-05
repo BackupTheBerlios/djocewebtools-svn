@@ -62,9 +62,13 @@ if (! defined("_DATAMANAGER_")) { define ("_DATAMANAGER_", 1);
 		$dir .= $repo->id . DIRECTORY_SEPARATOR;
 		return $dir;
 	}
-	Function userPrefFilename ($user) {
+	Function userPrefFilename ($user=NULL) {
 		global $SCMLOGS;
-		return repositoryCfgDirectory().$user.$SCMLOGS['user.pref.ext'];
+		if (isset($user)) {
+			return repositoryCfgDirectory().$user.$SCMLOGS['user.pref.ext'];
+		} else {
+			return userPrefDefaultFilename();
+		}
 	}
 	Function userCfgDefaultFilename () {
 		return repositoryCfgDirectory().'cfg.tpl';
@@ -72,9 +76,13 @@ if (! defined("_DATAMANAGER_")) { define ("_DATAMANAGER_", 1);
 	Function userPrefDefaultFilename () {
 		return repositoryCfgDirectory().'pref.tpl';
 	}
-	Function userConfigFilename ($user) {
+	Function userConfigFilename ($user=NULL) {
 		global $SCMLOGS;
-		return repositoryCfgDirectory().$user.$SCMLOGS['user.cfg.ext'];
+		if (isset($user)) {
+			return repositoryCfgDirectory().$user.$SCMLOGS['user.cfg.ext'];
+		} else {
+			return userCfgDefaultFilename();
+		}
 	}
 
 	Function userCfgDefaultText() {
@@ -140,7 +148,7 @@ if (! defined("_DATAMANAGER_")) { define ("_DATAMANAGER_", 1);
 		$lst = split ("\n", $tmp_cfg);
 		return convertSimpleModListToModRespList ($lst);
 	}
-	Function userModulesText ($user) {
+	Function userModulesText ($user=NULL) {
 		return  ContentOfFile (userConfigFilename ($user));
 	}
 

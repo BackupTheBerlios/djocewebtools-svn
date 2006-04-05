@@ -54,7 +54,11 @@ td.title {
 div.warning {
 	font-weight: bold;
 	color: white;
-	background-color: darkred;
+	background-color: #900;
+}
+div.warning a {
+	color: white;
+	background-color: #900;
 }
 span.info, div.info {
 	background-color: #ffffdd;

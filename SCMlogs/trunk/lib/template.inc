@@ -963,5 +963,3 @@ class Template
 
 }
 ?>
-
-
