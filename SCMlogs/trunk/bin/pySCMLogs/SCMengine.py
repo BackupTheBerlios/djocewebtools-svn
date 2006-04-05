@@ -298,11 +298,14 @@ class SCMLogsApplication:
 		else:
 			result = 0
 			log_dir = log.directory
-			if log_dir[0] == '/':
-				log_dir = log_dir[1:]
-			for dir in mydir:
-				#print "%s %s" % (dir, (log_dir)[:len(dir)])
-				result = result or (dir == (log_dir)[:len(dir)])
+			#if len(log_dir) == 0:
+				#print "Erreur ..."
+			if len(log_dir) > 0:
+				if log_dir[0] == '/':
+					log_dir = log_dir[1:]
+				for dir in mydir:
+					#print "%s %s" % (dir, (log_dir)[:len(dir)])
+					result = result or (dir == (log_dir)[:len(dir)])
 		return result;
 
 	def sendLogByEmailTo (self, logs, user_profile, logs_count, all_logs_count, a_subject='', is_html=0):
@@ -561,7 +564,7 @@ class SCMLogsApplication:
 					self.processUser (user, 'profil', '', self.logskey)
 				except:
 					print "Error while processing user [%s] \n" % (user)
-					#print "Unexpected error: %s" %( sys.exc_info()[0])
-					#einfo = sys.exc_info()
-					#sys.excepthook(einfo[0], einfo[1], einfo[2]);
+					print "Unexpected error: %s" %( sys.exc_info()[0])
+					einfo = sys.exc_info()
+					sys.excepthook(einfo[0], einfo[1], einfo[2]);
 
