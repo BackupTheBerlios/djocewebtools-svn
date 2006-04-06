@@ -1,10 +1,10 @@
 <?php
 
-class SiteAuthHtpasswd extends SiteAuthentification {
+class SiteAuthCvsPasswd extends SiteAuthentification {
 	var $expireTime;
 	var $passwd_filename;
 
-	function SiteAuthHtpasswd($cfg, $passwd_filename) {
+	function SiteAuthCvsPasswd($cfg, $passwd_filename) {
 		parent::SiteAuthentification (&$cfg);
 		$this->passwd_filename = $passwd_filename;
 	}
@@ -34,8 +34,7 @@ class SiteAuthHtpasswd extends SiteAuthentification {
 			FMWK_include_once("pear/pear.inc.php");
 			include_once "File/Passwd.php";
 
-			$passwd = &File_Passwd::factory('Authbasic');
-			$passwd->setMode('md5');
+			$passwd = &File_Passwd::factory('Cvs');
 			$passwd->setFile($this->passwd_filename);
 			$passwd->load();
 			$res = $passwd->verifyPasswd($u, $p);

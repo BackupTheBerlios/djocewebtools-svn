@@ -65,7 +65,7 @@ class ScmlogsSiteApplication extends SiteApplication {
 		$html = '';
 		if (isset ($SCMLOGS['repositories'])) {
 			$repos = $SCMLOGS['repositories'];
-			if (count($repos) > 0) {
+			if (count($repos) > 1) {
 				$html .= '<form action="'.$this_url.'" method="GET"><input type="submit" value="&gt;&gt;" />';
 				$html .= '<select name="repo">';
 				foreach ($repos as $k_repoid => $v_repo) {
@@ -76,6 +76,8 @@ class ScmlogsSiteApplication extends SiteApplication {
 					$html .= '>'.$v_repo->id.'</option>';
 				}
 				$html .= '</select></form>';
+			} else {
+				$html .= "Repository " . SCMLogs_repository_id();
 			}
 		}		
 		$param['DIS_VAR_PAGE_REPO_LIST'] = $html;
