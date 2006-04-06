@@ -3,6 +3,7 @@
 include "../conf/config.inc";
 include INC_DIR."require.inc";
 include INC_DIR."datamanager.inc";
+include INC_DIR."users.inc";
 global $SCMLOGS;
 
 ?>
@@ -51,12 +52,26 @@ div.question {
 if (isset($_GET['repo'])) {
 	$asked_repo = $_GET['repo'];
 }
-if (isset($_GET['op'])) {
+if (isset($_POST['op'])) {
+	$op = $_POST['op'];
+} elseif (isset($_GET['op'])) {
 	$op = $_GET['op'];
 } else {
 	$op = 'admin';
 }
-
+if (isset($_POST['user'])) {
+	$w_user = $_POST['user'];
+} elseif (isset($_GET['user'])) {
+	$w_user = $_GET['user'];
+}
+if (isset($_GET['confirm'])) {
+	$w_confirm = $_GET['confirm'] == 'yes';
+} else {
+	$w_confirm = false;
+}
+if (isset($_POST['action'])) {
+	$w_action = $_POST['action'];
+}
 if (isset ($asked_repo)) {
 	if ($asked_repo == SCMLogs_repository_id()) {
 	} else {
@@ -87,17 +102,44 @@ function adminCheckPath($path,$required=true) {
 	}
 	return $res;
 }
-if (isset($_GET['user'])) {
-	$w_user = $_GET['user'];
-}
-if (isset($_GET['confirm'])) {
-	$w_confirm = $_GET['confirm'] == 'yes';
-} else {
-	$w_confirm = false;
-}
 
 echo "<h1>Administration</h1>";
 switch ($op) {
+	case 'edit':
+		if (isset ($w_user)) {
+			echo "Editing ..." . $w_user;
+			if ($w_action == 'save') {
+				$userprof =& new UserProfile ($w_user);
+				$w_prefs =& $_POST['prefs'];
+				foreach ($w_prefs as $kp => $vp) {
+					$userprof->prefs[$kp] = $vp;
+				}
+				$userprof->save_prefs();
+				echo "Preferences saved:<br/><pre>".$userprof->to_text()."</pre>\n";
+			} else {
+				if (hasUserProfile($w_user)) {
+					$userprof =& new UserProfile ($w_user);
+					$prefs =& $userprof->prefs;
+					echo '<form action="" method="post">';
+					echo '<input type="hidden" name="op" value="edit" />';
+					echo '<input type="hidden" name="user" value="'.$w_user.'" />';
+					echo '<table>';
+					foreach ($prefs as $kp => $vp) {
+						echo '<tr>';
+						echo "<td>$kp</td>";
+						echo "<td><input type=\"text\" name=\"prefs[$kp]\" value=\"$vp\"</td>\n";
+						echo '</tr>';
+					}
+					echo '</table>';
+					echo '<input type="reset" value="Reset"/>';
+					echo '<input type="submit" value="save" name="action"/>';
+					echo '</form>';
+				} else {
+					echo 'No profile found !' . $w_user;
+				}
+			}
+		}
+		break;
 	case 'remove':
 		if (isset ($w_user)) {
 			echo "Removing ..." . $w_user;
@@ -170,6 +212,7 @@ switch ($op) {
 					echo '<li>';
 					echo $u;
 					echo ' [ <a href="?op=remove&user='.$u.'">remove</a> ]';
+					echo ' [ <a href="?op=edit&user='.$u.'">edit</a> ]';
 					echo '<ul>';
 					echo adminCheckPath(userConfigFilename($u));
 					echo '<br/>';
