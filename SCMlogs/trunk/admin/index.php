@@ -195,11 +195,12 @@ switch ($op) {
 		echo '- <strong>repository type dir</strong> : ' . adminCheckPath(repositoryTypeDirectory()) . '<br/>';
 		echo '- <strong>repository config dir</strong> : ' . adminCheckPath(repositoryCfgDirectory()) . '<br/>';
 		if (!$last_check_had_error) {
+			$users = listOfUsers();
 			echo '- <strong>default user config</strong> : ' . adminCheckPath(userCfgDefaultFilename()) . '<br/>';
 			echo '- <strong>default user pref</strong> : ' . adminCheckPath(userPrefDefaultFilename()) . '<br/>';
 			echo '<br/>';
 			echo '<form action="" method="GET">';
-			echo '- <strong>Users </strong> : ';
+			echo '- <strong>Users ('.count($users).') </strong> : ';
 			echo '<script>StartBlockControl("users","+","-",false);</script>';
 			echo '<ul><input type="text" name="user" value=""/>';
 			echo '<input type="submit" name="op" value="create"/>';
@@ -207,7 +208,6 @@ switch ($op) {
 			echo '</ul>';
 			echo '</form>';
 			echo '<ul>';
-				$users = listOfUsers();
 				foreach ($users as $u ) {
 					echo '<li>';
 					echo $u;
