@@ -371,7 +371,7 @@ class SCMLogsApplication:
 
 		if self.opt_output == 'mail' and not user_profile.send_email:
 			return 
-		if self.opt_output == 'mail' and not a_user == '':
+		if self.opt_output == 'mail' and a_user == '':
 			return
 
 		if a_filter == 'profil':
@@ -429,7 +429,7 @@ class SCMLogsApplication:
 		# send the mail only if there are some logs events.       #
 		###########################################################
 
-		#print "-> %s \t[%d/%d logs]" % (user, nb_logs, nb_all_logs);
+		#DBG#print "-> %s \t[%d/%d logs]" % (self.user, nb_logs, nb_all_logs);
 		if nb_logs > 0 or user_profile.send_emptylogs :
 			### Top Text
 			header_text = "";
@@ -437,7 +437,7 @@ class SCMLogsApplication:
 			bottom_text = "";
 			if output_format == 'text':
 				if a_logskey != '':
-					top_text = "Check online commits  :: [%s/show.php?user=%s&key=%s] :: [%s]\n%s" % (self.abs_appurl, a_user, a_logskey, a_logskey, top_text)
+					top_text = "Check online commits  :: [%s/show.php?key=%s] :: [%s]\n%s" % (self.abs_appurl, a_user, a_logskey, a_logskey, top_text)
 				if len(dirs_changed) > 0:
 					top_text = "%sYour selection containing changes : \n\n%s\n" % (top_text, dirs_changed)
 				top_text = "%sTotal :: %d / %d logs\n" % (top_text, nb_logs, nb_all_logs)
@@ -449,7 +449,7 @@ class SCMLogsApplication:
 					for m in mydirectories:
 						mydirectories_text = "%s :: %s \n" % (mydirectories_text, m)
 					bottom_text = "%s%s\n\n" % (bottom_text, mydirectories_text)
-				bottom_text = "%sIf you want to change your preferences, (like not receiving SCMLogs emails), go to [%s?user=%s]\n\n" % (bottom_text, self.config.webapp_url, a_user)
+				bottom_text = "%sIf you want to change your preferences, (like not receiving SCMLogs emails), go to [%s]\n\n" % (bottom_text, self.abs_appurl)
 			else :
 				if self.use_basetag:
 					header_text = "<BASE href=\"%s/\">\n" % (basetag_url)
@@ -457,7 +457,7 @@ class SCMLogsApplication:
 					header_text = ""
 
 				if a_logskey != '':
-					top_text = "Check online commits  ::<a href=\"%sshow.php?user=%s&key=%s\">[%s]</a><br>\n%s" % (rel_appurl, a_user, a_logskey, a_logskey, top_text)
+					top_text = "Check online commits  ::<a href=\"%sshow.php?key=%s\">[%s]</a><br>\n%s" % (rel_appurl, a_user, a_logskey, a_logskey, top_text)
 				if len(dirs_changed) > 0:
 					top_text = "%s<a name=\"TOP\"></a>Your selection containing changes : \n<br><ul>%s</ul>" % (top_text, dirs_changed)
 				top_text = "%s<br><b>Total</b> :: %d / %d logs" % (top_text, nb_logs, nb_all_logs)
@@ -471,7 +471,7 @@ class SCMLogsApplication:
 					for m in mydirectories:
 						mydirectories_text = "%s :: %s \n" % (mydirectories_text, m)
 					bottom_text = "%s<em>%s</em><br><br>\n" % (bottom_text, mydirectories_text)
-				bottom_text = "%sIf you want to change your preferences, (like not receiving SCMLogs emails), go to <a href=\"%s?user=%s\">%s</a><br>\n\n" % (bottom_text, rel_appurl, a_user, self.abs_appurl)
+				bottom_text = "%sIf you want to change your preferences, (like not receiving SCMLogs emails), go to <a href=\"%s\">%s</a><br>\n\n" % (bottom_text, rel_appurl, self.abs_appurl)
 
 			if self.opt_output == 'out':
 				if output_format == 'text':
@@ -527,8 +527,8 @@ class SCMLogsApplication:
 					mail_text = mail_text + "</body></html>\n";
 
 
-					#DBG# print "Sending mail to %s " % (user_profile)
-					self.sendLogByEmailTo (mail_text, user_profile, nb_logs, nb_all_logs, self.opt_subject, (output_format == 'html'))
+				#DBG# print "Sending mail to %s " % (user_profile)
+				self.sendLogByEmailTo (mail_text, user_profile, nb_logs, nb_all_logs, self.opt_subject, (output_format == 'html'))
 	
 	def get_raw_logsfile_content(self):
 		mylogsfile = open (self.logsfile, 'r')
@@ -563,7 +563,6 @@ class SCMLogsApplication:
 		if self.user != '':
 			self.processUser (self.user, self.opt_filter, self.opt_filter_fn, self.logskey)
 		elif self.user == 'none':
-			print "TOTOT"
 			self.processUser ('', self.opt_filter, self.opt_filter_fn, self.logskey)
 		else:
 			# For each user (thoses who have a .cfg file in the correct directory

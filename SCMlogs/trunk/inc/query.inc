@@ -25,7 +25,7 @@ Function EmailLogsAction ($commitsfilename, $username, $filter, $only_user='', $
 	if (!empty($username)) { $cmd .= " -u $username "; }
 	$cmd .= " -mail -$format --$type";
 	ExecuteCommand ($cmd);
-	echo "EmailLogsAction  done...<BR>\n";
+	echo "EmailLogsAction  done...<br>\n";
 	return $cmd;
 }
 
