@@ -24,7 +24,7 @@ if (! defined("_CONFIG_")) { define ("_CONFIG_", 1);
 
 	$SCMLOGS['style.css'] = 'base.css';
 	$SCMLOGS['app.url'] = $cfg['global']['SCMlogs_appurl'];
-	$SCMLOGS['htpasswd.filename'] = $cfg['global']['SCMlogs_htpasswd'];
+	$SCMLOGS['passwd.filename'] = $cfg['global']['SCMlogs_passwd'];
 
 	class RepositoryProfile {
 		var $id;

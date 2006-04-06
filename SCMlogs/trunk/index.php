@@ -19,11 +19,11 @@ $_sitecfg =& new SiteConfiguration();
 $_sitecfg->set_value('site.baseurl', 'index.php');
 $_sitecfg->set_value('site.title', 'SCMlogs');
 $_sitecfg->set_value('site.default_application', 'index');
-$_sitecfg->set_value('site.htpasswd', $SCMLOGS['htpasswd.filename']);
+$_sitecfg->set_value('site.passwd', $SCMLOGS['passwd.filename']);
 
 /* WebSite */
 FMWK_require_once('auth/AuthHtpasswd.php');
-$_siteauth =& new SiteAuthHtpasswd(&$_sitecfg, $_sitecfg->value('site.htpasswd'));
+$_siteauth =& new SiteAuthHtpasswd(&$_sitecfg, $_sitecfg->value('site.passwd'));
 $_sitemgr =& new SiteManager(&$_sitecfg);
 
 /* Main Application */

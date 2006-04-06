@@ -2,7 +2,7 @@
 SCMlogs_appdir = /path-to/SCMlogs/
 SCMlogs_datadir = /path-to/SCMlogs/data/
 SCMlogs_appurl = "http://url-to/SCMlogs/"
-SCMlogs_htpasswd = "path-to-htpasswd";
+SCMlogs_passwd = "path-to-passwd";
 
 SCM_repositories= testsvn,repo_cvs
 SCM_default_repository= testsvn
