@@ -582,3 +582,4 @@ class SCMLogsApplication:
 			print "Unexpected error: %s" %( sys.exc_info()[0])
 			einfo = sys.exc_info()
 			sys.excepthook(einfo[0], einfo[1], einfo[2]);
+			sys.exit(-1)
