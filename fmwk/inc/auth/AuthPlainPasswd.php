@@ -38,9 +38,10 @@ class SiteAuthPlainPasswd extends SiteAuthentification {
 				list($un,$pn) = explode ('=', $line, 2);
 				if ($un == $u) {
 					$res = ($pn == $p);
+					break;
 				}
 			}
-			if ((!is_object($res)) & $res) {
+			if ($res) {
 				$_SESSION['username'] = $u;
 				$this->signed_username = $u;
 				return TRUE;
