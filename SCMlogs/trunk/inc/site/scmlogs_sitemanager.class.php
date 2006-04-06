@@ -1,6 +1,6 @@
 <?php
 
-require_once SITE_INC_DIR."/core/siteapplication.class.php";
+FMWK_require_once ('core'.DIRECTORY_SEPARATOR.'siteapplication.class.php');
 
 class Scmlogs_SiteManager extends SiteManager {
 	var $config;
