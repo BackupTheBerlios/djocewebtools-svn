@@ -221,6 +221,8 @@ class SCMLogsApplication:
 				self.opt_filter = 'file';
 		if param.has_key ('only_user'): 
 			self.only_user = param['only_user']
+			if self.only_user == 'none':
+				self.only_user = ''
 		if param.has_key ('only_tag'): 
 			self.only_tag = param['only_tag']
 		if param.has_key ('mesg'): 

@@ -114,8 +114,10 @@ class SiteApp_show extends ScmlogsSiteApplication {
 				$param['DIS_Parameters'] .= "Only commits about TAG = $only_tag <BR>";
 			}
 
+			$is_mail_operation = FALSE;
 			switch ($operation) {
 				case 'EmailLogs':
+					$is_mail_operation = TRUE;
 					$param['DIS_Message'] = "Email $user all the logs <BR>(in the selected files)<BR>\n";
 					$processing_fct = "EmailLogsAction";
 					break;
@@ -124,6 +126,7 @@ class SiteApp_show extends ScmlogsSiteApplication {
 					$processing_fct = "ShowRawLogsAction";
 					break;
 				case 'EmailMyLogs':
+					$is_mail_operation = TRUE;
 					$only_user = $user;
 					$param['DIS_Message'] = "Email $user all the logs (in the selected files) \n";
 					$param['DIS_Message'] .= " from <STRONG>$user</STRONG><BR>";
@@ -136,6 +139,7 @@ class SiteApp_show extends ScmlogsSiteApplication {
 					$processing_fct = "ShowMyLogsAction";
 					break;
 				case 'EmailOnlyLogsFor':
+					$is_mail_operation = TRUE;
 					$param['DIS_Message'] = "Email $user all the logs (in the selected files)\n";
 					$param['DIS_Message'] .= " from user : <STRONG>$only_user</STRONG>\n";
 					$param['DIS_Message'] .= " with tag  : <STRONG>$only_tag</STRONG><BR>\n";
@@ -154,6 +158,13 @@ class SiteApp_show extends ScmlogsSiteApplication {
 					break;
 			}
 
+			if ($is_mail_operation and $user == 'none') {
+				$error = TRUE;
+				$param['DIS_Message'] = "Operation not allowed";
+				$param['DIS_Result'] = "Email operation is only for authentified users.";
+			}
+		}
+		if (!$error) {
 			$file_tempo_name = tempnam ($SCMLOGS['tmpdir'], "TEMPO_");
 			$file_tempo = fopen ($file_tempo_name, "w");
 			$param['DIS_Data'] ="";
@@ -219,11 +230,17 @@ class SiteApp_show extends ScmlogsSiteApplication {
 			RemoveFile ($file_tempo_name);
 		} else {
 			$param['DIS_Format'] = '';
-			$param['DIS_Message'] = "Please select at least one file or valid dates!!!";
 			$param['DIS_Parameters'] = "...";
 			$param['DIS_Command'] = "...";
-			$param['DIS_Data'] = "no file or valid dates selected";
-			$param['DIS_Result'] = "...";
+			if (empty($param['DIS_Message'])) {
+				$param['DIS_Message'] = "Please select at least one file or valid dates!!!";
+			}
+			if (empty($param['DIS_Data'])) {
+				$param['DIS_Data'] = "no file or valid dates selected";
+			}
+			if (empty($param['DIS_Result'])) {
+				$param['DIS_Result'] = "...";
+			}
 		}
 		$param['only_user'] =& $only_user;
 		$param['only_tag'] =& $only_tag;
