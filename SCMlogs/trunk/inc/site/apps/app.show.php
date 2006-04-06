@@ -14,7 +14,8 @@ class SiteApp_show extends ScmlogsSiteApplication {
 	Function getData() {
 		parent::getData();
 		$param =& $this->param;
-
+		$user = $this->site->username();
+		if (empty($user)) { $user = "none"; }
 		$error = false;
 
 	//	echo "<pre>"; print_r ($_POST); echo "</pre>";
@@ -60,7 +61,6 @@ class SiteApp_show extends ScmlogsSiteApplication {
 		if (!isset ($commitsfiles)) { $commitsfiles = array (); }
 		// if (isset ($_GET['key'])) { $commitsfiles[] = $_GET['key']; };
 
-		$user = $SCMUSER;
 		$param['DIS_Application'] = "show";
 
 		$param['DIS_Command'] = "cmd";
@@ -70,7 +70,7 @@ class SiteApp_show extends ScmlogsSiteApplication {
 			@$operation = $_POST['show'];
 			if (!isset ($operation)) { $operation = 'ShowLogs'; }
 
-			$param['DIS_Parameters'] = "Login used = $SCMUSER <BR>";
+			$param['DIS_Parameters'] = "Login used = $user <BR>";
 
 			@$filter = $_POST['filter'];
 			if (!isset ($filter) or (strlen ($filter) == 0)) { 

@@ -72,7 +72,8 @@ class UserProfile:
 				self.set_values (line)
 
 		if not isValidEmail(self.email):
-			self.email = user + self.config.at_domain_name
+			if user != '':
+				self.email = user + self.config.at_domain_name
 
 	def user_pref_filename (self, user):
 		return self.config.cfg_dir + user + self.config.pref_ext
@@ -103,8 +104,11 @@ class UserProfile:
 		myusercfgfile.close ();
 
 	def get_directories (self):
-		self.load_directories (self.user_cfg_filename (self.user));
-
+		fn = self.user_cfg_filename (self.user)
+		if os.path.exists (fn):
+			self.load_directories (fn);
+		else:
+			self.directories = [];
 
 ###################################
 # Declaration
@@ -365,6 +369,8 @@ class SCMLogsApplication:
 
 		if self.opt_output == 'mail' and not user_profile.send_email:
 			return 
+		if self.opt_output == 'mail' and not a_user == '':
+			return
 
 		if a_filter == 'profil':
 			user_profile.get_directories()
@@ -535,7 +541,6 @@ class SCMLogsApplication:
 		return len(mylogs);
 
 	def get_all_logs(self):
-		print "fetch get_all_logs"
 		if self.all_logs == None:
 			reg = '^[-|\*]{40,}$'
 			p = re.compile(reg, re.MULTILINE)
@@ -555,6 +560,9 @@ class SCMLogsApplication:
 		# and parse and create a list of Cvs logs objects.
 		if self.user != '':
 			self.processUser (self.user, self.opt_filter, self.opt_filter_fn, self.logskey)
+		elif self.user == 'none':
+			print "TOTOT"
+			self.processUser ('', self.opt_filter, self.opt_filter_fn, self.logskey)
 		else:
 			# For each user (thoses who have a .cfg file in the correct directory
 			# send an email regarding the directories affected.
