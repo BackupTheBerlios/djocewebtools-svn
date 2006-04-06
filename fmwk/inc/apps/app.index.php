@@ -10,9 +10,9 @@ class SiteApp_index extends SiteApplication {
 		echo $this->site;
 		$user = $this->site->username();
 		if (isset($user)) {
-			echo " <a href='index.php?".SITE_PARAM_APP."=sign&".SITE_PARAM_OP."=logout&asked_app=".$this->name."'>sign out</a>";
+			echo " <a href='index.php?".FMWK_PARAM_APP."=sign&".FMWK_PARAM_OP."=logout&asked_app=".$this->name."'>sign out</a>";
 		} else {
-			echo " <a href='index.php?".SITE_PARAM_APP."=sign&".SITE_PARAM_OP."=login&asked_app=".$this->name."'>sign in</a>";
+			echo " <a href='index.php?".FMWK_PARAM_APP."=sign&".FMWK_PARAM_OP."=login&asked_app=".$this->name."'>sign in</a>";
 		}
 		echo "<br/>";
 		parent::printContent();

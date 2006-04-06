@@ -18,7 +18,7 @@ class SiteApp_sign extends SiteApplication {
 	}
 	Function getData() {
 		parent::getData();
-		$this->wop = value_from_POST_GET(SITE_PARAM_OP, 'sign');
+		$this->wop = value_from_POST_GET(FMWK_PARAM_OP, 'sign');
 		if (empty($this->asked_app)) {
 			$this->asked_app = value_from_POST('asked_app', Null);
 		}
@@ -35,8 +35,7 @@ class SiteApp_sign extends SiteApplication {
 			case 'logout':
 				$auth = $this->site->auth;
 				$auth->logoutUser ($this->wusername);
-				require_once SITE_INC_DIR. "common".DIRECTORY_SEPARATOR."redirect.inc.php";
-				redirect ($this->site->applicationUrl($this->asked_app));
+				$this->site->redirectToApp ($this->asked_app);
 				exit();
 				break;
 			case 'login':
@@ -54,8 +53,7 @@ class SiteApp_sign extends SiteApplication {
 					if ($is_ok) {
 						$this->message .= "Welcome";
 						$this->wop = 'login';
-						require_once SITE_INC_DIR. "common".DIRECTORY_SEPARATOR."redirect.inc.php";
-						redirect ($this->site->applicationUrl($this->asked_app));
+						$this->site->redirectToApp ($this->asked_app);
 					} else {
 						$this->message .= "Invalid login or password";
 						$this->wop = 'sign';
@@ -87,7 +85,7 @@ class SiteApp_sign extends SiteApplication {
 <div style="border: solid 1px #ccc; padding: 5px; margin: 5px; background-color: #ffeecc;">
 <?php if (!empty($this->message)) { echo $this->message; }?>
 <p>Username : <input type="text" name="username" value="<?php echo $this->wusername; ?>" /></p>
-<input type="submit" name="<?php echo SITE_PARAM_OP ?>" value="logout" />
+<input type="submit" name="<?php echo FMWK_PARAM_OP ?>" value="logout" />
 </form>
 <?php
 					break;
@@ -101,7 +99,7 @@ class SiteApp_sign extends SiteApplication {
 <?php if (!empty($this->message)) { echo $this->message; }?>
 <p>Username : <input type="text" name="username" value="<?php echo $this->wusername; ?>" /></p>
 <p>Password : <input type="password" name="password" value="" /></p>
-<input type="submit" name="<?php echo SITE_PARAM_OP ?>" value="login" />
+<input type="submit" name="<?php echo FMWK_PARAM_OP ?>" value="login" />
 </div>
 </form>
 <?php

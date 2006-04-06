@@ -1,6 +1,6 @@
 <?php
 
-require_once SITE_INC_DIR."/core/siteapplication.class.php";
+FMWK_require_once ('core'.DIRECTORY_SEPARATOR.'siteapplication.class.php');
 
 class SiteManager {
 	var $config;
@@ -50,7 +50,7 @@ class SiteManager {
 	}
 
 	Function redirectToApp($appname=NULL, $op=NULL) {
-		require_once SITE_INC_DIR. "common".DIRECTORY_SEPARATOR."redirect.inc.php";
+		FMWK_require_once ('common'.DIRECTORY_SEPARATOR.'redirect.inc.php');
 		redirect ($this->applicationUrl($appname, $op));
 	}
 
@@ -64,7 +64,7 @@ class SiteManager {
 
 	/* Protected */
 	function allApplicationNames() {
-		require_once SITE_INC_DIR. "/common/file.inc.php";
+		FMWK_require_once ('common'.DIRECTORY_SEPARATOR.'file.inc.php');
 		$appsdirs =& $this->appsPaths($real_app);
 		$res = array ();
 		foreach ($appsdirs as $dn) {
@@ -79,21 +79,21 @@ class SiteManager {
 	function applicationUrl($appname=Null, $op=Null){
 		$url = $this->baseurl;
 		if (!empty($appname)) {
-			$url .= '?'.SITE_PARAM_APP.'=' . $appname;
+			$url .= '?'.FMWK_PARAM_APP.'=' . $appname;
 		} else {
-			$url .= '?'.SITE_PARAM_APP.'=' . $this->config->value ('site.default_application');
+			$url .= '?'.FMWK_PARAM_APP.'=' . $this->config->value ('site.default_application');
 		}
 		if (!empty($op)) {
-			$url .= '&'.SITE_PARAM_OP.'=' . $op;
+			$url .= '&'.FMWK_PARAM_OP.'=' . $op;
 		}
 		return $url;
 	}
 	Function appsPaths($app=Null) {
 		$res = array ();
-		$res[] = SITE_DIR . 'apps';
-		if (isset($app)) { $res[] = SITE_DIR . 'apps'.DIRECTORY_SEPARATOR.$app; }
-		$res[] = SITE_INC_DIR . 'apps';
-		if (isset($app)) { $res[] = SITE_INC_DIR . 'apps'.DIRECTORY_SEPARATOR.$app; }
+		$res[] = FMWK_SITE_DIR.'apps';
+		if (isset($app)) { $res[] = FMWK_SITE_DIR.'apps'.DIRECTORY_SEPARATOR.$app; }
+		$res[] = FMWK_ROOT_DIR.'inc'.DIRECTORY_SEPARATOR.'apps';
+		if (isset($app)) { $res[] = FMWK_ROOT_DIR.'inc'.DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$app; }
 		return $res;
 		}
 	Function loadApplication ($app) {
