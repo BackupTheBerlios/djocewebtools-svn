@@ -557,23 +557,28 @@ class SCMLogsApplication:
 					print ("\n\n[!] Unable to create object for: \n<pre>[%s]</pre>\n" %(log) );
 
 	def execute(self):
-		# Read the cvs log file
-		self.get_raw_logsfile_content()
-		# and parse and create a list of Cvs logs objects.
-		if self.user != '':
-			self.processUser (self.user, self.opt_filter, self.opt_filter_fn, self.logskey)
-		elif self.user == 'none':
-			self.processUser ('', self.opt_filter, self.opt_filter_fn, self.logskey)
-		else:
-			# For each user (thoses who have a .cfg file in the correct directory
-			# send an email regarding the directories affected.
-			for user in self.listOfUsers ():
-				#print user
-				try:
-					self.processUser (user, 'profil', '', self.logskey)
-				except:
-					print "Error while processing user [%s] \n" % (user)
-					print "Unexpected error: %s" %( sys.exc_info()[0])
-					einfo = sys.exc_info()
-					sys.excepthook(einfo[0], einfo[1], einfo[2]);
-
+		try:
+			# Read the cvs log file
+			self.get_raw_logsfile_content()
+			# and parse and create a list of Cvs logs objects.
+			if self.user != '':
+				self.processUser (self.user, self.opt_filter, self.opt_filter_fn, self.logskey)
+			elif self.user == 'none':
+				self.processUser ('', self.opt_filter, self.opt_filter_fn, self.logskey)
+			else:
+				# For each user (thoses who have a .cfg file in the correct directory
+				# send an email regarding the directories affected.
+				for user in self.listOfUsers ():
+					#print user
+					try:
+						self.processUser (user, 'profil', '', self.logskey)
+					except:
+						print "Error while processing user [%s] \n" % (user)
+						print "Unexpected error: %s" %( sys.exc_info()[0])
+						einfo = sys.exc_info()
+						sys.excepthook(einfo[0], einfo[1], einfo[2]);
+		except:
+			print "Error while processing execute \n"
+			print "Unexpected error: %s" %( sys.exc_info()[0])
+			einfo = sys.exc_info()
+			sys.excepthook(einfo[0], einfo[1], einfo[2]);
