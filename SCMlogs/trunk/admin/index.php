@@ -217,10 +217,12 @@ switch ($op) {
 					echo adminCheckPath(userConfigFilename($u));
 					echo '<br/>';
 					echo adminCheckPath(userPrefFilename($u),false);
+					$userprof =& new UserProfile ($u);
+					echo '<br/><script>StartBlockControl("pref'.$u.'","Show prefs","Hide pref",false);</script>';
+					echo "<div style=\"white-space: pre; font-size:80%; padding-left: 20px\">".$userprof->to_text()."</div>\n";
+					echo '<script>EndBlockControl("pref'.$u.'")</script>';
 					echo '</ul>';
 					echo '</li>';
-					$userprof =& new UserProfile ($u);
-					echo "Preferences:<ul><pre>".$userprof->to_text()."</pre></ul>\n";
 					}
 			echo '</ul>';
 			echo '<script>EndBlockControl("users")</script>';
