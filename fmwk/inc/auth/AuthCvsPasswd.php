@@ -50,7 +50,7 @@ class SiteAuthCvsPasswd extends SiteAuthentification {
 		}
 	}
 
-	function logoutUser($user) {
+	function logoutUser($user=NULL) {
 		// check $user == $this->user();
 		$_SESSION['username'] = Null;
 		$_COOKIE['username'] = Null;

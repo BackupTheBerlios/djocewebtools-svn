@@ -34,7 +34,7 @@ class BasicAuth extends SiteAuthentification {
 		}
 	}
 
-	function logoutUser($user) {
+	function logoutUser($user=NULL) {
 		// check $user == $this->user();
 		$_SESSION['user'] = Null;
 		$_COOKIE['user'] = Null;

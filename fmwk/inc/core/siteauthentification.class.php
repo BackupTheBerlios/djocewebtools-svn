@@ -22,7 +22,7 @@ class SiteAuthentification {
 		return FALSE;
 	}
 
-	function logoutUser($user) {
+	function logoutUser($user=NULL) {
 		$signed_username = Null;
 	}
 

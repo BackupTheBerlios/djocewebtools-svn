@@ -52,9 +52,16 @@ class SiteApp_sign extends ScmlogsSiteApplication {
 						}
 					}
 					if ($is_ok) {
-						$this->message .= "Welcome";
-						$this->wop = 'login';
-						$this->site->redirectToApp($this->asked_app);
+						require_once (INC_DIR. "users.inc");
+						if (user_exists($auth->signed_username)) {
+							$this->message .= "Welcome";
+							$this->wop = 'login';
+							$this->site->redirectToApp($this->asked_app);
+						} else {
+							$this->message .= "Sorry your account is not configured yet.<br/>";
+							$auth->logoutUser();
+							$this->wop = 'sign';
+						}
 					} else {
 						$this->message .= "Invalid login or password";
 						$this->wop = 'sign';
@@ -90,7 +97,6 @@ class SiteApp_sign extends ScmlogsSiteApplication {
 		switch ($op) {
 			case 'logout':
 				echo "You are not logged out<br/>";
-
 				break;
 			case 'login':
 				echo "You are now logged in as [".$this->wusername."]<br/>";
