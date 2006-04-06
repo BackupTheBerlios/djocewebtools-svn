@@ -219,7 +219,9 @@ switch ($op) {
 					echo adminCheckPath(userPrefFilename($u),false);
 					echo '</ul>';
 					echo '</li>';
-				}
+					$userprof =& new UserProfile ($u);
+					echo "Preferences:<ul><pre>".$userprof->to_text()."</pre></ul>\n";
+					}
 			echo '</ul>';
 			echo '<script>EndBlockControl("users")</script>';
 		}
