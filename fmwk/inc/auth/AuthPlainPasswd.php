@@ -33,11 +33,11 @@ class SiteAuthPlainPasswd extends SiteAuthentification {
 		} else {
 			$res = FALSE;
 			$txt = ContentOfFile($this->passwd_filename);
-			$lines = trim(split('\n', $txt));
+			$lines = split("\n", $txt);
 			foreach ($lines as $line) {
 				list($un,$pn) = explode ('=', $line, 2);
-				if ($un == $u) {
-					$res = ($pn == $p);
+				if (trim($un) == $u) {
+					$res = (trim($pn) == $p);
 					break;
 				}
 			}
