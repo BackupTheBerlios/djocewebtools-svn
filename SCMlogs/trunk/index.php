@@ -1,6 +1,6 @@
 <?php
-error_reporting (55);
 ini_set ("session.use_trans_sid", 1);
+//error_reporting (55);
 //ini_set('magic_quotes_runtime', 0);
 //ini_set('magic_quotes_gpc', 0);
 
