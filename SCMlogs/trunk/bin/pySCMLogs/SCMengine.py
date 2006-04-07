@@ -437,7 +437,7 @@ class SCMLogsApplication:
 			bottom_text = "";
 			if output_format == 'text':
 				if a_logskey != '':
-					top_text = "Check online commits  :: [%s/show.php?key=%s] :: [%s]\n%s" % (self.abs_appurl, a_user, a_logskey, a_logskey, top_text)
+					top_text = "Check online commits  :: [%s/show.php?key=%s] :: [%s]\n%s" % (self.abs_appurl, a_logskey, a_logskey, top_text)
 				if len(dirs_changed) > 0:
 					top_text = "%sYour selection containing changes : \n\n%s\n" % (top_text, dirs_changed)
 				top_text = "%sTotal :: %d / %d logs\n" % (top_text, nb_logs, nb_all_logs)
@@ -457,7 +457,7 @@ class SCMLogsApplication:
 					header_text = ""
 
 				if a_logskey != '':
-					top_text = "Check online commits  ::<a href=\"%sshow.php?key=%s\">[%s]</a><br>\n%s" % (rel_appurl, a_user, a_logskey, a_logskey, top_text)
+					top_text = "Check online commits  ::<a href=\"%sshow.php?key=%s\">[%s]</a><br>\n%s" % (rel_appurl, a_logskey, a_logskey, top_text)
 				if len(dirs_changed) > 0:
 					top_text = "%s<a name=\"TOP\"></a>Your selection containing changes : \n<br><ul>%s</ul>" % (top_text, dirs_changed)
 				top_text = "%s<br><b>Total</b> :: %d / %d logs" % (top_text, nb_logs, nb_all_logs)
