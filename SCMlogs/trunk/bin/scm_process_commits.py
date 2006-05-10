@@ -28,7 +28,8 @@ class CommitsManager:
 			file.close ();
 
 			if size > 5: 
-				self.send_email_on_log_for (filename)
+				file_key = strftime ("%Y-%m-%d", localtime(time()))
+				self.send_email_on_log_for (filename, file_key)
 
 				year = strftime ("%Y", localtime(time()))
 				month = strftime ("%m", localtime(time()))
@@ -41,7 +42,6 @@ class CommitsManager:
 				if not os.path.exists (commitdirname) :
 					os.mkdir (commitdirname);
 
-				file_key = strftime ("%Y-%m-%d", localtime(time()))
 				destfilename = "%s/%s" %(commitdirname, file_key)
 
 				destfile = open (destfilename, 'a+');
