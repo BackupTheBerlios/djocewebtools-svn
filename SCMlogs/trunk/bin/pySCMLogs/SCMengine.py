@@ -187,7 +187,7 @@ class SCMLogsApplication:
 			# Get config
 		self.load_config (self.opt_SCM_repo)
 
-		if len (self.logskey) > 0:
+		if (len(self.logsfile) == 0) and (len (self.logskey) > 0):
 			self.logsfile = self.commitsFileFor (self.logskey)
 
 		self.abs_appurl = self.config.SCMlogs_appurl;

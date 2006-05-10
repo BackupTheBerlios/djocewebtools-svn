@@ -28,6 +28,8 @@ class CommitsManager:
 			file.close ();
 
 			if size > 5: 
+				self.send_email_on_log_for (filename)
+
 				year = strftime ("%Y", localtime(time()))
 				month = strftime ("%m", localtime(time()))
 
@@ -49,11 +51,20 @@ class CommitsManager:
 				file = open (filename, 'w');
 				file.close ();
 
-				self.send_email (file_key)
+				#self.send_email (file_key)
 
 	def send_email (self, file_key):
 		# sending email
 		cmd = "%s -k %s -mail " % (self.sendlogs_cmd, file_key)
+		if len (self.config._filename) > 0:
+			cmd = "%s -cfg %s " % (cmd, self.config._filename)
+		if len (self.repo) > 0:
+			cmd = "%s -repo %s" % (cmd, self.repo);
+		self.process_command (cmd);
+
+	def send_email_on_log_for (self, log_filename, file_key):
+# sending email
+		cmd = "%s -f %s -k %s -mail " % (self.sendlogs_cmd, log_filename, file_key)
 		if len (self.config._filename) > 0:
 			cmd = "%s -cfg %s " % (cmd, self.config._filename)
 		if len (self.repo) > 0:
