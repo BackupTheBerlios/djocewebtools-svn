@@ -208,7 +208,7 @@ class SCMLogsApplication:
 			self.opt_cfg = param['config']
 		if param.has_key ('keyfile'): 
 			self.logskey = param ['keyfile']
-		elif param.has_key ('logfile'):
+		if param.has_key ('logfile'):
 			self.logsfile = param['logfile']
 		if param.has_key ('user'): 
 			self.user = param['user']
