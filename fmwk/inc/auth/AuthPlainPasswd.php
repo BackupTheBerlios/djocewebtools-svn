@@ -1,7 +1,6 @@
 <?php
 
 class SiteAuthPlainPasswd extends SiteAuthentification {
-	var $expireTime;
 	var $passwd_filename;
 
 	function SiteAuthPlainPasswd($cfg, $passwd_filename) {
@@ -10,14 +9,12 @@ class SiteAuthPlainPasswd extends SiteAuthentification {
 	}
 
 	function initialize() {
-		$expireTime = 60*60*24*100; // 100 days
-		session_set_cookie_params($expireTime);
-		session_start();
+		parent::initialize();
 	}
 
 	Function Authentificate() {
 		global $_SESSION;
-//		echo "<pre>"; print_r ($_SESSION); echo "</pre>";
+		//echo "<pre>"; print_r ($_SESSION); echo "</pre>";
 		if (isset($_SESSION['username'])) {
 			$this->signed_username = $_SESSION['username'];
 		}

@@ -8,9 +8,7 @@ class BasicAuth extends SiteAuthentification {
 	}
 
 	function initialize() {
-		$expireTime = 60*60*24*100; // 100 days
-		session_set_cookie_params($expireTime);
-		session_start();
+		parent::initialize();
 	}
 
 	Function authentificate() {
