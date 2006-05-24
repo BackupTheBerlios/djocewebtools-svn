@@ -49,12 +49,16 @@ Usage:  svn_log.py -rev revision -svnrepo path -l logfile
 	-l logfile	    - for the logfile to append to
 """
 
+debug_enabled = 0
+
 def dprint (txt):
-	sys.stderr.write (txt)
-	#alogfile = open ("/tmp/svn_log.logs", 'a')
-	#alogfile.write (msg)
-	#alogfile.flush ()
-	#alogfile.close ()
+	global debug_enabled
+	if debug_enabled:
+		sys.stderr.write (txt)
+		#alogfile = open ("/tmp/svn_log.logs", 'a')
+		#alogfile.write (txt)
+		#alogfile.flush ()
+		#alogfile.close ()
 
 def output_of (cmd):
 	#output = subprocess.Popen(string.split (cmd), stdout=subprocess.PIPE).communicate()[0]
@@ -120,5 +124,12 @@ def process_main():
 
 
 if __name__ == '__main__':
-	process_main()
+	try:
+		process_main()
+	except:
+		einfo = sys.exc_info()
+		sys.excepthook(einfo[0], einfo[1], einfo[2]);
+		sys.stderr.write ("\nPostCommit: Error occurred ... ask your system administrator \n")
+		sys.exit(-1)
+
 	sys.exit();

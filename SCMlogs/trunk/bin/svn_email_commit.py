@@ -32,6 +32,9 @@ superuser_email      = "jfiat@eiffel.com"
 
 message_footer = "Check logs online: http://www.ise/scmlogs/\n"
 
+def browse_revision_changeset_url (repo, rev):
+	return "http://www.ise/scmlogs/scmbrowser/?op=revset&repname=%s&rev=%s" % (repo, rev)
+
 def dprint (txt):
 	if debug_enabled:
 		sys.stderr.write (txt)
@@ -68,6 +71,7 @@ def process_main():
 	svnlook_cmd = "svnlook"
 	revision = ''
 	repository = ''
+	reponame = ''
 	to_emails = []
 	argc = len (sys.argv)
 	i = 1
@@ -76,6 +80,9 @@ def process_main():
 		i = i + 1
 		if arg == '-rev' :
 			revision = sys.argv[i]
+			i = i + 1
+		elif arg == '-reponame' :
+			reponame = sys.argv[i]
 			i = i + 1
 		elif arg == '-svnrepo' :
 			repository = sys.argv[i]
@@ -145,7 +152,11 @@ def process_main():
 		message_header = message_header +  "Subject: [SCM::Rev %s] by %s on %s\n" % (revision, login, date)
 		message_header = message_header +  "Organization: %s \n" % (organization_name)
 
-		message = "%s\n%s\n%s\n%s\n" % (message_header, text, "-"*72 + "\n", message_footer)
+		if reponame != '':
+			online_browser = browse_revision_changeset_url (reponame, revision)
+
+		message = "%s\n%s\n%s\n%s\n%s\n" % (message_header, text, "-"*72 + "\n", message_footer, online_browser)
+
 		dprint("\nMESSAGE=\n" + message)
 		sendMailToFromSubjectOfOn (to_emails, sender_name, sender_email, message, smtp_server)
 
