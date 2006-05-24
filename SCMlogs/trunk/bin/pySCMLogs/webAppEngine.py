@@ -11,6 +11,7 @@ class webappUrlEngine:
 	def urlShowDir (self, dir, r1): return ""
 	def urlDiffDir (self, dir, r1, r2): return ""
 	def urlChangeSet (self, r1, dir, file): return ""
+	def urlRevSet(self, rev): return ""
 
 class webscmlogs (webappUrlEngine):
 	def set_default_webapp (self, wapp):
@@ -48,5 +49,9 @@ class webscmlogs (webappUrlEngine):
 	def urlChangeSet (self, r1, dir, file):
 		url = self.urlTmp ('changeset')
 		url = "%s&path=%s/%s&r1=%s" % (url, dir, file, r1)
+		return url
+	def urlRevSet (self, rev):
+		url = self.urlTmp ('revset')
+		url = "%s&rev=%s" % (url, rev)
 		return url
 

@@ -21,7 +21,12 @@ class SvnLogEntry(SCMLogEntry):
 	def info_to_html (self):
 		result = ""
 		if self.revision > 0:
-			result =  "%s<tr><td class=i >Revision</td><td colspan=3>%d</td></tr>\n"  %(result, self.revision);
+			result =  "%s<tr><td class=i >Revision</td><td colspan=3>" %(result)
+			result = "%s<a href=\"%s\" target=\"_MyLogs_\">%d</a> " %(result, \
+					self.webappUrlForRevSet (self.revision), \
+					self.revision \
+				)
+			result = "%s</td></tr>\n"  %(result);
 		return result
 
 	def list_to_html (self, lst_id, lst, title, cssclass):

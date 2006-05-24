@@ -42,6 +42,9 @@ class SCMLogEntry:
 	def webappUrlForDiffDirectory (self, dir, r1, r2):
 		return self.webUrl_engine.urlDiffDir (dir, r1, r2)
 
+	def webappUrlForRevSet (self, rev):
+		return self.webUrl_engine.urlRevSet (rev)
+
 	def to_text (self):
 		tab = " "*13
 		offset = "  "
