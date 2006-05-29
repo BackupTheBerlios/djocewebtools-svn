@@ -133,7 +133,7 @@ if __name__ == '__main__':
 			email_mode_name = sys.argv [2]
 		else:
 			email_mode_name = sys.argv [1]
-			week_number = 1 + string.atoi (strftime ("%U", localtime(time())) ) 
+			week_number = string.atoi (strftime ("%U", localtime(time())) ) 
 			week_day = string.atoi (strftime ("%u", localtime(time())) ) 
 			if email_mode_name == email_mode_remind :
 				if week_day == 7 :
