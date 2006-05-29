@@ -1,0 +1,7 @@
+#!/usr/local/bin/python
+
+def url_for (id):
+	return "http://%s/%s" % (bot_id(), id)
+
+def html_url_for (id, name):
+	return "<a href=\"%s\">%s</a>" % (url_for(id), name)

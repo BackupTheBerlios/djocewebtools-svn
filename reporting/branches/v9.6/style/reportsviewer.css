@@ -1,0 +1,93 @@
+body {
+/*  font-family : Verdana, Arial; */
+	background-color: #ffffff;
+}
+
+A, A:active, A:visited  {
+	color: Blue;
+	/*color: #00cc00;*/
+	text-decoration: underline
+}
+A:hover {
+	text-decoration: none;
+	color: #FFFFFF;
+	background-color: #000066;
+	/* background-color: #006600;*/
+}
+
+A.nav, A.nav:active, A.nav:visited  {
+	text-decoration: none;
+	color: DarkBlue;
+}
+A.nav:hover {
+	text-decoration: none;
+	color: #FFFFFF;
+	background-color: #336699;
+}
+A.navheader, A.navheader:active, A.navheader:visited {
+	text-decoration: none;
+	color: #00ff00;
+}
+A.navheader:hover {
+	text-decoration: none;
+	color: #ff0000;
+	background-color: #ffffcc;
+}
+H2 {
+    color: Blue;
+	font-size: 12pt;
+        font-weight: bold;
+        border-bottom : 1px solid black;
+	margin-left: 3px;
+}
+H3 {
+	font-size: 12pt;
+        color: #000000;
+        margin-left : 25px;
+}
+TD {
+	vertical-align: top;
+}
+TD.menu {
+	background-color: #d0d0d0;
+}
+
+TD.reporttitle {
+	color: #000000;
+	background-color: #dddddd;
+	font-size: 12pt;
+	font-weight: bold;
+}
+TABLE.reportheader {
+	color: #FFFFFF;
+	background-color: #006699;
+	height: 40;
+	font-weight: bold;
+	text-align: left;
+}
+TD.headernavigation {
+	color: #FFFFFF;
+	font-size: 12pt;
+	font-weight: bold;
+	text-align: right;
+}
+TD.reportnavigation {
+	color: #000000;
+	background-color: #dddddd;
+	height: 22;
+	font-size: 12pt;
+	font-weight: bold;
+	text-align: right;
+}
+TD.reporttext {
+        border-left : 1px dashed grey;
+}
+DIV.teambar {
+	margin-top: 30px; padding: 5px; border: solid black 1px; background-color: #8888aa; font-weight: bold;
+	text-align: center;
+	font-size: 120%;
+}
+DIV.infobox {
+	margin-top: 20px; margin-left: 30px;
+}
+

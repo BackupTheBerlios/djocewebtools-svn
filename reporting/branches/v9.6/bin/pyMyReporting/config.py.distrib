@@ -1,0 +1,30 @@
+#!/usr/bin/python
+
+# Email Configuration
+organization_name    = "Your organisation name"
+smtp_server          = "your smtp, server's name"
+at_domain_name       = "@domain.com"
+
+# Url, Dir and Files settings
+reporting_data_path  = "/usr/local/www/MyReporting"
+reporters_file       = reporting_data_path + "/data/users.txt"
+reporting_web_path   = "http://www.intranet/MyReporting/"
+
+### Reporters
+reporters_email      = "reporters" + at_domain_name
+
+### Sender
+sender_name          = "MyReporting"
+sender_email         = "postmaster" + at_domain_name
+
+### SuperReporter
+superreporter_email  = "reportmaster" + at_domain_name
+
+### Option
+
+enable_copy_to_superreporter = 0;
+send_current_as_previous = 1; 
+    # If we send the email, on sunday (or after)
+    # The week starts on sunday .. 
+    # FIXME jfiat [2004/02/29] : we should add a smart way to figure it out ..
+
