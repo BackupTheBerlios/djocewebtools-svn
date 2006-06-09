@@ -315,13 +315,14 @@ class SCMLogsApplication:
 		return result;
 
 	def sendLogByEmailTo (self, logs, user_profile, logs_count, all_logs_count, a_subject='', is_html=0):
-		today = strftime ("%A %Y/%b/%d (%H:%M:%S)", localtime(time()))
+		#today = strftime ("%A %Y/%b/%d (%H:%M:%S)", localtime(time()))
+		today = strftime ("%A %Y/%b/%d", localtime(time()))
 		if a_subject != '':
 			subject = "[SCM:%s] " % (a_subject)
 		else:
 			subject = "[SCM:Commits @ %s] " % (user_profile.user)
 		subject = "%s<%s> " % (subject, self.config.repository_name)
-		subject = "%s %s <%d/%d logs>" % (subject, today, logs_count, all_logs_count)
+		subject = "%s <%d/%d logs> %s" % (subject, logs_count, all_logs_count, today)
 		header = ""
 		header = header +  "X-Mailer: PyJoceMailer\n"
 		header = header +  "Reply-To: <%s>\n" % (self.config.superuser_email)
