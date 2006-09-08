@@ -6,6 +6,7 @@
 	$smarty->assign("VAR_APPLICATION_NAME", $DIS_Application);
 	$smarty->assign ("ListYearDirs", $reporting_dirs);
 	$smarty->assign ("ListUserReports", $listUserReports);
+	$smarty->assign ("ListUserWeekRanges", $listUserWeekRanges);
 	$smarty->assign ("SelectedYear", $selected_year);
 	$smarty->assign ("SelectedUser", $DIS_AllUsers[$selected_user]);
 	$smarty->assign("VAR_EDIT_USERNAME_HTML_SELECT", $DIS_PostUsername_HTML_SELECT);

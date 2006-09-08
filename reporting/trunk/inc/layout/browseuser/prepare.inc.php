@@ -17,6 +17,7 @@
 
 	$reporting_dirs = listOfKnownYear ();
 	$listUserReports = array ();
+	$listWeekRanges = array ();
 
 	$weeks_range = range (1,52);
 	while (list ($k_week, $v) = each ($weeks_range)) {
@@ -24,9 +25,12 @@
 		if (userReportExists($selected_user, $selected_year, $k_week)) {
 			$ufn = userFilename ($selected_user, $selected_year, $k_week);
 			$listUserReports[$k_week] = ContentOfFile ($ufn);
+			$listUserWeekRanges[$k_week] = "from " . strftime ("%d/%m/%Y", firstDayOfWeek ($k_week, $selected_year))
+				. " to " . strftime ("%d/%m/%Y", lastDayOfWeek ($k_week, $selected_year))  ;
 		}
 	}
 	krsort ($listUserReports);
+	krsort ($listUserWeekRanges);
 
 	$DIS_AllUsers = active_users() + inactive_users();
 	@$DIS_PostUsername_HTML_SELECT = userList_HTML_SELECT ('selected_user', $DIS_AllUsers, 'Select username', $selected_user);

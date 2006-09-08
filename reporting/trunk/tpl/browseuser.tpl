@@ -22,7 +22,7 @@ Please select year : <BR>
 		no report ...
 	{else}
 		{foreach from=$ListUserReports key=kWeek item=vWeekfile}
-		<A HREF="#w{$kWeek}">{$kWeek}</A> : 
+		<A HREF="#w{$kWeek}">{$kWeek}</A> 
 		{/foreach}
 	{/if}
 {else}
@@ -46,7 +46,9 @@ Please select year : <BR>
 <DIV style="padding: 4px; text-align: left; background-color: #ffffff; border: solid 1pt #dddddd;">
 <a name="w{$kWeek}" ></A>
 <div style="padding: 4px; background-color: #eeeeff; font-weight: bold; border: solid 1px #dddddd;">
-<a style="font-size: 60%;" HREF="#TOP">[^]</a> <a href="{$VAR_WEEK_URL}">Week {$kWeek}</a>
+<a style="font-size: 60%;" HREF="#TOP">[^]</a> <a href="{$VAR_WEEK_URL}">Week {$kWeek}
+{$ListUserWeekRanges[$kWeek]}
+</a>
 <a href="{$VAR_USER_EDIT_REPORT}"><img src="{$VAR_REPORTING_URL}/img/small_image.gif" border=0 /></a>
 </div>
 <DIV style="margin-left: 20px">
