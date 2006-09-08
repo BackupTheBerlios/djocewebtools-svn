@@ -1,7 +1,6 @@
 <?php
 
 class SiteAuthHtpasswd extends SiteAuthentification {
-	var $expireTime;
 	var $passwd_filename;
 
 	function SiteAuthHtpasswd($cfg, $passwd_filename) {
