@@ -47,6 +47,12 @@ class tracUrlEngine extends webappUrlEngine {
 	function urlDiffDir ($dir, $r1, $r2) {
 		return $this->urlDiffFile('', $dir, $r1, $r2);
 	}
+	function urlRevSet ($rev) {
+		$url = $this->urlTmp('changeset');
+		$url .= "$rev";
+		return $url;
+	}
+	
 }
 
 ?>

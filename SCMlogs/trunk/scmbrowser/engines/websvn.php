@@ -45,6 +45,13 @@ class websvnUrlEngine extends webappUrlEngine {
 		$url .= "&compare[]=/".$this->cleaned_path($dir)."@$r1&compare[]=/".$this->cleaned_path($dir)."@$r2";
 		return $url;
 	}
+	function urlRevSet ($rev) {
+		$url = $this->urlTmp ('listing');
+		$url .= "&rev=$rev";
+		$url .= "&path=/&sc=1";
+		return $url;
+	}
+	
 }
 
 ?>

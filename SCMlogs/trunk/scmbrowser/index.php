@@ -35,6 +35,10 @@ Function url_for_operation_on_browser ($op, $appUrlEngine){
 			$r2 = $_GET['r2'];
 			$url = $appUrlEngine->urlDiffDir($dir, $r1, $r2);
 			break;
+		case 'revset':
+			$rev = $_GET['rev'];
+			$url = $appUrlEngine->urlRevSet($rev);
+			break;
 		default:
 			$url = $appUrlEngine->urlBrowser();
 			break;

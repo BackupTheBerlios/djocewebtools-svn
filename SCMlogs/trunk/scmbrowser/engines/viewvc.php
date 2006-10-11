@@ -52,6 +52,12 @@ class viewvcUrlEngine extends webappUrlEngine {
 	function urlDiffDir ($dir, $r1, $r2) {
 		return $this->urlShowDir ($dir, $r1);
 	}
+	function urlRevSet ($rev) {
+		$url = $this->urlTmp ('');
+		$url .= "&view=rev";
+		$url .= "&revision=$rev";
+		return $url;
+	}
 }
 
 ?>
