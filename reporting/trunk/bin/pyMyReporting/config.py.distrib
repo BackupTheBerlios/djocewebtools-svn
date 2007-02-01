@@ -23,8 +23,4 @@ superreporter_email  = "reportmaster" + at_domain_name
 ### Option
 
 enable_copy_to_superreporter = 0;
-send_current_as_previous = 1; 
-    # If we send the email, on sunday (or after)
-    # The week starts on sunday .. 
-    # FIXME jfiat [2004/02/29] : we should add a smart way to figure it out ..
 

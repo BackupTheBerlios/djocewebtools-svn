@@ -133,29 +133,35 @@ if __name__ == '__main__':
 			email_mode_name = sys.argv [2]
 		else:
 			email_mode_name = sys.argv [1]
-			week_number = string.atoi (strftime ("%U", localtime(time())) ) 
-			week_day = string.atoi (strftime ("%u", localtime(time())) ) 
+			week_number = string.atoi (strftime ("%W", localtime(time())) ) 
+			#note: week_number: [0..53] week starts on monday ...
+
+			week_day = string.atoi (strftime ("%w", localtime(time())) ) 
+			#note: week_day: 0:sun; 1:mon; 2:tue; 3:wed; 4:thu; 5:fri; 6:sat
+
+			#print ("===> week_number=%d -> week_day=%d \n" % (week_number, week_day))
 			if email_mode_name == email_mode_remind :
-				if week_day == 7 :
-					send_current_as_previous = 0;
-					week_number = week_number
-				if week_day == 6 :
-					send_current_as_previous = 0;
-					week_number = week_number
-				if week_day == 5 :
-					send_current_as_previous = 0;
-					week_number = week_number
-				if week_day == 4 :
-					send_current_as_previous = 0;
-					week_number = week_number
-			if send_current_as_previous == 1 :
-				week_number = week_number - 1
+				if week_day == 0 or week_day == 1 or week_day == 2:
+					# if today is sun,mon,tue
+					# send reminder for previous week 
+					week_number = week_number - 1
+				#else:
+					# otherwise this is for current week 
+			else: #send reports
+				if week_day == 1 or week_day == 2 or week_day == 3 or week_day == 4:
+					# if today is mon,tue,wed,thu
+					# send reports of previous week
+					week_number = week_number - 1
+				#else:
+					# otherwise this is for current week 
+					# sent on fri,sat, or sun
 			if week_number == 0 :
 				week_number = 52
 				year = year - 1
-			# We send the previous week report
+
+			#print ("===> week_number=%d -> week_day=%d \n" % (week_number, week_day))
 	else:
-		print "Usage: script week_number (new|refresh|remind)\n"
+		print "Usage: script {week_number} (new|refresh|remind)\n"
 		sys.exit ();
 			
 	#else :
