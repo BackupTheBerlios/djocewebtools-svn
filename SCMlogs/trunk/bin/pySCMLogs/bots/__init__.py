@@ -23,10 +23,19 @@ def html_url_for(bot,id,name):
 	except:
 		return ""
 
+def url_for(bot,id,name):
+	bot_name = "%s.%s" % (__name__, bot)
+	try:
+		__import__(bot_name)
+		cmd = "%s.url_for(\"%s\")" % (bot, id)
+		return eval(cmd)
+	except:
+		return ""
+
 def bots_html_replace (html):
 	global p_bot
 #issue if more than one link with same substring .. 123 and 12345
-	results = p_bot.findall( html)
+	results = p_bot.findall (html)
 	offset = 0
 	if results:
 		for res in results:
@@ -35,6 +44,18 @@ def bots_html_replace (html):
 				html = replace (html, res[0], url)
 				offset = offset + len(url) - len(res[0])
 	return html
+
+def bots_extracted_values (txt):
+	global p_bot
+#issue if more than one link with same substring .. 123 and 12345
+	result = []
+	results = p_bot.findall (txt)
+	if results:
+		for res in results:
+			url = url_for(res[1],res[2],res[0])
+			if len(url) > 0:
+				result.append ([res[0], url])
+	return result
 
 def bots_html (html):
 	global p_bot

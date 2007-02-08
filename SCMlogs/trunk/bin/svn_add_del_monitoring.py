@@ -151,7 +151,7 @@ def process_main():
 			message_header = ""
 			message_header = message_header +  "X-Mailer: PyJoceMailer\n"
 			message_header = message_header +  "Reply-To: <%s>\n" % (sender_email)
-			message_header = message_header +  'From: "' + sender_name + '" <' + sender_email + '>\n'
+			message_header = message_header +  'From: "' + sender_name + ' - ' + login + '" <' + sender_email + '>\n'
 			to_emails_str = "%s" % (to_emails[0]);
 			if len(to_emails) > 1:
 				cc_emails_str = " <%s> " % (to_emails[1]);
